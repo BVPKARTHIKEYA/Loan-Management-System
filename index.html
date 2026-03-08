@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABC Bank</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+.fade-in{
+opacity:0;
+animation:fadeIn 2s forwards;
+animation-delay:4s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+</style>
+
+</head>
+
+
+<body class="h-screen overflow-hidden">
+
+<!-- HEADER -->
+<header>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop
+class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
+
+<source src="motion.mp4" type="video/mp4">
+
+</video>
+
+</header>
+
+
+<!-- DARK OVERLAY -->
+<div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+
+<!-- MAIN CONTENT -->
+<main class="relative h-screen text-white">
+
+<!-- TITLE SECTION -->
+<section class="flex justify-center text-center pt-28">
+
+<h1 class="text-6xl font-bold tracking-wide">
+
+Welcome to ABC Bank
+
+</h1>
+
+</section>
+
+
+
+<!-- BANK DESCRIPTION -->
+<section class="absolute bottom-24 w-full text-center px-6">
+
+<article>
+
+<p class="text-xl max-w-3xl mx-auto leading-relaxed">
+
+ABC Bank has emerged as one of the leading banks in recent times,
+delivering secure digital banking, innovative financial solutions,
+and fast loan approval systems for millions of customers across the country.
+
+</p>
+
+<p class="text-lg mt-4 max-w-3xl mx-auto">
+
+Our mission is to simplify banking with modern technology while ensuring
+security, transparency, and customer satisfaction.
+
+</p>
+
+</article>
+
+
+
+<!-- LOGIN / REGISTER BUTTONS -->
+<nav class="flex justify-center gap-6 mt-10 fade-in">
+
+<a href="login.html"
+class="bg-blue-900 hover:bg-blue-800 px-8 py-3 rounded-lg text-lg font-semibold shadow-lg">
+
+Login
+
+</a>
+
+<a href="register.html"
+class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-3 rounded-lg text-lg font-semibold shadow-lg">
+
+Register
+
+</a>
+
+</nav>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer class="absolute bottom-2 w-full text-center text-gray-300 text-sm">
+
+<p>© 2026 ABC Bank. All Rights Reserved.</p>
+
+</footer>
+
+</body>
+
+</html>

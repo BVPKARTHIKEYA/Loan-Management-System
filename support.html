@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABC Bank Support</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+
+
+<body class="bg-gray-100">
+
+<!-- HEADER -->
+<header>
+
+<!-- NAVBAR -->
+<nav class="bg-blue-900 text-white shadow-xl sticky top-0">
+
+<div class="w-full px-10 py-5 flex justify-between items-center">
+
+<!-- CLICKABLE LOGO -->
+
+<a href="home.html" class="flex items-center gap-3">
+
+<img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+
+<h1 class="text-2xl font-bold">
+ABC Bank
+</h1>
+
+</a>
+
+
+<ul class="hidden md:flex gap-10 font-semibold text-lg">
+
+<li><a href="home.html"><i class="fa fa-home mr-2"></i>Home</a></li>
+<li><a href="bank-account.html"><i class="fa fa-building-columns mr-2"></i>Accounts</a></li>
+<li><a href="loan-application.html"><i class="fa fa-money-bill mr-2"></i>Loans</a></li>
+<li><a href="cibil.html"><i class="fa fa-chart-line mr-2"></i>CIBIL</a></li>
+<li><a href="loan-approval.html"><i class="fa fa-circle-check mr-2"></i>Approval Status</a></li>
+<li><a href="loan-receipt.html"><i class="fa fa-file-invoice mr-2"></i>Loan Receipt</a></li>
+<li><a href="support.html"><i class="fa fa-headset mr-2"></i>Support</a></li>
+
+</ul>
+
+
+<aside class="flex items-center gap-3 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold">
+
+<i class="fa fa-user-circle text-xl"></i>
+<span>User</span>
+
+</aside>
+
+</div>
+
+</nav>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+<main class="max-w-7xl mx-auto p-8">
+
+<!-- PAGE HEADER -->
+<section class="mb-10">
+
+<h2 class="text-4xl font-bold">
+Customer Support
+</h2>
+
+<p class="text-gray-600 text-lg mt-2">
+We are here to help you with your banking and loan related queries.
+</p>
+
+</section>
+
+
+
+<!-- CONTACT CARDS -->
+<section class="grid md:grid-cols-3 gap-6 mb-10">
+
+<article class="bg-white shadow rounded-xl p-6 text-center">
+
+<i class="fa fa-phone text-3xl text-blue-700 mb-3"></i>
+
+<h3 class="font-bold text-xl">
+Call Support
+</h3>
+
+<p class="text-gray-600 mt-2">
+1800-123-456
+</p>
+
+</article>
+
+
+
+<article class="bg-white shadow rounded-xl p-6 text-center">
+
+<i class="fa fa-envelope text-3xl text-blue-700 mb-3"></i>
+
+<h3 class="font-bold text-xl">
+Email Support
+</h3>
+
+<p class="text-gray-600 mt-2">
+support@abcbank.com
+</p>
+
+</article>
+
+
+
+<article class="bg-white shadow rounded-xl p-6 text-center">
+
+<i class="fa fa-location-dot text-3xl text-blue-700 mb-3"></i>
+
+<h3 class="font-bold text-xl">
+Head Office
+</h3>
+
+<p class="text-gray-600 mt-2">
+Mumbai, India
+</p>
+
+</article>
+
+</section>
+
+
+
+<!-- SUPPORT FORM -->
+<section class="bg-white shadow rounded-xl p-8 mb-10">
+
+<header>
+<h2 class="text-2xl font-bold mb-6">
+Submit a Support Request
+</h2>
+</header>
+
+<form class="grid md:grid-cols-2 gap-6">
+
+<div>
+
+<label class="font-semibold">
+Full Name
+</label>
+
+<input type="text"
+class="w-full border rounded-lg p-3 mt-2">
+
+</div>
+
+
+
+<div>
+
+<label class="font-semibold">
+Email
+</label>
+
+<input type="email"
+class="w-full border rounded-lg p-3 mt-2">
+
+</div>
+
+
+
+<div>
+
+<label class="font-semibold">
+Phone Number
+</label>
+
+<input type="tel"
+class="w-full border rounded-lg p-3 mt-2">
+
+</div>
+
+
+
+<div>
+
+<label class="font-semibold">
+Issue Type
+</label>
+
+<select class="w-full border rounded-lg p-3 mt-2">
+
+<option>Select Issue</option>
+<option>Loan Application</option>
+<option>Account Issue</option>
+<option>CIBIL Query</option>
+<option>Payment Issue</option>
+
+</select>
+
+</div>
+
+
+
+<div class="md:col-span-2">
+
+<label class="font-semibold">
+Describe Your Issue
+</label>
+
+<textarea
+rows="4"
+class="w-full border rounded-lg p-3 mt-2">
+</textarea>
+
+</div>
+
+
+
+<div class="md:col-span-2">
+
+<button
+class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold">
+
+Submit Request
+
+</button>
+
+</div>
+
+</form>
+
+</section>
+
+
+
+<!-- FAQ -->
+<section class="bg-white shadow rounded-xl p-8">
+
+<h2 class="text-2xl font-bold mb-6">
+Support FAQs
+</h2>
+
+<div class="space-y-4">
+
+<article>
+<details class="border rounded-lg p-4">
+<summary class="font-semibold">How long does loan approval take?</summary>
+<p class="mt-2 text-gray-600">Loan approval typically takes 24–72 hours.</p>
+</details>
+</article>
+
+<article>
+<details class="border rounded-lg p-4">
+<summary class="font-semibold">How can I check my loan status?</summary>
+<p class="mt-2 text-gray-600">You can check your status in the Approval Status page.</p>
+</details>
+</article>
+
+<article>
+<details class="border rounded-lg p-4">
+<summary class="font-semibold">What documents are required for loans?</summary>
+<p class="mt-2 text-gray-600">PAN card, Aadhaar, income proof, and property documents.</p>
+</details>
+</article>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<!-- FOOTER -->
+<footer class="bg-blue-900 text-white mt-16">
+
+<div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
+
+<section>
+
+<h3 class="text-xl font-bold">ABC Bank</h3>
+
+<p class="mt-3 opacity-80">
+Trusted digital banking and loan services across India.
+</p>
+
+</section>
+
+
+
+<nav>
+
+<h4 class="font-semibold mb-3">Quick Links</h4>
+
+<ul class="space-y-2">
+
+<li><a href="home.html">Home</a></li>
+<li><a href="loan-application.html">Loans</a></li>
+<li><a href="officer-review.html">Officer Review</a></li>
+<li><a href="loan-approval.html">Loan Approval</a></li>
+
+</ul>
+
+</nav>
+
+
+
+<section>
+
+<h4 class="font-semibold mb-3">Loan Services</h4>
+
+<ul class="space-y-2">
+
+<li>Personal Loan</li>
+<li>Home Loan</li>
+<li>Vehicle Loan</li>
+<li>Business Loan</li>
+
+</ul>
+
+</section>
+
+
+
+<aside>
+
+<h4 class="font-semibold mb-3">Follow Us</h4>
+
+<div class="flex gap-4 text-2xl">
+
+<i class="fab fa-facebook"></i>
+<i class="fab fa-instagram"></i>
+<i class="fab fa-linkedin"></i>
+<i class="fab fa-twitter"></i>
+
+</div>
+
+</aside>
+
+</div>
+
+<div class="text-center border-t border-blue-700 py-4">
+© 2026 ABC Bank
+</div>
+
+</footer>
+
+</body>
+</html>
+

@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Register – ABC Bank</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<style>
+body{
+font-family:'Source Sans 3',sans-serif;
+}
+</style>
+
+</head>
+
+<body class="min-h-screen flex bg-gray-100">
+
+<!-- HEADER -->
+<header class="hidden">
+<h1>ABC Bank Registration</h1>
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+<main class="flex w-full min-h-screen">
+
+<!-- LEFT VIDEO SECTION -->
+<section class="hidden md:block md:w-2/3 relative">
+
+<figure>
+
+<video autoplay muted loop playsinline class="w-full h-full object-cover">
+
+<source src="bank-bg.mp4" type="video/mp4">
+
+</video>
+
+<figcaption class="sr-only">
+ABC Bank promotional background video
+</figcaption>
+
+</figure>
+
+<div class="absolute inset-0 bg-black/30"></div>
+
+</section>
+
+
+
+<!-- REGISTER FORM SECTION -->
+<section class="w-full md:w-1/3 flex items-center justify-center p-10 bg-white shadow-2xl">
+
+<article class="w-full max-w-md">
+
+<header class="text-center mb-8">
+
+<img src="abc-bank-logo.jpeg"
+class="h-36 w-auto mx-auto mb-6 object-contain">
+
+<h2 class="text-3xl font-bold font-[Playfair_Display]">
+Create Account
+</h2>
+
+<p class="text-gray-500 text-sm">
+Register to start your banking journey
+</p>
+
+</header>
+
+
+
+<form id="registerForm" class="space-y-4">
+
+<div class="grid grid-cols-2 gap-4">
+
+<input id="fname" type="text" required placeholder="First Name"
+class="border rounded-lg p-3">
+
+<input id="lname" type="text" required placeholder="Last Name"
+class="border rounded-lg p-3">
+
+</div>
+
+
+<input id="email" type="email" required placeholder="Email"
+class="border rounded-lg p-3 w-full">
+
+<input id="mobile" type="tel" required placeholder="Mobile Number"
+class="border rounded-lg p-3 w-full">
+
+<input id="dob" type="date" required
+class="border rounded-lg p-3 w-full">
+
+
+<div class="grid grid-cols-2 gap-4">
+
+<input id="password" type="password" required minlength="6"
+placeholder="Password"
+class="border rounded-lg p-3">
+
+<input id="confirmPassword" type="password" required
+placeholder="Confirm Password"
+class="border rounded-lg p-3">
+
+</div>
+
+
+<label class="flex items-start gap-2 text-sm">
+
+<input type="checkbox" required class="mt-1">
+
+<span>I agree to the Terms and Privacy Policy</span>
+
+</label>
+
+
+<button
+type="submit"
+class="w-full bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-lg font-semibold">
+
+<i class="fa fa-user-plus mr-2"></i>
+Create Account
+
+</button>
+
+</form>
+
+
+
+<footer class="text-center text-sm text-gray-500 mt-6">
+
+<p>
+Already have an account?
+
+<a href="login.html"
+class="text-blue-700 font-semibold hover:underline">
+
+Sign In →
+
+</a>
+</p>
+
+</footer>
+
+</article>
+
+</section>
+
+</main>
+
+
+
+<!-- FOOTER -->
+<footer class="hidden">
+<p>© 2026 ABC Bank</p>
+</footer>
+
+
+
+<script>
+
+document.getElementById("registerForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+let password=document.getElementById("password").value;
+let confirmPassword=document.getElementById("confirmPassword").value;
+
+if(password.length < 6){
+
+swal("Weak Password","Password must contain at least 6 characters","error");
+return;
+
+}
+
+if(password !== confirmPassword){
+
+swal("Password Mismatch","Passwords do not match","error");
+return;
+
+}
+
+swal("Registration Successful","Your ABC Bank account has been created","success")
+.then(()=>{
+
+window.location.href="home.html";
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
+

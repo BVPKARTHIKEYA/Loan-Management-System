@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Open Bank Account</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<!-- HEADER -->
+<header class="bg-white shadow-sm">
+<div class="max-w-7xl mx-auto p-6">
+
+<nav>
+<a href="home.html"
+class="text-blue-700 flex items-center gap-2 font-semibold text-lg">
+<i class="fa fa-arrow-left"></i>
+Back to Dashboard
+</a>
+</nav>
+
+<h1 class="text-4xl font-bold mt-3">
+Open Bank Account
+</h1>
+
+<p class="text-gray-600 text-lg">
+Complete the form below to open your ABC Bank account.
+</p>
+
+</div>
+</header>
+
+
+<!-- MAIN CONTENT -->
+<main class="max-w-7xl mx-auto p-6">
+
+<form class="bg-white shadow-xl rounded-xl p-10 space-y-12">
+
+<!-- PERSONAL DETAILS -->
+<section>
+
+<header class="mb-6">
+<h2 class="text-2xl font-bold">Personal Information</h2>
+</header>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold text-lg">Full Name</label>
+<input id="name" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Date of Birth</label>
+<input id="dob" type="date"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Email</label>
+<input id="email" type="email"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Mobile Number</label>
+<input id="mobile" type="tel"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Aadhaar Number</label>
+<input id="aadhaar" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">PAN Number</label>
+<input id="pan" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+</div>
+</section>
+
+
+<!-- PARENT DETAILS -->
+<section>
+
+<header class="mb-6">
+<h2 class="text-2xl font-bold">Parent Details</h2>
+</header>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold text-lg">Father Name</label>
+<input id="father" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Mother Name</label>
+<input id="mother" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ADDRESS -->
+<section>
+
+<header class="mb-6">
+<h2 class="text-2xl font-bold">Address Information</h2>
+</header>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div class="md:col-span-2">
+<label class="font-semibold text-lg">Address</label>
+<textarea
+class="w-full border rounded-md p-3 mt-2 text-lg"></textarea>
+</div>
+
+<div>
+<label class="font-semibold text-lg">City</label>
+<input id="city" type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">State</label>
+
+<select id="state"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+<option value="">Select</option>
+<option>Andhra Pradesh</option>
+<option>Maharashtra</option>
+<option>Karnataka</option>
+</select>
+
+</div>
+
+<div>
+<label class="font-semibold text-lg">PIN Code</label>
+<input id="pincode" type="number"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ACCOUNT TYPE -->
+<section>
+
+<header>
+<h2 class="text-3xl font-bold text-blue-900 mb-6">
+Select Type of Bank Account
+</h2>
+</header>
+
+<p class="text-lg text-gray-600 mb-6">
+Choose the account that best fits your banking needs.
+</p>
+
+<div class="grid md:grid-cols-2 gap-8">
+
+<article class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
+
+<input type="radio" name="account" class="mb-4">
+
+<div class="flex items-center gap-4 mb-4">
+<span class="text-5xl">🏦</span>
+<h3 class="text-2xl font-bold text-blue-900">Savings Account</h3>
+</div>
+
+<p class="text-lg text-gray-700 mb-4">
+Ideal for individuals who want to safely save money and earn interest.
+</p>
+
+</article>
+
+
+<article class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
+
+<input type="radio" name="account" class="mb-4">
+
+<div class="flex items-center gap-4 mb-4">
+<span class="text-5xl">💼</span>
+<h3 class="text-2xl font-bold text-blue-900">Current Account</h3>
+</div>
+
+<p class="text-lg text-gray-700 mb-4">
+Designed for businesses that perform frequent financial transactions.
+</p>
+
+</article>
+
+</div>
+
+</section>
+
+
+<!-- INCOME DETAILS -->
+<section>
+
+<header>
+<h2 class="text-2xl font-bold mb-6">Income Details</h2>
+</header>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold text-lg">Gross Annual Income</label>
+<input id="grossIncome" type="number"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Monthly Net Income</label>
+<input id="netIncome" type="number"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Other Income</label>
+<input id="otherIncome" type="number"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Income Verification Document</label>
+<input id="incomeDoc" type="file"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SUBMIT -->
+<section>
+<button onclick="validateForm()"
+class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
+
+<i class="fa fa-check-circle mr-2"></i>
+Submit Account Application
+
+</button>
+</section>
+
+</form>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer class="text-center text-gray-500 text-sm py-6">
+© 2026 ABC Bank. All rights reserved.
+</footer>
+
+
+<script>
+
+function validateForm(){
+
+let name=document.getElementById("name").value.trim();
+let mobile=document.getElementById("mobile").value.trim();
+let aadhaar=document.getElementById("aadhaar").value.trim();
+let pan=document.getElementById("pan").value.trim();
+let grossIncome=document.getElementById("grossIncome").value.trim();
+
+let aadhaarPattern=/^[0-9]{12}$/;
+let panPattern=/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+let mobilePattern=/^[6-9][0-9]{9}$/;
+
+if(name===""){
+swal("Error","Enter full name","error");
+return;
+}
+
+if(!mobilePattern.test(mobile)){
+swal("Invalid Mobile","Enter valid mobile number","error");
+return;
+}
+
+if(!aadhaarPattern.test(aadhaar)){
+swal("Invalid Aadhaar","Aadhaar must be 12 digits","error");
+return;
+}
+
+if(!panPattern.test(pan)){
+swal("Invalid PAN","PAN format ABCDE1234F","error");
+return;
+}
+
+if(grossIncome===""){
+swal("Income Missing","Enter gross income","warning");
+return;
+}
+
+swal({
+title:"Application Submitted",
+text:"Your ABC Bank account request has been submitted successfully",
+icon:"success"
+}).then(function(){
+
+window.location.href="cibil.html";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
+

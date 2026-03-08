@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABC Bank Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+html,body{
+height:100%;
+width:100%;
+margin:0;
+padding:0;
+}
+</style>
+
+</head>
+
+
+<body class="bg-gray-100 text-xl w-full min-h-screen">
+
+<!-- HEADER -->
+<header>
+
+<!-- NAVBAR -->
+<nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
+
+<div class="w-full px-10 py-5 flex justify-between items-center">
+
+<a href="home.html" class="flex items-center gap-3">
+
+<img src="abc-bank-logo.jpeg"
+class="w-12 h-12 rounded-full">
+
+<h1 class="text-3xl font-bold">
+ABC Bank
+</h1>
+
+</a>
+
+<ul class="hidden md:flex gap-10 font-semibold text-xl">
+
+<li><a href="home.html"><i class="fa fa-home mr-2"></i>Home</a></li>
+
+<li><a href="bank-account.html"><i class="fa fa-building-columns mr-2"></i>Accounts</a></li>
+
+<li><a href="cibil.html"><i class="fa fa-chart-line mr-2"></i>CIBIL</a></li>
+
+<li><a href="loan-application.html"><i class="fa fa-money-bill mr-2"></i>Loans</a></li>
+
+<li><a href="loan-approval.html"><i class="fa fa-circle-check mr-2"></i>Approval Status</a></li>
+
+<li><a href="loan-receipt.html"><i class="fa fa-file-invoice mr-2"></i>Loan Receipt</a></li>
+
+<li><a href="support.html"><i class="fa fa-headset mr-2"></i>Support</a></li>
+
+</ul>
+
+<!-- USER PROFILE -->
+<aside class="relative group">
+
+<div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer">
+
+<i class="fa fa-user-circle text-2xl"></i>
+
+<div class="flex flex-col">
+
+<span id="username">User</span>
+<span class="text-sm opacity-70" id="userid">ID: NIL</span>
+
+</div>
+
+<i class="fa fa-chevron-down text-sm"></i>
+
+</div>
+
+<div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg hidden group-hover:block">
+
+<div class="p-4 border-b">
+
+<p class="font-semibold text-lg" id="profileName">User</p>
+<p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+
+</div>
+
+<a href="bank-account.html" class="block px-4 py-3 hover:bg-gray-100">
+<i class="fa fa-building-columns mr-2"></i>
+My Account
+</a>
+
+<a href="#" onclick="logout()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+<i class="fa fa-sign-out-alt mr-2"></i>
+Logout
+</a>
+
+</div>
+
+</aside>
+
+</div>
+
+</nav>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+<main class="w-full px-10 py-10">
+
+<!-- HERO SECTION -->
+<section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-12 mb-12 flex flex-col md:flex-row justify-between gap-10">
+
+<article>
+
+<p class="text-2xl">
+👋 Welcome
+</p>
+
+<h1 class="text-5xl font-bold mt-3" id="welcomeUser">
+User
+</h1>
+
+<p class="text-xl mt-6">
+Manage your loans, track applications and check CIBIL scores easily using the ABC Bank Loan Management System.
+</p>
+
+<div class="flex gap-4 mt-8">
+
+<a href="bank-account.html"
+class="border border-white px-8 py-3 rounded-md text-xl">
+My Account
+</a>
+
+</div>
+
+</article>
+
+
+<!-- ACCOUNT SUMMARY -->
+<aside class="bg-white/10 border border-white/20 rounded-xl p-10 w-full md:w-80">
+
+<p class="text-xl opacity-80">
+Primary Account
+</p>
+
+<p class="font-mono text-xl opacity-80" id="accountNumber">
+ACC •••• NIL
+</p>
+
+<p class="text-xl mt-5 opacity-80">
+Available Balance
+</p>
+
+<p class="text-4xl font-bold">
+₹ NIL
+</p>
+
+</aside>
+
+</section>
+
+
+<!-- LOAN STEPS -->
+<section class="bg-white shadow-xl rounded-xl p-12 mb-12">
+
+<h2 class="text-3xl font-bold text-blue-900 mb-6">
+Complete Process to Apply for a Loan at ABC Bank
+</h2>
+
+<ol class="list-decimal pl-8 space-y-4 text-xl text-gray-700">
+
+<li>Create an ABC Bank customer profile through registration.</li>
+<li>Open a savings or current account with ABC Bank.</li>
+<li>Upload identity documents such as PAN and Aadhaar.</li>
+<li>Verify your creditworthiness through CIBIL score check.</li>
+<li>Select loan type: Personal, Home, Vehicle or Business.</li>
+<li>Enter income details and additional income sources.</li>
+<li>Upload financial documents and statements.</li>
+<li>Bank loan officer reviews your application.</li>
+<li>Loan gets approved and amount is disbursed.</li>
+
+</ol>
+
+</section>
+
+
+
+<!-- DEMO VIDEO -->
+<section class="text-center mb-12">
+
+<h2 class="text-3xl font-bold text-blue-900 mb-6">
+Loan System Demo
+</h2>
+
+<figure>
+
+<video controls class="mx-auto rounded-xl shadow-lg w-[950px]">
+<source src="work-demo.mp4" type="video/mp4">
+</video>
+
+<figcaption class="text-gray-600 mt-3">
+Demo of ABC Bank Loan Management System workflow
+</figcaption>
+
+</figure>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+<section class="text-center mb-6">
+
+<h2 class="text-4xl font-bold text-blue-900">
+ABC Bank Achievements
+</h2>
+
+<p class="text-xl text-gray-600 mt-3">
+ABC Bank has achieved record breaking growth and innovation in digital banking services across India.
+</p>
+
+</section>
+
+
+<!-- IMAGE MARQUEE -->
+<section class="max-w-7xl mx-auto overflow-hidden mb-14">
+
+<marquee scrollamount="10">
+
+<img src="images-1.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+<img src="images-2.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+<img src="images-3.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+<img src="images-4.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+<img src="images-5.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+
+</marquee>
+
+</section>
+
+
+<!-- FAQ -->
+<section class="bg-gray-50 p-12 rounded-xl mb-12">
+
+<h2 class="text-3xl font-bold text-center text-blue-900 mb-8">
+Frequently Asked Questions
+</h2>
+
+<div class="space-y-6 max-w-4xl mx-auto text-xl">
+
+<article>
+<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
+<summary class="font-semibold text-xl">What is the minimum CIBIL score required?</summary>
+<p class="text-gray-600 mt-3">
+ABC Bank recommends a CIBIL score above 700 for faster loan approval.
+</p>
+</details>
+</article>
+
+<article>
+<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
+<summary class="font-semibold text-xl">How long does loan approval take?</summary>
+<p class="text-gray-600 mt-3">
+Loan approval usually takes between 24 to 72 hours depending on document verification.
+</p>
+</details>
+</article>
+
+<article>
+<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
+<summary class="font-semibold text-xl">What documents are required?</summary>
+<p class="text-gray-600 mt-3">
+Required documents include PAN card, Aadhaar card, salary slips and bank statements.
+</p>
+</details>
+</article>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<!-- FOOTER -->
+<footer class="bg-blue-900 text-white mt-16">
+
+<div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
+
+<section>
+<h3 class="text-2xl font-bold">ABC Bank</h3>
+<p class="mt-3 opacity-80">
+Providing trusted digital banking and loan services across India.
+</p>
+</section>
+
+<section>
+<h4 class="font-semibold mb-3">Quick Links</h4>
+<ul class="space-y-2">
+<li><a href="home.html">Home</a></li>
+<li><a href="bank-account.html">Accounts</a></li>
+<li><a href="loan-application.html">Loans</a></li>
+<li><a href="cibil.html">CIBIL Check</a></li>
+</ul>
+</section>
+
+<section>
+<h4 class="font-semibold mb-3">Loan Services</h4>
+<ul class="space-y-2">
+<li>Personal Loan</li>
+<li>Home Loan</li>
+<li>Vehicle Loan</li>
+<li>Business Loan</li>
+</ul>
+</section>
+
+<section>
+<h4 class="font-semibold mb-3">Follow Us</h4>
+
+<div class="flex gap-4 text-3xl">
+<i class="fab fa-facebook"></i>
+<i class="fab fa-instagram"></i>
+<i class="fab fa-linkedin"></i>
+<i class="fab fa-twitter"></i>
+</div>
+
+</section>
+
+</div>
+
+<div class="text-center border-t border-blue-700 py-4">
+© 2026 ABC Bank. All rights reserved.
+</div>
+
+</footer>
+
+
+<script>
+
+let user = JSON.parse(localStorage.getItem("bankUser")) || {
+name:"User",
+id:"0000",
+account:"NIL"
+};
+
+document.getElementById("username").innerText = user.name;
+document.getElementById("userid").innerText = "ID: " + user.id;
+
+document.getElementById("profileName").innerText = user.name;
+document.getElementById("profileAccount").innerText = "Account: " + user.account;
+
+document.getElementById("welcomeUser").innerText = user.name;
+document.getElementById("accountNumber").innerText = user.account;
+
+function logout(){
+
+localStorage.removeItem("bankUser");
+
+alert("Logged out successfully");
+
+window.location.href="index.html";
+
+}
+
+</script>
+
+</body>
+</html>
+

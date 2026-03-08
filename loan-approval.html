@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Loan Approval</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body class="bg-gray-100 text-lg">
+
+<!-- HEADER -->
+<header class="bg-white shadow">
+
+<div class="max-w-5xl mx-auto p-6">
+
+<nav>
+
+<a href="home.html"
+class="text-blue-700 flex items-center gap-2 font-semibold text-lg">
+
+<i class="fa fa-arrow-left"></i>
+Back to Dashboard
+
+</a>
+
+</nav>
+
+<h1 class="text-4xl font-bold mt-3">
+Loan Approval
+</h1>
+
+<p class="text-gray-500 text-lg">
+Official loan sanction letter and approval details.
+</p>
+
+</div>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+<main class="max-w-5xl mx-auto p-6">
+
+<!-- APPROVAL BANNER -->
+<section class="bg-green-600 text-white rounded-xl p-10 text-center mb-6 shadow">
+
+<i class="fa fa-circle-check text-6xl mb-4"></i>
+
+<h2 class="text-4xl font-bold">
+Congratulations!
+</h2>
+
+<p class="text-xl font-semibold mt-3">
+Your Loan Has Been Approved
+</p>
+
+<p class="text-lg opacity-90 mt-2">
+Loan disbursement will be completed within 2–3 business days.
+</p>
+
+<div class="flex justify-center gap-4 mt-5 flex-wrap text-lg">
+
+<span class="bg-white/20 px-4 py-2 rounded">
+Loan ID: #LN2024001
+</span>
+
+<span class="bg-white/20 px-4 py-2 rounded">
+Approved: Apr 02 2024
+</span>
+
+</div>
+
+</section>
+
+
+
+<!-- LOAN DETAILS -->
+<section class="bg-white rounded-xl shadow p-8 mb-6">
+
+<header>
+
+<h2 class="text-2xl font-bold mb-5">
+Loan Details
+</h2>
+
+</header>
+
+<div class="grid md:grid-cols-2 gap-6 text-lg">
+
+<article>
+<p class="text-gray-500">Customer Name</p>
+<p class="font-semibold text-xl">John Doe</p>
+</article>
+
+<article>
+<p class="text-gray-500">Loan Type</p>
+<p class="font-semibold text-xl">Home Loan</p>
+</article>
+
+<article>
+<p class="text-gray-500">Loan Amount</p>
+<p class="font-bold text-green-600 text-2xl">
+₹25,00,000
+</p>
+</article>
+
+<article>
+<p class="text-gray-500">Interest Rate</p>
+<p class="text-lg">8.50% p.a</p>
+</article>
+
+<article>
+<p class="text-gray-500">Loan Duration</p>
+<p class="text-lg">20 Years</p>
+</article>
+
+<article>
+<p class="text-gray-500">Monthly EMI</p>
+<p class="text-blue-600 font-semibold text-xl">
+₹21,740
+</p>
+</article>
+
+<article>
+<p class="text-gray-500">Total Payable</p>
+<p class="text-lg">₹52,17,600</p>
+</article>
+
+<article>
+<p class="text-gray-500">Processing Fee</p>
+<p class="text-lg">₹12,500</p>
+</article>
+
+</div>
+
+</section>
+
+
+
+<!-- DISBURSEMENT DETAILS -->
+<section class="bg-white rounded-xl shadow p-8 mb-6">
+
+<header>
+
+<h2 class="text-2xl font-bold mb-5">
+Disbursement Details
+</h2>
+
+</header>
+
+<div class="grid md:grid-cols-2 gap-6 text-lg">
+
+<article>
+<p class="text-gray-500">Account Number</p>
+<p class="font-mono text-xl">ACC-8765-4321</p>
+</article>
+
+<article>
+<p class="text-gray-500">IFSC Code</p>
+<p class="text-lg">ABCB0001234</p>
+</article>
+
+<article>
+<p class="text-gray-500">Branch</p>
+<p class="text-lg">Mumbai Central</p>
+</article>
+
+<article>
+<p class="text-gray-500">Disbursement Amount</p>
+<p class="font-semibold text-green-600 text-xl">
+₹25,00,000
+</p>
+</article>
+
+</div>
+
+</section>
+
+
+
+<!-- EMI TABLE -->
+<section class="bg-white rounded-xl shadow p-8 mb-6">
+
+<header>
+
+<h2 class="text-2xl font-bold mb-5">
+EMI Schedule (Sample)
+</h2>
+
+</header>
+
+<table class="w-full text-lg">
+
+<thead class="bg-blue-900 text-white">
+
+<tr>
+
+<th class="p-3 text-left">Month</th>
+<th class="p-3 text-left">EMI</th>
+<th class="p-3 text-left">Principal</th>
+<th class="p-3 text-left">Interest</th>
+<th class="p-3 text-left">Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr class="border-b">
+
+<td class="p-3">May 2024</td>
+<td>₹21,740</td>
+<td>₹4,115</td>
+<td>₹17,625</td>
+<td>₹24,95,885</td>
+
+</tr>
+
+<tr class="border-b">
+
+<td class="p-3">Jun 2024</td>
+<td>₹21,740</td>
+<td>₹4,144</td>
+<td>₹17,596</td>
+<td>₹24,91,741</td>
+
+</tr>
+
+<tr>
+
+<td class="p-3">Jul 2024</td>
+<td>₹21,740</td>
+<td>₹4,173</td>
+<td>₹17,567</td>
+<td>₹24,87,568</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+
+
+<!-- SIGNATURE SECTION -->
+<section class="flex justify-between mt-12 text-center text-lg">
+
+<aside>
+
+<div class="h-12 border-b w-40"></div>
+
+<p class="mt-2">
+Customer Signature
+</p>
+
+</aside>
+
+<aside>
+
+<i class="fa fa-stamp text-5xl text-blue-800"></i>
+
+<p class="mt-2">
+Bank Seal
+</p>
+
+</aside>
+
+<aside>
+
+<div class="h-12 border-b w-40"></div>
+
+<p class="mt-2">
+Authorized Signatory
+</p>
+
+</aside>
+
+</section>
+
+</main>
+
+
+
+<!-- FOOTER -->
+<footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
+
+<p>© 2026 ABC Bank. All Rights Reserved.</p>
+
+</footer>
+
+</body>
+
+</html>
+

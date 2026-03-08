@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Loan Application</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body class="bg-gray-100">
+
+<!-- HEADER -->
+<header class="bg-white shadow">
+
+<div class="max-w-6xl mx-auto p-6">
+
+<nav>
+
+<a href="home.html"
+class="text-blue-700 flex items-center gap-2 font-semibold text-lg">
+
+<i class="fa fa-arrow-left"></i>
+Back to Dashboard
+
+</a>
+
+</nav>
+
+<h1 class="text-4xl font-bold mt-2">
+Loan Application
+</h1>
+
+<p class="text-gray-600 text-lg">
+Select loan type and complete the application.
+</p>
+
+</div>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+<main class="max-w-6xl mx-auto p-6">
+
+<div class="grid md:grid-cols-3 gap-6">
+
+<!-- ================================= -->
+<!-- LOAN APPLICATION FORM -->
+<!-- ================================= -->
+
+<section class="md:col-span-2 bg-white shadow rounded-xl p-8">
+
+<header>
+
+<h2 class="text-2xl font-bold mb-4">
+Step 1 – Select Loan Type
+</h2>
+
+</header>
+
+
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 text-center text-lg">
+
+<article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
+<p class="text-4xl">🏠</p>
+<p class="font-semibold">Home Loan</p>
+<p class="text-gray-500">8.5%</p>
+</article>
+
+<article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
+<p class="text-4xl">👤</p>
+<p class="font-semibold">Personal Loan</p>
+<p class="text-gray-500">10.9%</p>
+</article>
+
+<article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
+<p class="text-4xl">🚗</p>
+<p class="font-semibold">Vehicle Loan</p>
+<p class="text-gray-500">9.2%</p>
+</article>
+
+<article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
+<p class="text-4xl">🥇</p>
+<p class="font-semibold">Gold Loan</p>
+<p class="text-gray-500">7.5%</p>
+</article>
+
+<article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
+<p class="text-4xl">🎓</p>
+<p class="font-semibold">Education Loan</p>
+<p class="text-gray-500">8.2%</p>
+</article>
+
+</div>
+
+
+
+<h2 class="text-2xl font-bold mb-4">
+Step 2 – Loan Details
+</h2>
+
+
+<form class="space-y-6">
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="text-lg font-semibold">
+Loan Amount
+</label>
+
+<input
+type="number"
+placeholder="2500000"
+class="w-full border rounded-md p-3 mt-2 text-lg"
+/>
+</div>
+
+
+<div>
+<label class="text-lg font-semibold">
+Annual Income
+</label>
+
+<input
+type="number"
+placeholder="600000"
+class="w-full border rounded-md p-3 mt-2 text-lg"
+/>
+</div>
+
+
+<div>
+<label class="text-lg font-semibold">
+Employment Type
+</label>
+
+<select class="w-full border rounded-md p-3 mt-2 text-lg">
+
+<option>Select</option>
+<option>Salaried</option>
+<option>Self Employed</option>
+<option>Business</option>
+
+</select>
+
+</div>
+
+
+<div>
+<label class="text-lg font-semibold">
+Loan Duration
+</label>
+
+<select class="w-full border rounded-md p-3 mt-2 text-lg">
+
+<option>Select Duration</option>
+<option>1 Year</option>
+<option>3 Years</option>
+<option>5 Years</option>
+<option>10 Years</option>
+<option>20 Years</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div>
+<label class="text-lg font-semibold">
+Loan Purpose
+</label>
+
+<textarea
+class="w-full border rounded-md p-3 mt-2 text-lg"
+placeholder="Purpose of loan">
+</textarea>
+</div>
+
+
+<div>
+<label class="text-lg font-semibold">
+Collateral Details
+</label>
+
+<input
+type="text"
+class="w-full border rounded-md p-3 mt-2 text-lg"
+placeholder="Property / Vehicle / Gold"
+/>
+</div>
+
+
+<!-- AVAILABLE TENURE FROM CIBIL -->
+
+<section class="bg-green-50 border border-green-300 rounded-lg p-5">
+
+<p class="text-lg font-semibold text-green-700">
+Available Loan Tenure from CIBIL Report
+</p>
+
+<p id="tenureDisplay" class="text-2xl font-bold text-green-600 mt-2">
+Calculating...
+</p>
+
+</section>
+
+
+
+<div class="space-y-3 text-lg">
+
+<label class="flex items-start gap-2">
+
+<input type="checkbox">
+
+<span>
+I confirm that all information is accurate.
+</span>
+
+</label>
+
+<label class="flex items-start gap-2">
+
+<input type="checkbox">
+
+<span>
+I authorize ABC Bank to verify my CIBIL score and documents.
+</span>
+
+</label>
+
+</div>
+
+
+<button
+class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
+
+<i class="fa fa-paper-plane mr-2"></i>
+Submit Loan Application
+
+</button>
+
+</form>
+
+</section>
+
+
+
+<!-- ================================= -->
+<!-- SIDEBAR -->
+<!-- ================================= -->
+
+<aside class="space-y-6">
+
+<section class="bg-white shadow rounded-xl p-6">
+
+<h3 class="text-xl font-bold mb-3">
+Interest Rates
+</h3>
+
+<table class="w-full text-lg">
+
+<tr class="border-b">
+<td>Home Loan</td>
+<td class="font-semibold">8.50%</td>
+</tr>
+
+<tr class="border-b">
+<td>Personal Loan</td>
+<td class="font-semibold">10.99%</td>
+</tr>
+
+<tr class="border-b">
+<td>Vehicle Loan</td>
+<td class="font-semibold">9.25%</td>
+</tr>
+
+<tr class="border-b">
+<td>Gold Loan</td>
+<td class="font-semibold">7.50%</td>
+</tr>
+
+<tr>
+<td>Education Loan</td>
+<td class="font-semibold">8.25%</td>
+</tr>
+
+</table>
+
+</section>
+
+
+
+<section class="bg-white shadow rounded-xl p-6">
+
+<h3 class="text-xl font-bold mb-3">
+Eligibility
+</h3>
+
+<ul class="text-lg text-gray-700 space-y-2">
+
+<li>Age: 21 – 65 years</li>
+<li>CIBIL Score ≥ 650</li>
+<li>Minimum 2 years employment</li>
+<li>Monthly income ≥ ₹25,000</li>
+<li>Valid KYC documents</li>
+
+</ul>
+
+</section>
+
+
+
+<section class="bg-white shadow rounded-xl p-6">
+
+<h3 class="text-xl font-bold mb-3">
+Required Documents
+</h3>
+
+<ul class="text-lg text-gray-700 space-y-2">
+
+<li>Aadhaar Card</li>
+<li>PAN Card</li>
+<li>Salary Slips (3 months)</li>
+<li>Bank Statement</li>
+<li>Property Documents</li>
+
+</ul>
+
+</section>
+
+</aside>
+
+</div>
+
+</main>
+
+
+
+<!-- FOOTER -->
+<footer class="bg-blue-900 text-white text-center py-6 mt-10">
+
+<p>© 2026 ABC Bank. All Rights Reserved.</p>
+
+</footer>
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+let tenure = localStorage.getItem("loanTenure");
+
+if(tenure){
+document.getElementById("tenureDisplay").innerHTML =
+tenure + " Years Available";
+}
+else{
+document.getElementById("tenureDisplay").innerHTML =
+"Tenure not calculated from CIBIL report";
+}
+
+});
+
+</script>
+
+</body>
+</html>
+
