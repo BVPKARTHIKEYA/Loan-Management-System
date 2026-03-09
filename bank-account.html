@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,7 +182,7 @@ Choose the account that best fits your banking needs.
 
 <div class="grid md:grid-cols-2 gap-8">
 
-<article class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
+<label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
 
 <input type="radio" name="account" class="mb-4">
 
@@ -192,14 +191,14 @@ Choose the account that best fits your banking needs.
 <h3 class="text-2xl font-bold text-blue-900">Savings Account</h3>
 </div>
 
-<p class="text-lg text-gray-700 mb-4">
+<p class="text-lg text-gray-700">
 Ideal for individuals who want to safely save money and earn interest.
 </p>
 
-</article>
+</label>
 
 
-<article class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
+<label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
 
 <input type="radio" name="account" class="mb-4">
 
@@ -208,11 +207,11 @@ Ideal for individuals who want to safely save money and earn interest.
 <h3 class="text-2xl font-bold text-blue-900">Current Account</h3>
 </div>
 
-<p class="text-lg text-gray-700 mb-4">
+<p class="text-lg text-gray-700">
 Designed for businesses that perform frequent financial transactions.
 </p>
 
-</article>
+</label>
 
 </div>
 
@@ -257,15 +256,53 @@ class="w-full border rounded-md p-3 mt-2 text-lg">
 </section>
 
 
+<!-- KYC DOCUMENT UPLOAD -->
+
+<section>
+
+<header class="mb-6">
+<h2 class="text-2xl font-bold">KYC Document Upload</h2>
+<p class="text-gray-600">
+Upload Aadhaar card, PAN card and your signature image for verification.
+</p>
+</header>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold text-lg">Upload Aadhaar Card</label>
+<input id="aadhaarFile" type="file" accept="image/*"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div>
+<label class="font-semibold text-lg">Upload PAN Card</label>
+<input id="panFile" type="file" accept="image/*"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+<div class="md:col-span-2">
+<label class="font-semibold text-lg">Upload Signature</label>
+<input id="signatureFile" type="file" accept="image/*"
+class="w-full border rounded-md p-3 mt-2 text-lg">
+</div>
+
+</div>
+
+</section>
+
+
 <!-- SUBMIT -->
 <section>
-<button onclick="validateForm()"
+
+<button type="button" onclick="validateForm()"
 class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
 
 <i class="fa fa-check-circle mr-2"></i>
 Submit Account Application
 
 </button>
+
 </section>
 
 </form>
@@ -288,6 +325,10 @@ let mobile=document.getElementById("mobile").value.trim();
 let aadhaar=document.getElementById("aadhaar").value.trim();
 let pan=document.getElementById("pan").value.trim();
 let grossIncome=document.getElementById("grossIncome").value.trim();
+
+let aadhaarFile=document.getElementById("aadhaarFile").files.length;
+let panFile=document.getElementById("panFile").files.length;
+let signatureFile=document.getElementById("signatureFile").files.length;
 
 let aadhaarPattern=/^[0-9]{12}$/;
 let panPattern=/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
@@ -318,6 +359,21 @@ swal("Income Missing","Enter gross income","warning");
 return;
 }
 
+if(aadhaarFile===0){
+swal("Missing Document","Upload Aadhaar card image","warning");
+return;
+}
+
+if(panFile===0){
+swal("Missing Document","Upload PAN card image","warning");
+return;
+}
+
+if(signatureFile===0){
+swal("Missing Document","Upload signature image","warning");
+return;
+}
+
 swal({
 title:"Application Submitted",
 text:"Your ABC Bank account request has been submitted successfully",
@@ -334,4 +390,3 @@ window.location.href="cibil.html";
 
 </body>
 </html>
-

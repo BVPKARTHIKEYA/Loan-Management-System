@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,23 +14,24 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+
 html,body{
 height:100%;
 width:100%;
 margin:0;
 padding:0;
 }
+
 </style>
 
 </head>
 
-
 <body class="bg-gray-100 text-xl w-full min-h-screen">
 
 <!-- HEADER -->
+
 <header>
 
-<!-- NAVBAR -->
 <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
 
 <div class="w-full px-10 py-5 flex justify-between items-center">
@@ -50,22 +50,17 @@ ABC Bank
 <ul class="hidden md:flex gap-10 font-semibold text-xl">
 
 <li><a href="home.html"><i class="fa fa-home mr-2"></i>Home</a></li>
-
 <li><a href="bank-account.html"><i class="fa fa-building-columns mr-2"></i>Accounts</a></li>
-
 <li><a href="cibil.html"><i class="fa fa-chart-line mr-2"></i>CIBIL</a></li>
-
 <li><a href="loan-application.html"><i class="fa fa-money-bill mr-2"></i>Loans</a></li>
-
 <li><a href="loan-approval.html"><i class="fa fa-circle-check mr-2"></i>Approval Status</a></li>
-
 <li><a href="loan-receipt.html"><i class="fa fa-file-invoice mr-2"></i>Loan Receipt</a></li>
-
 <li><a href="support.html"><i class="fa fa-headset mr-2"></i>Support</a></li>
 
 </ul>
 
 <!-- USER PROFILE -->
+
 <aside class="relative group">
 
 <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer">
@@ -73,10 +68,8 @@ ABC Bank
 <i class="fa fa-user-circle text-2xl"></i>
 
 <div class="flex flex-col">
-
 <span id="username">User</span>
 <span class="text-sm opacity-70" id="userid">ID: NIL</span>
-
 </div>
 
 <i class="fa fa-chevron-down text-sm"></i>
@@ -86,10 +79,8 @@ ABC Bank
 <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg hidden group-hover:block">
 
 <div class="p-4 border-b">
-
 <p class="font-semibold text-lg" id="profileName">User</p>
 <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
-
 </div>
 
 <a href="bank-account.html" class="block px-4 py-3 hover:bg-gray-100">
@@ -112,23 +103,19 @@ Logout
 
 </header>
 
-
-
 <!-- MAIN CONTENT -->
+
 <main class="w-full px-10 py-10">
 
-<!-- HERO SECTION -->
+<!-- HERO -->
+
 <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-12 mb-12 flex flex-col md:flex-row justify-between gap-10">
 
 <article>
 
-<p class="text-2xl">
-👋 Welcome
-</p>
+<p class="text-2xl">👋 Welcome</p>
 
-<h1 class="text-5xl font-bold mt-3" id="welcomeUser">
-User
-</h1>
+<h1 class="text-5xl font-bold mt-3" id="welcomeUser">User</h1>
 
 <p class="text-xl mt-6">
 Manage your loans, track applications and check CIBIL scores easily using the ABC Bank Loan Management System.
@@ -145,31 +132,26 @@ My Account
 
 </article>
 
-
 <!-- ACCOUNT SUMMARY -->
+
 <aside class="bg-white/10 border border-white/20 rounded-xl p-10 w-full md:w-80">
 
-<p class="text-xl opacity-80">
-Primary Account
-</p>
+<p class="text-xl opacity-80">Primary Account</p>
 
 <p class="font-mono text-xl opacity-80" id="accountNumber">
 ACC •••• NIL
 </p>
 
-<p class="text-xl mt-5 opacity-80">
-Available Balance
-</p>
+<p class="text-xl mt-5 opacity-80">Available Balance</p>
 
-<p class="text-4xl font-bold">
-₹ NIL
-</p>
+<p class="text-4xl font-bold">₹ NIL</p>
 
 </aside>
 
 </section>
 
 <!-- LOAN WORKFLOW -->
+<<<<<<< Updated upstream
 
 <div class="bg-white shadow rounded-xl p-8 mb-12">
 
@@ -232,180 +214,209 @@ Loan Application Workflow
 
 </div>
 
+=======
+>>>>>>> Stashed changes
 
-<!-- LOAN STEPS -->
-<section class="bg-white shadow-xl rounded-xl p-12 mb-12">
+<div class="bg-white shadow rounded-xl p-8 mb-12">
 
-<h2 class="text-3xl font-bold text-blue-900 mb-6">
-Complete Process to Apply for a Loan at ABC Bank
+<h2 class="text-3xl font-bold mb-8 text-blue-900">
+Loan Application Workflow
 </h2>
 
-<ol class="list-decimal pl-8 space-y-4 text-xl text-gray-700">
+<div class="flex flex-wrap items-center justify-between gap-4 text-xl">
 
-<li>Create an ABC Bank customer profile through registration.</li>
-<li>Open a savings or current account with ABC Bank.</li>
-<li>Upload identity documents such as PAN and Aadhaar.</li>
-<li>Verify your creditworthiness through CIBIL score check.</li>
-<li>Select loan type: Personal, Home, Vehicle or Business.</li>
-<li>Enter income details and additional income sources.</li>
-<li>Upload financial documents and statements.</li>
-<li>Bank loan officer reviews your application.</li>
-<li>Loan gets approved and amount is disbursed.</li>
+<a href="register.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center">1</div>
+<p>Register</p>
+</a>
 
-</ol>
+<div class="flex-1 h-1 bg-gray-300"></div>
 
-</section>
+<a href="bank-account.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">2</div>
+<p>Open Account</p>
+</a>
 
+<div class="flex-1 h-1 bg-gray-300"></div>
 
+<a href="cibil.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center">3</div>
+<p>CIBIL Check</p>
+</a>
+
+<div class="flex-1 h-1 bg-gray-300"></div>
+
+<a href="loan-application.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center">4</div>
+<p>Apply Loan</p>
+</a>
+
+<div class="flex-1 h-1 bg-gray-300"></div>
+
+<a href="officer-review.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center">5</div>
+<p>Officer Review</p>
+</a>
+
+<div class="flex-1 h-1 bg-gray-300"></div>
+
+<a href="lawyer-verification.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center">6</div>
+<p>Lawyer Verification</p>
+</a>
+
+<div class="flex-1 h-1 bg-gray-300"></div>
+
+<a href="loan-approval.html" class="flex items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center">7</div>
+<p>Loan Approval</p>
+</a>
+
+</div>
+
+</div>
 
 <!-- DEMO VIDEO -->
-<section class="text-center mb-12">
 
-<h2 class="text-3xl font-bold text-blue-900 mb-6">
+<section class="text-center mb-16">
+
+<h2 class="text-4xl font-bold text-blue-900 mb-8">
 Loan System Demo
 </h2>
 
-<figure>
+<video controls
+class="mx-auto rounded-2xl shadow-2xl border-4 border-blue-900 w-[1200px]">
 
-<video controls class="mx-auto rounded-xl shadow-lg w-[950px]">
 <source src="work-demo.mp4" type="video/mp4">
+
 </video>
 
-<figcaption class="text-gray-600 mt-3">
-Demo of ABC Bank Loan Management System workflow
-</figcaption>
-
-</figure>
-
-</section>
-
-
-<!-- ACHIEVEMENTS -->
-<section class="text-center mb-6">
-
-<h2 class="text-4xl font-bold text-blue-900">
-ABC Bank Achievements
-</h2>
-
-<p class="text-xl text-gray-600 mt-3">
-ABC Bank has achieved record breaking growth and innovation in digital banking services across India.
+<p class="text-gray-600 mt-4 text-xl">
+Complete walkthrough of ABC Bank Loan Management System
 </p>
 
 </section>
 
-
 <!-- IMAGE MARQUEE -->
-<section class="max-w-7xl mx-auto overflow-hidden mb-14">
 
-<marquee scrollamount="10">
+<section class="max-w-7xl mx-auto overflow-hidden mb-16">
 
-<img src="images-1.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
-<img src="images-2.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
-<img src="images-3.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
-<img src="images-4.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
-<img src="images-5.jpg" class="inline-block w-[600px] mr-2 rounded-lg shadow-lg">
+<h2 class="text-3xl font-bold text-center text-blue-900 mb-8">
+ABC Bank Success Stories
+</h2>
+
+<marquee scrollamount="10" class="py-4">
+
+<img src="images-1.jpg" class="inline-block w-[650px] mr-4 rounded-xl shadow-xl">
+<img src="images-2.jpg" class="inline-block w-[650px] mr-4 rounded-xl shadow-xl">
+<img src="images-3.jpg" class="inline-block w-[650px] mr-4 rounded-xl shadow-xl">
+<img src="images-4.jpg" class="inline-block w-[650px] mr-4 rounded-xl shadow-xl">
+<img src="images-5.jpg" class="inline-block w-[650px] mr-4 rounded-xl shadow-xl">
 
 </marquee>
 
 </section>
 
-
 <!-- FAQ -->
-<section class="bg-gray-50 p-12 rounded-xl mb-12">
 
-<h2 class="text-3xl font-bold text-center text-blue-900 mb-8">
+<section class="bg-gradient-to-r from-blue-50 to-blue-100 p-14 rounded-2xl mb-12 shadow-lg">
+
+<h2 class="text-4xl font-bold text-center text-blue-900 mb-12">
 Frequently Asked Questions
 </h2>
 
-<div class="space-y-6 max-w-4xl mx-auto text-xl">
+<div class="space-y-6 max-w-5xl mx-auto text-xl">
 
-<article>
-<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
-<summary class="font-semibold text-xl">What is the minimum CIBIL score required?</summary>
-<p class="text-gray-600 mt-3">
-ABC Bank recommends a CIBIL score above 700 for faster loan approval.
-</p>
+<details class="bg-white shadow-lg rounded-xl p-6 cursor-pointer">
+<summary class="font-semibold text-2xl text-blue-900">What is the minimum CIBIL score required?</summary>
+<p class="mt-4">ABC Bank recommends maintaining a CIBIL score above 700.</p>
 </details>
-</article>
 
-<article>
-<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
-<summary class="font-semibold text-xl">How long does loan approval take?</summary>
-<p class="text-gray-600 mt-3">
-Loan approval usually takes between 24 to 72 hours depending on document verification.
-</p>
+<details class="bg-white shadow-lg rounded-xl p-6 cursor-pointer">
+<summary class="font-semibold text-2xl text-blue-900">How long does loan approval take?</summary>
+<p class="mt-4">Usually between 24 to 72 hours depending on verification.</p>
 </details>
-</article>
 
-<article>
-<details class="bg-white shadow-lg rounded-lg p-5 cursor-pointer">
-<summary class="font-semibold text-xl">What documents are required?</summary>
-<p class="text-gray-600 mt-3">
-Required documents include PAN card, Aadhaar card, salary slips and bank statements.
-</p>
+<details class="bg-white shadow-lg rounded-xl p-6 cursor-pointer">
+<summary class="font-semibold text-2xl text-blue-900">What documents are required?</summary>
+<p class="mt-4">PAN card, Aadhaar card, salary slips and bank statements.</p>
 </details>
-</article>
+
+<details class="bg-white shadow-lg rounded-xl p-6 cursor-pointer">
+<summary class="font-semibold text-2xl text-blue-900">What types of loans does ABC Bank offer?</summary>
+<p class="mt-4">Personal, Home, Vehicle and Business loans.</p>
+</details>
+
+<details class="bg-white shadow-lg rounded-xl p-6 cursor-pointer">
+<summary class="font-semibold text-2xl text-blue-900">Can I track my loan status online?</summary>
+<p class="mt-4">Yes, through the Approval Status section.</p>
+</details>
 
 </div>
 
 </section>
 
-</main>
+<!--  FOOTER -->
 
+<footer class="bg-blue-900 text-white mt-20">
 
-
-<!-- FOOTER -->
-<footer class="bg-blue-900 text-white mt-16">
-
-<div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
+<div class="max-w-7xl mx-auto px-10 py-14 grid md:grid-cols-4 gap-12">
 
 <section>
-<h3 class="text-2xl font-bold">ABC Bank</h3>
-<p class="mt-3 opacity-80">
-Providing trusted digital banking and loan services across India.
+<h3 class="text-3xl font-bold mb-4">ABC Bank</h3>
+<p class="text-lg opacity-80 leading-relaxed">
+ABC Bank provides secure digital banking solutions and loan services across India.
+Our mission is to simplify loan management and provide transparent financial services.
 </p>
 </section>
 
 <section>
-<h4 class="font-semibold mb-3">Quick Links</h4>
-<ul class="space-y-2">
-<li><a href="home.html">Home</a></li>
-<li><a href="bank-account.html">Accounts</a></li>
-<li><a href="loan-application.html">Loans</a></li>
-<li><a href="cibil.html">CIBIL Check</a></li>
+<h4 class="text-2xl font-semibold mb-5 border-b border-blue-700 pb-2">Quick Links</h4>
+<ul class="space-y-3 text-lg">
+<li><a href="home.html" class="hover:text-yellow-300">Home</a></li>
+<li><a href="bank-account.html" class="hover:text-yellow-300">Accounts</a></li>
+<li><a href="loan-application.html" class="hover:text-yellow-300">Apply Loan</a></li>
+<li><a href="loan-approval.html" class="hover:text-yellow-300">Loan Status</a></li>
+<li><a href="support.html" class="hover:text-yellow-300">Support</a></li>
 </ul>
 </section>
 
 <section>
-<h4 class="font-semibold mb-3">Loan Services</h4>
-<ul class="space-y-2">
+<h4 class="text-2xl font-semibold mb-5 border-b border-blue-700 pb-2">Loan Services</h4>
+<ul class="space-y-3 text-lg">
 <li>Personal Loan</li>
 <li>Home Loan</li>
 <li>Vehicle Loan</li>
+<li>Education Loan</li>
 <li>Business Loan</li>
 </ul>
 </section>
 
 <section>
-<h4 class="font-semibold mb-3">Follow Us</h4>
+<h4 class="text-2xl font-semibold mb-5 border-b border-blue-700 pb-2">Contact Us</h4>
 
-<div class="flex gap-4 text-3xl">
-<i class="fab fa-facebook"></i>
-<i class="fab fa-instagram"></i>
-<i class="fab fa-linkedin"></i>
-<i class="fab fa-twitter"></i>
+<p class="text-lg mb-3">📍 Mumbai, India</p>
+<p class="text-lg mb-3">📞 +91 98765 43210</p>
+<p class="text-lg mb-6">✉ support@abcbank.com</p>
+
+<div class="flex gap-6 text-3xl">
+<i class="fab fa-facebook hover:text-yellow-300 cursor-pointer"></i>
+<i class="fab fa-instagram hover:text-yellow-300 cursor-pointer"></i>
+<i class="fab fa-linkedin hover:text-yellow-300 cursor-pointer"></i>
+<i class="fab fa-twitter hover:text-yellow-300 cursor-pointer"></i>
 </div>
 
 </section>
 
 </div>
 
-<div class="text-center border-t border-blue-700 py-4">
-© 2026 ABC Bank. All rights reserved.
+<div class="text-center border-t border-blue-700 py-6 text-lg">
+© 2026 ABC Bank. All Rights Reserved | Secure Digital Banking Platform
 </div>
 
 </footer>
 
+</main>
 
 <script>
 
@@ -425,17 +436,12 @@ document.getElementById("welcomeUser").innerText = user.name;
 document.getElementById("accountNumber").innerText = user.account;
 
 function logout(){
-
 localStorage.removeItem("bankUser");
-
 alert("Logged out successfully");
-
 window.location.href="index.html";
-
 }
 
 </script>
 
 </body>
 </html>
-
