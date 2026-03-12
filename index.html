@@ -2,129 +2,118 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ABC Bank</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-
-.fade-in{
-opacity:0;
-animation:fadeIn 2s forwards;
-animation-delay:4s;
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+  animation-delay: 4s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-@keyframes fadeIn{
-from{opacity:0;}
-to{opacity:1;}
+#lang-switcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 6px 12px;
 }
-
+#lang-switcher label {
+  color: #facc15;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#lang-select {
+  background: transparent;
+  color: #fff;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#lang-select option {
+  background: #1e3a5f;
+  color: #fff;
+}
 </style>
-
 </head>
-
 
 <body class="h-screen overflow-hidden">
 
+<!-- LANGUAGE SWITCHER -->
+<div id="lang-switcher">
+  <label><i class="fa fa-globe"></i> Language:</label>
+  <select id="lang-select" onchange="applyLang(this.value)">
+    <option value="en">English</option>
+    <option value="te">తెలుగు</option>
+    <option value="ta">தமிழ்</option>
+    <option value="ml">മലയാളം</option>
+    <option value="kn">ಕನ್ನಡ</option>
+    <option value="hi">हिन्दी</option>
+  </select>
+</div>
 
 <header>
-
-
-<video autoplay muted loop
-class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
-
-<source src="motion.mp4" type="video/mp4">
-
-</video>
-
+  <video autoplay muted loop class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
+    <source src="motion.mp4" type="video/mp4">
+  </video>
 </header>
-
 
 <!-- DARK OVERLAY -->
 <div class="absolute inset-0 bg-black bg-opacity-60"></div>
 
-
-
 <main class="relative h-screen text-white">
 
+  <section class="flex justify-center text-center pt-28">
+    <h1 class="text-6xl font-bold tracking-wide" data-i18n="welcome"></h1>
+  </section>
 
-<section class="flex justify-center text-center pt-28">
+  <section class="absolute bottom-24 w-full text-center px-6">
+    <article>
+      <p class="text-xl max-w-3xl mx-auto leading-relaxed" data-i18n="desc1"></p>
+      <p class="text-lg mt-4 max-w-3xl mx-auto" data-i18n="desc2"></p>
+    </article>
 
-<h1 class="text-6xl font-bold tracking-wide">
-
-Welcome to ABC Bank
-
-</h1>
-
-</section>
-
-
-
-<!-- BANK DESCRIPTION -->
-<section class="absolute bottom-24 w-full text-center px-6">
-
-<article>
-
-<p class="text-xl max-w-3xl mx-auto leading-relaxed">
-
-ABC Bank has emerged as one of the leading banks in recent times,
-delivering secure digital banking, innovative financial solutions,
-and fast loan approval systems for millions of customers across the country.
-
-</p>
-
-<p class="text-lg mt-4 max-w-3xl mx-auto">
-
-Our mission is to simplify banking with modern technology while ensuring
-security, transparency, and customer satisfaction.
-
-</p>
-
-</article>
-
-
-
-<!-- LOGIN / REGISTER BUTTONS -->
-<nav class="flex justify-center gap-6 mt-10 fade-in">
-
-<a href="login.html"
-class="bg-blue-900 hover:bg-blue-800 px-8 py-3 rounded-lg text-lg font-semibold shadow-lg">
-
-Login
-
-</a>
-
-<a href="register.html"
-class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-3 rounded-lg text-lg font-semibold shadow-lg">
-
-Register
-
-</a>
-
-</nav>
-
-
-
-
-</section>
+    <nav class="flex justify-center gap-6 mt-10 fade-in">
+      <a href="login.html"
+        class="bg-blue-900 hover:bg-blue-800 px-8 py-3 rounded-lg text-lg font-semibold shadow-lg"
+        data-i18n="login"></a>
+      <a href="register.html"
+        class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-3 rounded-lg text-lg font-semibold shadow-lg"
+        data-i18n="register"></a>
+    </nav>
+  </section>
 
 </main>
 
-
-<!-- FOOTER -->
 <footer class="absolute bottom-2 w-full text-center text-gray-300 text-sm">
-
-<p>© 2026 ABC Bank. All Rights Reserved.</p>
-
+  <p data-i18n="footer"></p>
 </footer>
 
-</body>
+<!-- shared.js must load BEFORE applyLang is called -->
+<script src="shared.js"></script>
+<script>
+  // Restore saved language on page load
+  const savedLang = localStorage.getItem('abcbank_lang') || 'en';
+  document.getElementById('lang-select').value = savedLang;
+  applyLang(savedLang);
+</script>
 
+</body>
 </html>

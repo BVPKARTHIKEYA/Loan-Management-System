@@ -1,272 +1,286 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Loan Receipt – ABC Bank</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="shared.js"></script>
+
+<style>
+  #lang-switcher { display: none !important; }
+</style>
 
 </head>
-
 <body class="bg-gray-100 text-lg">
 
-<!-- HEADER -->
-<header class="bg-white shadow">
+<!-- NAVBAR -->
+<header>
+  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
+    <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
-<div class="max-w-5xl mx-auto p-6">
+      <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
+      </a>
 
-<nav>
+      <a href="home.html"
+        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i>
+        <span data-i18n="receipt_back_dashboard">Back to Dashboard</span>
+      </a>
 
-<a href="home.html" class="text-blue-700 font-semibold flex items-center gap-2 text-lg">
-<i class="fa fa-arrow-left"></i>
-Back to Dashboard
-</a>
+      <div class="flex items-center gap-4 flex-shrink-0">
 
-</nav>
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
+            <i class="fa fa-globe"></i> Lang:
+          </label>
+          <select id="nav-lang-select"
+            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+            <option value="en" style="background:#1e3a5f">English</option>
+            <option value="te" style="background:#1e3a5f">తెలుగు</option>
+            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
+            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
+            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
+            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
+          </select>
+        </div>
 
-<h1 class="text-4xl font-bold mt-3">Loan Processing Receipt</h1>
+        <div class="relative group">
+          <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
+            <i class="fa fa-user-circle text-2xl"></i>
+            <div class="flex flex-col leading-tight">
+              <span id="username" class="text-base font-bold">User</span>
+              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+            </div>
+            <i class="fa fa-chevron-down text-sm ml-1"></i>
+          </div>
+          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+            <div class="p-4 border-b">
+              <p class="font-semibold text-lg" id="profileName">User</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+            </div>
+            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
+              <i class="fa fa-home mr-2"></i>
+              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
+            </a>
+            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+              <i class="fa fa-sign-out-alt mr-2"></i>
+              <span data-i18n="nav_logout">Logout</span>
+            </a>
+          </div>
+        </div>
 
-<p class="text-gray-500 text-lg mt-1">
-Official receipt for your loan application
-</p>
-
-</div>
-
+      </div>
+    </div>
+  </nav>
 </header>
 
+
+<!-- PAGE HEADER -->
+<div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
+  <h1 class="text-4xl font-bold mt-1" data-i18n="receipt_page_title">Loan Processing Receipt</h1>
+  <p class="text-gray-500 text-lg mt-1" data-i18n="receipt_page_desc">Official receipt for your loan application</p>
+</div>
 
 
 <!-- MAIN CONTENT -->
 <main class="max-w-5xl mx-auto p-6">
 
-<!-- ACTION BUTTONS -->
-<section class="flex gap-4 mb-6 flex-wrap text-lg">
-
-<button onclick="window.print()" class="px-5 py-3 border border-gray-400 rounded-md hover:bg-gray-200">
-<i class="fa fa-print mr-2"></i>
-Print
-</button>
-
-<a href="loan-approval.html" class="px-5 py-3 bg-blue-700 text-white rounded-md hover:bg-blue-800">
-Proceed to Approval
-</a>
-
-</section>
-
-
-
-<div class="grid md:grid-cols-3 gap-6">
-
-<!-- RECEIPT CARD -->
-<section class="md:col-span-2 bg-white shadow-lg rounded-xl overflow-hidden">
-
-<!-- RECEIPT HEADER -->
-<header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white text-center p-8">
-
-<div class="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-3">
-<i class="fa fa-landmark text-3xl"></i>
-</div>
-
-<h2 class="text-2xl font-bold font-[Playfair_Display]">ABC Bank</h2>
-
-<p class="text-lg text-gray-200">
-Official Loan Application Receipt
-</p>
-
-</header>
-
-
-
-<!-- RECEIPT BODY -->
-<div class="p-8 space-y-8">
-
-<!-- APPLICANT INFO -->
-<article>
-
-<h3 class="font-semibold text-xl mb-4">Applicant Information</h3>
-
-<div class="space-y-3 text-lg">
-
-<div class="flex justify-between">
-<span class="text-gray-500">Applicant Name</span>
-<span id="rcptName">John Doe</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">Account Number</span>
-<span class="font-mono">ACC-8765-4321</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">PAN</span>
-<span class="font-mono">ABCDE1234F</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">CIBIL Score</span>
-<span class="text-green-600 font-semibold">780 Excellent</span>
-</div>
-
-</div>
-
-</article>
-
-
-
-<!-- LOAN DETAILS -->
-<article>
-
-<h3 class="font-semibold text-xl mb-4">Loan Details</h3>
-
-<div class="space-y-3 text-lg">
-
-<div class="flex justify-between">
-<span class="text-gray-500">Loan Type</span>
-<span>🏠 Home Loan</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">Loan Amount</span>
-<span class="font-bold text-2xl text-blue-700">₹25,00,000</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">Interest Rate</span>
-<span>8.5% p.a</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">Duration</span>
-<span>20 Years</span>
-</div>
-
-<div class="flex justify-between">
-<span class="text-gray-500">Monthly EMI</span>
-<span class="font-semibold text-blue-700 text-xl">₹21,740</span>
-</div>
-
-</div>
-
-</article>
-
-
-
-<!-- LEGAL NOTICE -->
-<section class="bg-yellow-50 border border-yellow-300 p-5 rounded-lg text-lg text-yellow-900">
-
-<i class="fa fa-scale-balanced mr-2"></i>
-
-<strong>Legal Verification in Progress.</strong>
-
-Documents are under review. Estimated completion 3–5 working days.
-
-</section>
-
-
-
-<!-- SIGNATURE AREA -->
-<section class="flex justify-between pt-6 border-t border-dashed text-lg">
-
-<aside class="text-center">
-<div class="h-12 border-b w-36"></div>
-<p class="mt-2">Customer Signature</p>
-</aside>
-
-<aside class="text-center">
-<div class="w-14 h-14 border-2 border-blue-700 rounded-full flex items-center justify-center">
-<i class="fa fa-stamp text-blue-700 text-xl"></i>
-</div>
-<p>Bank Seal</p>
-</aside>
-
-<aside class="text-center">
-<div class="h-12 border-b w-36"></div>
-<p class="mt-2">Authorized Signatory</p>
-</aside>
-
-</section>
-
-</div>
-
-</section>
-
-
-
-<!-- RIGHT SIDE STATUS -->
-<aside class="space-y-6">
-
-<section class="bg-white shadow rounded-xl p-6">
-
-<h3 class="font-semibold text-xl mb-4">
-<i class="fa fa-diagram-project text-blue-600 mr-2"></i>
-Processing Status
-</h3>
-
-<div class="space-y-4 text-lg">
-
-<div class="flex items-center gap-3">
-<span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-<i class="fa fa-check text-green-600"></i>
-</span>
-Application Submitted
-</div>
-
-<div class="flex items-center gap-3">
-<span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-<i class="fa fa-check text-green-600"></i>
-</span>
-Loan Officer Assigned
-</div>
-
-<div class="flex items-center gap-3">
-<span class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-<i class="fa fa-spinner animate-spin text-blue-600"></i>
-</span>
-Legal Verification
-</div>
-
-<div class="flex items-center gap-3">
-<span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-4
-</span>
-Credit Appraisal
-</div>
-
-<div class="flex items-center gap-3">
-<span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-5
-</span>
-Final Approval
-</div>
-
-</div>
-
-</section>
-
-</aside>
-
-</div>
-
+  <!-- ACTION BUTTONS -->
+  <section class="flex gap-4 mb-6 flex-wrap text-lg">
+    <button onclick="window.print()"
+      class="px-5 py-3 border border-gray-400 rounded-md hover:bg-gray-200">
+      <i class="fa fa-print mr-2"></i>
+      <span data-i18n="receipt_print_btn">Print</span>
+    </button>
+    <a href="loan-approval.html"
+      class="px-5 py-3 bg-blue-700 text-white rounded-md hover:bg-blue-800">
+      <span data-i18n="receipt_proceed_approval">Proceed to Approval</span>
+    </a>
+  </section>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <!-- RECEIPT CARD -->
+    <section class="md:col-span-2 bg-white shadow-lg rounded-xl overflow-hidden">
+
+      <!-- RECEIPT HEADER -->
+      <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white text-center p-8">
+        <div class="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-3">
+          <i class="fa fa-landmark text-3xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold font-[Playfair_Display]" data-i18n="receipt_bank_name">ABC Bank</h2>
+        <p class="text-lg text-gray-200" data-i18n="receipt_header_title">Official Loan Application Receipt</p>
+      </header>
+
+      <!-- RECEIPT BODY -->
+      <div class="p-8 space-y-8">
+
+        <!-- APPLICANT INFO -->
+        <article>
+          <h3 class="font-semibold text-xl mb-4" data-i18n="receipt_applicant_info">Applicant Information</h3>
+          <div class="space-y-3 text-lg">
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_applicant_name">Applicant Name</span>
+              <span id="rcptName">John Doe</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_account_number">Account Number</span>
+              <span class="font-mono">ACC-8765-4321</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_pan">PAN</span>
+              <span class="font-mono">ABCDE1234F</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_cibil_score">CIBIL Score</span>
+              <span class="text-green-600 font-semibold">780 Excellent</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOAN DETAILS -->
+        <article>
+          <h3 class="font-semibold text-xl mb-4" data-i18n="receipt_loan_details">Loan Details</h3>
+          <div class="space-y-3 text-lg">
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_loan_type">Loan Type</span>
+              <span>🏠 Home Loan</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_loan_amount">Loan Amount</span>
+              <span class="font-bold text-2xl text-blue-700">₹25,00,000</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_interest_rate">Interest Rate</span>
+              <span>8.5% p.a</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_duration">Duration</span>
+              <span>20 Years</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="receipt_monthly_emi">Monthly EMI</span>
+              <span class="font-semibold text-blue-700 text-xl">₹21,740</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- LEGAL NOTICE -->
+        <section class="bg-yellow-50 border border-yellow-300 p-5 rounded-lg text-lg text-yellow-900">
+          <i class="fa fa-scale-balanced mr-2"></i>
+          <strong data-i18n="receipt_legal_notice_title">Legal Verification in Progress.</strong>
+          <span data-i18n="receipt_legal_notice_desc"> Documents are under review. Estimated completion 3–5 working days.</span>
+        </section>
+
+        <!-- SIGNATURE AREA -->
+        <section class="flex justify-between pt-6 border-t border-dashed text-lg">
+          <aside class="text-center">
+            <div class="h-12 border-b w-36"></div>
+            <p class="mt-2" data-i18n="receipt_customer_signature">Customer Signature</p>
+          </aside>
+          <aside class="text-center">
+            <div class="w-14 h-14 border-2 border-blue-700 rounded-full flex items-center justify-center">
+              <i class="fa fa-stamp text-blue-700 text-xl"></i>
+            </div>
+            <p data-i18n="receipt_bank_seal">Bank Seal</p>
+          </aside>
+          <aside class="text-center">
+            <div class="h-12 border-b w-36"></div>
+            <p class="mt-2" data-i18n="receipt_authorized_signatory">Authorized Signatory</p>
+          </aside>
+        </section>
+
+      </div>
+    </section>
+
+
+    <!-- RIGHT SIDE STATUS -->
+    <aside class="space-y-6">
+      <section class="bg-white shadow rounded-xl p-6">
+        <h3 class="font-semibold text-xl mb-4">
+          <i class="fa fa-diagram-project text-blue-600 mr-2"></i>
+          <span data-i18n="receipt_processing_status">Processing Status</span>
+        </h3>
+        <div class="space-y-4 text-lg">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+              <i class="fa fa-check text-green-600"></i>
+            </span>
+            <span data-i18n="receipt_status_application">Application Submitted</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+              <i class="fa fa-check text-green-600"></i>
+            </span>
+            <span data-i18n="receipt_status_officer">Loan Officer Assigned</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <i class="fa fa-spinner animate-spin text-blue-600"></i>
+            </span>
+            <span data-i18n="receipt_status_legal">Legal Verification</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">4</span>
+            <span data-i18n="receipt_status_credit">Credit Appraisal</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">5</span>
+            <span data-i18n="receipt_status_final">Final Approval</span>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+  </div>
 </main>
-
 
 
 <!-- FOOTER -->
 <footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
-
-<p>© 2026 ABC Bank. All Rights Reserved.</p>
-
+  <p data-i18n="receipt_footer">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
+
+
+<script>
+
+// ── Load user ──
+var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
+document.getElementById("username").innerText       = user.name;
+document.getElementById("userid").innerText         = "ID: " + user.id;
+document.getElementById("profileName").innerText    = user.name;
+document.getElementById("profileAccount").innerText = "Account: " + user.account;
+document.getElementById("rcptName").innerText       = user.name;
+
+// ── Logout ──
+function logoutUser() {
+  localStorage.removeItem("bankUser");
+  alert("Logged out successfully");
+  window.location.href = "index.html";
+}
+
+// ── Wire navbar lang select to shared.js applyLang ──
+var navSel = document.getElementById("nav-lang-select");
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+navSel.value = savedLang;
+
+navSel.addEventListener('change', function() {
+  applyLang(this.value);
+  var sharedSel = document.getElementById('lang-select');
+  if (sharedSel) sharedSel.value = this.value;
+});
+
+applyLang(savedLang);
+
+</script>
 
 </body>
 </html>
-

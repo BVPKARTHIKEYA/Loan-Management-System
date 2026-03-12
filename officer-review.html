@@ -1,268 +1,261 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Loan Officer Review</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="shared.js"></script>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  #lang-switcher { display: none !important; }
+</style>
 
 </head>
-
 <body class="bg-gray-100">
 
-<!-- HEADER -->
-<header class="bg-white shadow">
+<!-- NAVBAR -->
+<header>
+  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
+    <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
-<div class="max-w-7xl mx-auto p-6">
+      <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
+      </a>
 
-<h1 class="text-4xl font-bold">
-Loan Officer Review Panel
-</h1>
+      <a href="home.html"
+        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i>
+        <span data-i18n="account_back_dashboard">Back to Dashboard</span>
+      </a>
 
-<p class="text-gray-600 text-lg">
-Review applicant details and finalize loan approval.
-</p>
+      <div class="flex items-center gap-4 flex-shrink-0">
 
-</div>
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
+            <i class="fa fa-globe"></i> Lang:
+          </label>
+          <select id="nav-lang-select"
+            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+            <option value="en" style="background:#1e3a5f">English</option>
+            <option value="te" style="background:#1e3a5f">తెలుగు</option>
+            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
+            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
+            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
+            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
+          </select>
+        </div>
 
+        <div class="relative group">
+          <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
+            <i class="fa fa-user-circle text-2xl"></i>
+            <div class="flex flex-col leading-tight">
+              <span id="username" class="text-base font-bold">User</span>
+              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+            </div>
+            <i class="fa fa-chevron-down text-sm ml-1"></i>
+          </div>
+          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+            <div class="p-4 border-b">
+              <p class="font-semibold text-lg" id="profileName">User</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+            </div>
+            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
+              <i class="fa fa-home mr-2"></i>
+              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
+            </a>
+            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+              <i class="fa fa-sign-out-alt mr-2"></i>
+              <span data-i18n="nav_logout">Logout</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
 </header>
 
+
+<!-- PAGE HEADER -->
+<div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
+  <h1 class="text-4xl font-bold mt-1" data-i18n="officer_page_title">Loan Officer Review Panel</h1>
+  <p class="text-gray-600 text-lg mt-1" data-i18n="officer_page_desc">Review applicant details and finalize loan approval.</p>
+</div>
 
 
 <!-- MAIN CONTENT -->
 <main class="max-w-7xl mx-auto p-6">
 
-
-
-<!-- ASSIGNED OFFICER -->
-<section class="bg-yellow-50 border border-yellow-300 rounded-xl p-6 mb-6 flex items-center gap-6">
-
-<figure class="flex items-center gap-6">
-
-<img src="vimg.jpg"
-class="w-24 h-24 rounded-full object-cover border-4 border-yellow-400">
-
-<figcaption>
-
-<h2 class="text-xl font-bold text-yellow-800">
-Assigned Loan Officer
-</h2>
-
-<p class="text-2xl font-semibold mt-2">
-<i class="fa fa-user-tie mr-2"></i>
-Venkatesh Sharma
-</p>
-
-</figcaption>
-
-</figure>
-
-</section>
-
-
-
-<!-- PERSONAL DETAILS -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Personal Information
-</h2>
-</header>
-
-<div class="grid md:grid-cols-3 gap-4 text-lg">
-
-<article><p><b>Name:</b> John Doe</p></article>
-<article><p><b>Date of Birth:</b> 12-05-1995</p></article>
-<article><p><b>Email:</b> john@example.com</p></article>
-
-<article><p><b>Mobile:</b> 9876543210</p></article>
-<article><p><b>Aadhaar:</b> 1234 5678 9123</p></article>
-<article><p><b>PAN:</b> ABCPD1234X</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- PARENT DETAILS -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Parent Details
-</h2>
-</header>
-
-<div class="grid md:grid-cols-2 gap-4 text-lg">
-
-<article><p><b>Father Name:</b> Rajesh Kumar</p></article>
-<article><p><b>Father Occupation:</b> Business</p></article>
-
-<article><p><b>Mother Name:</b> Sunita Kumar</p></article>
-<article><p><b>Mother Occupation:</b> Homemaker</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- INCOME DETAILS -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Income Information
-</h2>
-</header>
-
-<div class="grid md:grid-cols-3 gap-4 text-lg">
-
-<article><p><b>Employment:</b> Salaried</p></article>
-<article><p><b>Monthly Income:</b> ₹75,000</p></article>
-<article><p><b>Gross Annual Income:</b> ₹900,000</p></article>
-
-<article><p><b>Other Income:</b> ₹10,000</p></article>
-<article><p><b>Income Scheme:</b> Salary Based Scheme</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- ADDRESS -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Address Information
-</h2>
-</header>
-
-<div class="grid md:grid-cols-2 gap-4 text-lg">
-
-<article><p><b>Address:</b> 45 MG Road</p></article>
-<article><p><b>City:</b> Hyderabad</p></article>
-
-<article><p><b>State:</b> Telangana</p></article>
-<article><p><b>PIN Code:</b> 500001</p></article>
-
-<article><p><b>Country:</b> India</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- CIBIL REPORT -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-CIBIL Report
-</h2>
-</header>
-
-<div class="grid md:grid-cols-3 gap-4 text-lg">
-
-<article><p><b>CIBIL Score:</b> 780</p></article>
-
-<article>
-<p>
-<b>Available Loan Tenure:</b>
-<span class="text-green-600 font-bold text-xl">
-25 Years
-</span>
-</p>
-</article>
-
-<article><p><b>Employment Status:</b> Salaried</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- LOAN DETAILS -->
-<section class="bg-white shadow rounded-xl p-6 mb-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Loan Application Details
-</h2>
-</header>
-
-<div class="grid md:grid-cols-3 gap-4 text-lg">
-
-<article><p><b>Loan Type:</b> Home Loan</p></article>
-<article><p><b>Loan Amount:</b> ₹25,00,000</p></article>
-<article><p><b>Loan Duration Requested:</b> 20 Years</p></article>
-
-<article><p><b>Annual Income:</b> ₹900,000</p></article>
-<article><p><b>Collateral:</b> Property</p></article>
-
-</div>
-
-</section>
-
-
-
-<!-- OFFICER DECISION -->
-<section class="bg-white shadow rounded-xl p-6">
-
-<header>
-<h2 class="text-2xl font-bold mb-4">
-Officer Decision
-</h2>
-</header>
-
-<div class="flex gap-4">
-
-<button
-class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
-
-Approve Loan
-
-</button>
-
-<button
-class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold">
-
-Reject Loan
-
-</button>
-
-</div>
-
-</section>
-
-
+  <!-- ASSIGNED OFFICER -->
+  <section class="bg-yellow-50 border border-yellow-300 rounded-xl p-6 mb-6 flex items-center gap-6">
+    <figure class="flex items-center gap-6">
+      <img src="vimg.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-yellow-400">
+      <figcaption>
+        <h2 class="text-xl font-bold text-yellow-800" data-i18n="officer_assigned_title">Assigned Loan Officer</h2>
+        <p class="text-2xl font-semibold mt-2">
+          <i class="fa fa-user-tie mr-2"></i>
+          <span data-i18n="officer_name">Venkatesh Sharma</span>
+        </p>
+      </figcaption>
+    </figure>
+  </section>
+
+
+  <!-- PERSONAL DETAILS -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="personal_info_title">Personal Information</h2>
+    </header>
+    <div class="grid md:grid-cols-3 gap-4 text-lg">
+      <article><p><b data-i18n="personal_name">Name:</b> John Doe</p></article>
+      <article><p><b data-i18n="personal_dob">Date of Birth:</b> 12-05-1995</p></article>
+      <article><p><b data-i18n="personal_email">Email:</b> john@example.com</p></article>
+      <article><p><b data-i18n="personal_mobile">Mobile:</b> 9876543210</p></article>
+      <article><p><b data-i18n="personal_aadhaar">Aadhaar:</b> 1234 5678 9123</p></article>
+      <article><p><b data-i18n="personal_pan">PAN:</b> ABCPD1234X</p></article>
+    </div>
+  </section>
+
+
+  <!-- PARENT DETAILS -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="parent_details_title">Parent Details</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-4 text-lg">
+      <article><p><b data-i18n="father_name">Father Name:</b> Rajesh Kumar</p></article>
+      <article><p><b data-i18n="father_occupation">Father Occupation:</b> Business</p></article>
+      <article><p><b data-i18n="mother_name">Mother Name:</b> Sunita Kumar</p></article>
+      <article><p><b data-i18n="mother_occupation">Mother Occupation:</b> Homemaker</p></article>
+    </div>
+  </section>
+
+
+  <!-- INCOME DETAILS -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="income_info_title">Income Information</h2>
+    </header>
+    <div class="grid md:grid-cols-3 gap-4 text-lg">
+      <article><p><b data-i18n="income_employment">Employment:</b> Salaried</p></article>
+      <article><p><b data-i18n="income_monthly">Monthly Income:</b> ₹75,000</p></article>
+      <article><p><b data-i18n="income_annual">Gross Annual Income:</b> ₹900,000</p></article>
+      <article><p><b data-i18n="income_other">Other Income:</b> ₹10,000</p></article>
+      <article><p><b data-i18n="income_scheme">Income Scheme:</b> Salary Based Scheme</p></article>
+    </div>
+  </section>
+
+
+  <!-- ADDRESS -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="address_info_title">Address Information</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-4 text-lg">
+      <article><p><b data-i18n="address">Address:</b> 45 MG Road</p></article>
+      <article><p><b data-i18n="city">City:</b> Hyderabad</p></article>
+      <article><p><b data-i18n="state">State:</b> Telangana</p></article>
+      <article><p><b data-i18n="pincode">PIN Code:</b> 500001</p></article>
+      <article><p><b data-i18n="country">Country:</b> India</p></article>
+    </div>
+  </section>
+
+
+  <!-- CIBIL REPORT -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="cibil_report_title">CIBIL Report</h2>
+    </header>
+    <div class="grid md:grid-cols-3 gap-4 text-lg">
+      <article><p><b data-i18n="cibil_score">CIBIL Score:</b> 780</p></article>
+      <article>
+        <p>
+          <b data-i18n="cibil_tenure">Available Loan Tenure:</b>
+          <span class="text-green-600 font-bold text-xl"> 25 Years</span>
+        </p>
+      </article>
+      <article><p><b data-i18n="cibil_employment_status">Employment Status:</b> Salaried</p></article>
+    </div>
+  </section>
+
+
+  <!-- LOAN DETAILS -->
+  <section class="bg-white shadow rounded-xl p-6 mb-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="loan_application_details_title">Loan Application Details</h2>
+    </header>
+    <div class="grid md:grid-cols-3 gap-4 text-lg">
+      <article><p><b data-i18n="loan_type">Loan Type:</b> Home Loan</p></article>
+      <article><p><b data-i18n="loan_amount">Loan Amount:</b> ₹25,00,000</p></article>
+      <article><p><b data-i18n="loan_duration_requested">Loan Duration Requested:</b> 20 Years</p></article>
+      <article><p><b data-i18n="loan_annual_income">Annual Income:</b> ₹900,000</p></article>
+      <article><p><b data-i18n="loan_collateral_val">Collateral:</b> Property</p></article>
+    </div>
+  </section>
+
+
+  <!-- OFFICER DECISION -->
+  <section class="bg-white shadow rounded-xl p-6">
+    <header>
+      <h2 class="text-2xl font-bold mb-4" data-i18n="officer_decision_title">Officer Decision</h2>
+    </header>
+    <div class="flex gap-4">
+      <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+        <i class="fa fa-check mr-2"></i>
+        <span data-i18n="approve_loan_btn">Approve Loan</span>
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold">
+        <i class="fa fa-times mr-2"></i>
+        <span data-i18n="reject_loan_btn">Reject Loan</span>
+      </button>
+    </div>
+  </section>
 
 </main>
 
 
-
 <!-- FOOTER -->
 <footer class="bg-blue-900 text-white text-center py-6 mt-10">
-
-<p>© 2026 ABC Bank. All Rights Reserved.</p>
-
+  <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
 
+
+<script>
+
+// ── Load user ──
+var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
+document.getElementById("username").innerText       = user.name;
+document.getElementById("userid").innerText         = "ID: " + user.id;
+document.getElementById("profileName").innerText    = user.name;
+document.getElementById("profileAccount").innerText = "Account: " + user.account;
+
+// ── Logout ──
+function logoutUser() {
+  localStorage.removeItem("bankUser");
+  alert("Logged out successfully");
+  window.location.href = "index.html";
+}
+
+// ── Wire navbar lang select to shared.js applyLang ──
+var navSel = document.getElementById("nav-lang-select");
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+navSel.value = savedLang;
+
+navSel.addEventListener('change', function() {
+  applyLang(this.value);
+  var sharedSel = document.getElementById('lang-select');
+  if (sharedSel) sharedSel.value = this.value;
+});
+
+applyLang(savedLang);
+
+</script>
+
 </body>
-
 </html>
-

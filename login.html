@@ -1,189 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABC Bank LMS Login</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<title>ABC Bank LMS Login</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-<style>
-body{
-font-family:'Source Sans 3',sans-serif;
-}
-</style>
-
+  <style>
+    body { font-family: 'Source Sans 3', sans-serif; }
+  </style>
 </head>
 
 <body class="min-h-screen flex bg-gray-100">
 
-<!-- MAIN CONTENT -->
 <main class="flex w-full min-h-screen">
 
-<!-- LEFT VIDEO SECTION -->
-<section class="hidden md:block md:w-2/3 relative h-screen overflow-hidden">
+  <!-- LEFT VIDEO SECTION -->
+  <section class="hidden md:block md:w-2/3 relative h-screen overflow-hidden">
+    <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
+      <source src="bank-bg.mp4" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-black/30"></div>
+  </section>
 
-<video autoplay muted loop playsinline
-class="absolute top-0 left-0 w-full h-full object-cover">
+  <!-- LOGIN FORM SECTION -->
+  <section class="w-full md:w-1/3 flex items-center justify-center p-10 bg-white shadow-2xl">
 
-<source src="bank-bg.mp4" type="video/mp4">
+    <article class="w-full max-w-md">
 
-</video>
+      <header class="text-center mb-8">
+        <img src="abc-bank-logo.jpeg" class="h-36 w-auto mx-auto mb-6 object-contain">
+        <h2 class="text-3xl font-bold font-[Playfair_Display]" data-i18n="login_heading">Sign In</h2>
+        <p class="text-gray-500 text-sm" data-i18n="login_subheading">Access your ABC Bank account</p>
+      </header>
 
-<div class="absolute inset-0 bg-black/30"></div>
+      <form id="loginForm" class="space-y-5">
 
-</section>
+        <div>
+          <label class="block text-sm font-medium mb-1" data-i18n="login_email">Email</label>
+          <input id="email" type="email" required placeholder="john@email.com"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+        </div>
 
+        <div>
+          <label class="block text-sm font-medium mb-1" data-i18n="login_password">Password</label>
+          <input id="password" type="password" required minlength="6" maxlength="20"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+            data-i18n-placeholder="login_password_placeholder">
+        </div>
 
+        <div class="text-center">
+          <a href="forgot-password.html" class="text-blue-600 hover:text-blue-800 text-sm underline"
+            data-i18n="login_forgot">Forgot Password?</a>
+        </div>
 
-<!-- LOGIN FORM SECTION -->
-<section class="w-full md:w-1/3 flex items-center justify-center p-10 bg-white shadow-2xl">
+        <button type="submit"
+          class="w-full bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-lg font-semibold transition">
+          <i class="fa fa-right-to-bracket mr-2"></i>
+          <span data-i18n="login_btn">Sign In</span>
+        </button>
 
-<article class="w-full max-w-md">
+      </form>
 
-<header class="text-center mb-8">
+      <footer class="text-center text-sm text-gray-500 mt-6">
+        <p>
+          <span data-i18n="login_no_account">Don't have an account?</span>
+          <a href="register.html" class="text-blue-700 font-semibold hover:underline ml-1"
+            data-i18n="login_register_link">Register →</a>
+        </p>
+      </footer>
 
-<img src="abc-bank-logo.jpeg"
-class="h-36 w-auto mx-auto mb-6 object-contain">
-
-<h2 class="text-3xl font-bold font-[Playfair_Display]">
-Welcome Back
-</h2>
-
-<p class="text-gray-500 text-sm">
-Sign in to your ABC Bank account
-</p>
-
-</header>
-
-
-
-<form id="loginForm" class="space-y-5">
-
-<div>
-
-<label class="block text-sm font-medium mb-1">
-Email Address
-</label>
-
-<input
-id="email"
-type="email"
-required
-placeholder="john@email.com"
-class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-
-</div>
-
-
-
-<div>
-
-<label class="block text-sm font-medium mb-1">
-Password
-</label>
-
-<input
-id="password"
-type="password"
-required
-minlength="6"
-maxlength="20"
-placeholder="Enter your password"
-class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-
-</div>
-
-
-<div class="text-center">
-
-<a href="forgot-password.html"
-class="text-blue-600 hover:text-blue-800 text-sm underline">
-
-Forgot Password?
-
-</a>
-
-</div>
-
-
-<button
-type="submit"
-class="w-full bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-lg font-semibold">
-
-<i class="fa fa-right-to-bracket mr-2"></i>
-Sign In
-
-</button>
-
-</form>
-
-
-
-<footer class="text-center text-sm text-gray-500 mt-6">
-
-<p>
-Don't have an account?
-
-<a href="register.html"
-class="text-blue-700 font-semibold hover:underline">
-
-Register Now →
-
-</a>
-</p>
-
-</footer>
-
-</article>
-
-</section>
+    </article>
+  </section>
 
 </main>
 
-
+<script src="logic.js"></script>   <!-- ← Must include this -->
+<script src="shared.js"></script>  <!-- keep if you still use it for translations -->
 
 <script>
-
-document.getElementById("loginForm").addEventListener("submit", function(e){
-
-e.preventDefault();
-
-let email = document.getElementById("email").value.trim();
-let password = document.getElementById("password").value.trim();
-
-if(email === "" || password === ""){
-
-swal("Missing Fields","Please enter email and password","warning");
-return;
-
+// Prevent logged-in users from seeing login page again
+if (abcBank.isLoggedIn()) {
+  window.location.href = "home.html";
 }
 
-if(password.length < 6){
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-swal("Invalid Password","Password must be at least 6 characters","error");
-return;
+  const lang = localStorage.getItem('abcbank_lang') || 'en';
+  const d = I18N?.[lang] || I18N?.['en'] || {
+    alert_missing_title: "Missing Fields",
+    alert_missing_text: "Please fill in both email and password.",
+    alert_invalid_pwd_title: "Invalid Password",
+    alert_invalid_pwd_text: "Password must be at least 6 characters.",
+    alert_login_success_title: "Success!",
+    alert_login_success_text: "Welcome back!",
+    alert_login_failed_title: "Login Failed",
+  };
 
-}
+  const email    = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-swal("Login Successful","Welcome to ABC Bank","success")
-.then(() => {
+  // Basic client-side checks
+  if (!email || !password) {
+    swal(d.alert_missing_title, d.alert_missing_text, "warning");
+    return;
+  }
 
-window.location.href="home.html";
+  if (password.length < 6) {
+    swal(d.alert_invalid_pwd_title, d.alert_invalid_pwd_text, "error");
+    return;
+  }
 
+  // Actual authentication against localStorage "database"
+  const result = abcBank.loginUser(email, password);
+
+  if (result.success) {
+    swal(d.alert_login_success_title, result.message || d.alert_login_success_text, "success")
+      .then(() => {
+        window.location.href = "home.html";
+      });
+  } else {
+    swal(d.alert_login_failed_title || "Login Failed", result.message, "error");
+  }
 });
-
-});
-
 </script>
 
 </body>

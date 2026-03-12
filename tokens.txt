@@ -1,0 +1,887 @@
+File: index.html
+
+welcome : "Welcome to ABC Bank"
+
+desc1 : "Secure, Fast and Reliable Banking Services for Everyone."
+
+desc2 : "Manage your accounts, apply for loans, and track your financial growth with ease."
+
+login : "Login"
+
+register : "Register"
+
+footer : "© 2026 ABC Bank. All Rights Reserved."
+
+language : "Language"
+
+lang_en : "English"
+
+lang_te : "Telugu"
+
+lang_ta : "Tamil"
+
+lang_ml : "Malayalam"
+
+lang_kn : "Kannada"
+
+lang_hi : "Hindi"
+
+File: login.html
+
+login_heading : "Welcome Back"
+
+login_subheading : "Sign in to your ABC Bank account"
+
+login_email : "Email Address"
+
+login_password : "Password"
+
+login_password_placeholder : "Enter your password"
+
+login_forgot : "Forgot Password?"
+
+login_btn : "Sign In"
+
+login_no_account : "Don't have an account?"
+
+login_register_link : "Register Now →"
+
+alert_missing_title : "Missing Information"
+
+alert_missing_text : "Please enter both email and password."
+
+alert_invalid_pwd_title : "Invalid Password"
+
+alert_invalid_pwd_text : "Password must be at least 6 characters long."
+
+alert_login_success_title : "Login Successful"
+
+alert_login_success_text : "Welcome back! Redirecting to your dashboard."
+File: register.html
+
+reg_title : "Create Account"
+
+reg_subheading : "Register to start your banking journey"
+
+reg_fname : "First Name"
+
+reg_lname : "Last Name"
+
+reg_email_placeholder : "Email"
+
+reg_phone_placeholder : "Mobile Number"
+
+reg_password_placeholder : "Password"
+
+reg_confirm_placeholder : "Confirm Password"
+
+reg_terms : "I agree to the Terms and Privacy Policy"
+
+reg_btn : "Create Account"
+
+reg_have_account : "Already have an account?"
+
+reg_signin_link : "Sign In →"
+
+reg_alert_weak_pwd_title : "Weak Password"
+
+reg_alert_weak_pwd_text : "Password must be at least 6 characters long."
+
+reg_alert_mismatch_title : "Password Mismatch"
+
+reg_alert_mismatch_text : "Passwords do not match. Please try again."
+
+reg_alert_success_title : "Registration Successful"
+
+reg_alert_success_text : "Your account has been created successfully."
+File: home.html
+
+nav_home : "Home"
+
+nav_accounts : "Accounts"
+
+nav_cibil : "CIBIL"
+
+nav_loans : "Loans"
+
+nav_approval_status : "Approval Status"
+
+nav_loan_receipt : "Loan Receipt"
+
+nav_support : "Support"
+
+welcome_text : "Welcome"
+
+hero_description : "Manage your loans, track applications and check CIBIL scores easily using the ABC Bank Loan Management System."
+
+my_account_btn : "My Account"
+
+primary_account : "Primary Account"
+
+available_balance : "Available Balance"
+
+loan_workflow_title : "Loan Application Workflow"
+
+workflow_register : "Register"
+
+workflow_open_account : "Open Account"
+
+workflow_cibil_check : "CIBIL Check"
+
+workflow_apply_loan : "Apply Loan"
+
+workflow_officer_review : "Officer Review"
+
+workflow_lawyer_verification : "Lawyer Verification"
+
+workflow_loan_approval : "Loan Approval"
+
+demo_title : "Loan System Demo"
+
+demo_description : "Complete walkthrough of ABC Bank Loan Management System"
+
+success_stories_title : "ABC Bank Success Stories"
+
+faq_title : "Frequently Asked Questions"
+
+faq_q1 : "What is the minimum CIBIL score required?"
+
+faq_a1 : "ABC Bank recommends maintaining a CIBIL score above 700."
+
+faq_q2 : "How long does loan approval take?"
+
+faq_a2 : "Usually between 24 to 72 hours depending on verification."
+
+faq_q3 : "What documents are required?"
+
+faq_a3 : "PAN card, Aadhaar card, salary slips and bank statements."
+
+faq_q4 : "What types of loans does ABC Bank offer?"
+
+faq_a4 : "Personal, Home, Vehicle and Business loans."
+
+faq_q5 : "Can I track my loan status online?"
+
+faq_a5 : "Yes, through the Approval Status section."
+
+footer_about_title : "ABC Bank"
+
+footer_about_desc : "ABC Bank provides secure digital banking solutions and loan services across India. Our mission is to simplify loan management and provide transparent financial services."
+
+footer_quick_links : "Quick Links"
+
+footer_apply_loan : "Apply Loan"
+
+footer_loan_status : "Loan Status"
+
+footer_loan_services : "Loan Services"
+
+footer_personal_loan : "Personal Loan"
+
+footer_home_loan : "Home Loan"
+
+footer_vehicle_loan : "Vehicle Loan"
+
+footer_education_loan : "Education Loan"
+
+footer_business_loan : "Business Loan"
+
+footer_contact : "Contact Us"
+
+footer_location : "Mumbai, India"
+
+footer_phone : "+91 98765 43210"
+
+footer_email : "support@abcbank.com"
+
+footer_copyright : "© 2026 ABC Bank. All Rights Reserved | Secure Digital Banking Platform"
+
+logout_alert : "Logged out successfully"
+File: forgot-password.html
+
+forgot_title : "ABC Bank Password Recovery"
+
+forgot_description : "Enter your registered email or mobile number to reset your password."
+
+forgot_input_label : "Email or Mobile Number"
+
+forgot_input_placeholder : "Enter registered email or mobile"
+
+forgot_btn : "Send Reset Link"
+
+forgot_back_login : "Back to Login"
+File: cibil.html
+
+cibil_dashboard_link : "Go to Dashboard"
+
+cibil_title : "CIBIL Report Verification"
+
+cibil_description : "Submit your credit information to determine loan eligibility."
+
+cibil_score_range_good : "750 – 900"
+
+cibil_score_status_good : "Approved"
+
+cibil_score_desc_good : "Excellent score"
+
+cibil_score_range_avg : "650 – 749"
+
+cibil_score_status_avg : "Under Review"
+
+cibil_score_desc_avg : "Average score"
+
+cibil_score_range_low : "300 – 649"
+
+cibil_score_status_low : "Rejected"
+
+cibil_score_desc_low : "Poor score"
+
+cibil_form_title : "CIBIL Verification Form"
+
+cibil_dob : "Date of Birth"
+
+cibil_score : "CIBIL Score"
+
+cibil_score_placeholder : "750"
+
+cibil_employment : "Employment Status"
+
+cibil_employment_select : "Select"
+
+cibil_employment_salaried : "Salaried"
+
+cibil_employment_self : "Self Employed"
+
+cibil_employment_business : "Business"
+
+cibil_income : "Monthly Income"
+
+cibil_income_placeholder : "75000"
+
+cibil_loan_type : "Loan Type"
+
+cibil_loan_select : "Select Loan"
+
+cibil_home_loan : "Home Loan"
+
+cibil_vehicle_loan : "Vehicle Loan"
+
+cibil_personal_loan : "Personal Loan"
+
+cibil_education_loan : "Education Loan"
+
+cibil_loan_amount : "Loan Amount"
+
+cibil_loan_amount_placeholder : "2500000"
+
+cibil_upload_report : "Upload CIBIL Report"
+
+cibil_tenure_title : "Maximum Loan Tenure"
+
+cibil_tenure_desc : "Loan tenure will be calculated as:"
+
+cibil_tenure_formula : "60 − Your Current Age"
+
+cibil_verify_btn : "Verify CIBIL Score"
+
+cibil_meter_title : "Score Meter"
+
+cibil_meter_placeholder : "Enter your score"
+
+cibil_footer : "© 2026 ABC Bank. All rights reserved."
+File: bank-account.html
+
+account_back_dashboard : "Back to Dashboard"
+
+account_page_title : "Open Bank Account"
+
+account_page_desc : "Complete the form below to open your ABC Bank account."
+
+personal_info_title : "Personal Information"
+
+full_name : "Full Name"
+
+date_of_birth : "Date of Birth"
+
+email : "Email"
+
+mobile_number : "Mobile Number"
+
+aadhaar_number : "Aadhaar Number"
+
+pan_number : "PAN Number"
+
+parent_details_title : "Parent Details"
+
+father_name : "Father Name"
+
+mother_name : "Mother Name"
+
+address_info_title : "Address Information"
+
+address : "Address"
+
+city : "City"
+
+state : "State"
+
+state_select : "Select"
+
+state_andhra : "Andhra Pradesh"
+
+state_maharashtra : "Maharashtra"
+
+state_karnataka : "Karnataka"
+
+pincode : "PIN Code"
+
+account_type_title : "Select Type of Bank Account"
+
+account_type_desc : "Choose the account that best fits your banking needs."
+
+savings_account : "Savings Account"
+
+savings_account_desc : "Ideal for individuals who want to safely save money and earn interest."
+
+current_account : "Current Account"
+
+current_account_desc : "Designed for businesses that perform frequent financial transactions."
+
+income_details_title : "Income Details"
+
+gross_annual_income : "Gross Annual Income"
+
+monthly_net_income : "Monthly Net Income"
+
+other_income : "Other Income"
+
+income_verification_doc : "Income Verification Document"
+
+kyc_upload_title : "KYC Document Upload"
+
+kyc_upload_desc : "Upload Aadhaar card, PAN card and your signature image for verification."
+
+upload_aadhaar : "Upload Aadhaar Card"
+
+upload_pan : "Upload PAN Card"
+
+upload_signature : "Upload Signature"
+
+submit_account_application : "Submit Account Application"
+
+footer_text : "© 2026 ABC Bank. All rights reserved."
+
+alert_name_missing : "Enter full name"
+
+alert_invalid_mobile_title : "Invalid Mobile"
+
+alert_invalid_mobile_text : "Enter valid mobile number"
+
+alert_invalid_aadhaar_title : "Invalid Aadhaar"
+
+alert_invalid_aadhaar_text : "Aadhaar must be 12 digits"
+
+alert_invalid_pan_title : "Invalid PAN"
+
+alert_invalid_pan_text : "PAN format ABCDE1234F"
+
+alert_income_missing_title : "Income Missing"
+
+alert_income_missing_text : "Enter gross income"
+
+alert_missing_document_title : "Missing Document"
+
+alert_missing_aadhaar : "Upload Aadhaar card image"
+
+alert_missing_pan : "Upload PAN card image"
+
+alert_missing_signature : "Upload signature image"
+
+alert_application_success_title : "Application Submitted"
+
+alert_application_success_text : "Your ABC Bank account request has been submitted successfully"
+File: lawyer-verification.html
+
+legal_title : "Legal Document Verification"
+
+legal_description : "Bank legal department verifies all uploaded documents before loan approval."
+
+legal_officer_title : "Assigned Legal Officer"
+
+legal_officer_name : "Advocate Venkata Ramana"
+
+documents_title : "Uploaded Documents"
+
+doc_pan : "PAN Card"
+
+doc_pan_file : "pan-card.pdf"
+
+doc_aadhaar : "Aadhaar Card"
+
+doc_aadhaar_file : "aadhaar.pdf"
+
+doc_property : "Property Document"
+
+doc_property_file : "property-doc.pdf"
+
+doc_income : "Income Proof"
+
+doc_income_file : "salary-slip.pdf"
+
+doc_view_btn : "View"
+
+legal_review_title : "Legal Review Notes"
+
+legal_review_placeholder : "Add verification comments here..."
+
+legal_decision_title : "Legal Decision"
+
+approve_documents : "Approve Documents"
+
+reject_application : "Reject Application"
+
+footer_bank_title : "ABC Bank"
+
+footer_bank_desc : "Secure banking and loan verification services."
+
+footer_quick_links : "Quick Links"
+
+footer_home : "Home"
+
+footer_loans : "Loans"
+
+footer_officer_review : "Officer Review"
+
+footer_loan_approval : "Loan Approval"
+
+footer_loan_services : "Loan Services"
+
+footer_personal_loan : "Personal Loan"
+
+footer_home_loan : "Home Loan"
+
+footer_vehicle_loan : "Vehicle Loan"
+
+footer_business_loan : "Business Loan"
+
+footer_follow_us : "Follow Us"
+
+footer_copyright : "© 2026 ABC Bank"
+File: loan-application.html
+
+loan_back_dashboard : "Back to Dashboard"
+
+loan_page_title : "Loan Application"
+
+loan_page_desc : "Select loan type and complete the application."
+
+loan_step1_title : "Step 1 – Select Loan Type"
+
+loan_home : "Home Loan"
+
+loan_personal : "Personal Loan"
+
+loan_vehicle : "Vehicle Loan"
+
+loan_gold : "Gold Loan"
+
+loan_education : "Education Loan"
+
+loan_step2_title : "Step 2 – Loan Details"
+
+loan_amount : "Loan Amount"
+
+loan_amount_placeholder : "2500000"
+
+loan_income : "Annual Income"
+
+loan_income_placeholder : "600000"
+
+loan_employment : "Employment Type"
+
+loan_employment_select : "Select"
+
+loan_employment_salaried : "Salaried"
+
+loan_employment_self : "Self Employed"
+
+loan_employment_business : "Business"
+
+loan_duration : "Loan Duration"
+
+loan_duration_select : "Select Duration"
+
+loan_duration_1 : "1 Year"
+
+loan_duration_3 : "3 Years"
+
+loan_duration_5 : "5 Years"
+
+loan_duration_10 : "10 Years"
+
+loan_duration_20 : "20 Years"
+
+loan_purpose : "Loan Purpose"
+
+loan_purpose_placeholder : "Purpose of loan"
+
+loan_collateral : "Collateral Details"
+
+loan_collateral_placeholder : "Property / Vehicle / Gold"
+
+loan_tenure_title : "Available Loan Tenure from CIBIL Report"
+
+loan_tenure_calculating : "Calculating..."
+
+loan_tenure_not_available : "Tenure not calculated from CIBIL report"
+
+loan_confirm_accuracy : "I confirm that all information is accurate."
+
+loan_authorize_cibil : "I authorize ABC Bank to verify my CIBIL score and documents."
+
+loan_submit_btn : "Submit Loan Application"
+
+interest_rates_title : "Interest Rates"
+
+eligibility_title : "Eligibility"
+
+eligibility_age : "Age: 21 – 65 years"
+
+eligibility_cibil : "CIBIL Score ≥ 650"
+
+eligibility_experience : "Minimum 2 years employment"
+
+eligibility_income : "Monthly income ≥ ₹25,000"
+
+eligibility_kyc : "Valid KYC documents"
+
+documents_required_title : "Required Documents"
+
+doc_aadhaar : "Aadhaar Card"
+
+doc_pan : "PAN Card"
+
+doc_salary_slips : "Salary Slips (3 months)"
+
+doc_bank_statement : "Bank Statement"
+
+doc_property_docs : "Property Documents"
+
+footer_bank_title : "ABC Bank"
+
+footer_bank_desc : "ABC Bank provides secure digital banking solutions and loan services across India. Our mission is to simplify loan management and provide transparent financial services."
+
+footer_quick_links : "Quick Links"
+
+footer_home : "Home"
+
+footer_accounts : "Accounts"
+
+footer_apply_loan : "Apply Loan"
+
+footer_loan_status : "Loan Status"
+
+footer_support : "Support"
+
+footer_loan_services : "Loan Services"
+
+footer_personal_loan : "Personal Loan"
+
+footer_home_loan : "Home Loan"
+
+footer_vehicle_loan : "Vehicle Loan"
+
+footer_education_loan : "Education Loan"
+
+footer_business_loan : "Business Loan"
+
+footer_contact : "Contact Us"
+
+footer_location : "Mumbai, India"
+
+footer_phone : "+91 98765 43210"
+
+footer_email : "support@abcbank.com"
+
+footer_copyright : "© 2026 ABC Bank. All Rights Reserved | Secure Digital Banking Platform"
+File: loan-approval.html
+
+approval_back_dashboard : "Back to Dashboard"
+
+approval_page_title : "Loan Approval"
+
+approval_page_desc : "Official loan sanction letter and approval details."
+
+approval_banner_title : "Congratulations!"
+
+approval_banner_text : "Your Loan Has Been Approved"
+
+approval_banner_desc : "Loan disbursement will be completed within 2–3 business days."
+
+approval_loan_id : "Loan ID"
+
+approval_date : "Approved"
+
+loan_details_title : "Loan Details"
+
+loan_customer_name : "Customer Name"
+
+loan_type : "Loan Type"
+
+loan_amount : "Loan Amount"
+
+loan_interest_rate : "Interest Rate"
+
+loan_duration : "Loan Duration"
+
+loan_monthly_emi : "Monthly EMI"
+
+loan_total_payable : "Total Payable"
+
+loan_processing_fee : "Processing Fee"
+
+disbursement_title : "Disbursement Details"
+
+disbursement_account : "Account Number"
+
+disbursement_ifsc : "IFSC Code"
+
+disbursement_branch : "Branch"
+
+disbursement_amount : "Disbursement Amount"
+
+emi_schedule_title : "EMI Schedule (Sample)"
+
+emi_month : "Month"
+
+emi_amount : "EMI"
+
+emi_principal : "Principal"
+
+emi_interest : "Interest"
+
+emi_balance : "Balance"
+
+signature_customer : "Customer Signature"
+
+signature_bank_seal : "Bank Seal"
+
+signature_authorized : "Authorized Signatory"
+
+footer_text : "© 2026 ABC Bank. All Rights Reserved."
+File: loan-receipt.html
+
+receipt_back_dashboard : "Back to Dashboard"
+
+receipt_page_title : "Loan Processing Receipt"
+
+receipt_page_desc : "Official receipt for your loan application"
+
+receipt_print_btn : "Print"
+
+receipt_proceed_approval : "Proceed to Approval"
+
+receipt_bank_name : "ABC Bank"
+
+receipt_header_title : "Official Loan Application Receipt"
+
+receipt_applicant_info : "Applicant Information"
+
+receipt_applicant_name : "Applicant Name"
+
+receipt_account_number : "Account Number"
+
+receipt_pan : "PAN"
+
+receipt_cibil_score : "CIBIL Score"
+
+receipt_loan_details : "Loan Details"
+
+receipt_loan_type : "Loan Type"
+
+receipt_loan_amount : "Loan Amount"
+
+receipt_interest_rate : "Interest Rate"
+
+receipt_duration : "Duration"
+
+receipt_monthly_emi : "Monthly EMI"
+
+receipt_legal_notice_title : "Legal Verification in Progress."
+
+receipt_legal_notice_desc : "Documents are under review. Estimated completion 3–5 working days."
+
+receipt_customer_signature : "Customer Signature"
+
+receipt_bank_seal : "Bank Seal"
+
+receipt_authorized_signatory : "Authorized Signatory"
+
+receipt_processing_status : "Processing Status"
+
+receipt_status_application : "Application Submitted"
+
+receipt_status_officer : "Loan Officer Assigned"
+
+receipt_status_legal : "Legal Verification"
+
+receipt_status_credit : "Credit Appraisal"
+
+receipt_status_final : "Final Approval"
+
+receipt_footer : "© 2026 ABC Bank. All Rights Reserved."
+File: officer-review.html
+
+officer_page_title : "Loan Officer Review Panel"
+
+officer_page_desc : "Review applicant details and finalize loan approval."
+
+officer_assigned_title : "Assigned Loan Officer"
+
+officer_name : "Venkatesh Sharma"
+
+personal_info_title : "Personal Information"
+
+personal_name : "Name"
+
+personal_dob : "Date of Birth"
+
+personal_email : "Email"
+
+personal_mobile : "Mobile"
+
+personal_aadhaar : "Aadhaar"
+
+personal_pan : "PAN"
+
+parent_details_title : "Parent Details"
+
+father_name : "Father Name"
+
+father_occupation : "Father Occupation"
+
+mother_name : "Mother Name"
+
+mother_occupation : "Mother Occupation"
+
+income_info_title : "Income Information"
+
+income_employment : "Employment"
+
+income_monthly : "Monthly Income"
+
+income_annual : "Gross Annual Income"
+
+income_other : "Other Income"
+
+income_scheme : "Income Scheme"
+
+address_info_title : "Address Information"
+
+address : "Address"
+
+city : "City"
+
+state : "State"
+
+pincode : "PIN Code"
+
+country : "Country"
+
+cibil_report_title : "CIBIL Report"
+
+cibil_score : "CIBIL Score"
+
+cibil_tenure : "Available Loan Tenure"
+
+cibil_employment_status : "Employment Status"
+
+loan_details_title : "Loan Application Details"
+
+loan_type : "Loan Type"
+
+loan_amount : "Loan Amount"
+
+loan_duration_requested : "Loan Duration Requested"
+
+loan_annual_income : "Annual Income"
+
+loan_collateral : "Collateral"
+
+officer_decision_title : "Officer Decision"
+
+approve_loan_btn : "Approve Loan"
+
+reject_loan_btn : "Reject Loan"
+
+footer_text : "© 2026 ABC Bank. All Rights Reserved."
+
+File: support.html
+
+nav_home : "Home"
+nav_accounts : "Accounts"
+nav_loans : "Loans"
+nav_cibil : "CIBIL"
+nav_approval_status : "Approval Status"
+nav_loan_receipt : "Loan Receipt"
+nav_support : "Support"
+
+support_page_title : "Customer Support"
+support_page_desc : "We are here to help you with your banking and loan related queries."
+
+support_call_title : "Call Support"
+support_call_number : "1800-123-456"
+
+support_email_title : "Email Support"
+support_email_address : "support@abcbank.com"
+
+support_head_office : "Head Office"
+support_head_office_location : "Mumbai, India"
+
+support_form_title : "Submit a Support Request"
+
+support_full_name : "Full Name"
+support_email : "Email"
+support_phone : "Phone Number"
+
+support_issue_type : "Issue Type"
+support_issue_select : "Select Issue"
+support_issue_loan : "Loan Application"
+support_issue_account : "Account Issue"
+support_issue_cibil : "CIBIL Query"
+support_issue_payment : "Payment Issue"
+
+support_issue_desc : "Describe Your Issue"
+
+support_submit_btn : "Submit Request"
+
+support_faq_title : "Support FAQs"
+
+faq_q1 : "How long does loan approval take?"
+faq_a1 : "Loan approval typically takes 24–72 hours."
+
+faq_q2 : "How can I check my loan status?"
+faq_a2 : "You can check your status in the Approval Status page."
+
+faq_q3 : "What documents are required for loans?"
+faq_a3 : "PAN card, Aadhaar, income proof, and property documents."
+
+footer_bank_title : "ABC Bank"
+footer_bank_desc : "Trusted digital banking and loan services across India."
+
+footer_quick_links : "Quick Links"
+
+footer_home : "Home"
+footer_loans : "Loans"
+footer_officer_review : "Officer Review"
+footer_loan_approval : "Loan Approval"
+
+footer_loan_services : "Loan Servi
+footer_personal_loan : "Personal Loan"
+footer_home_loan : "Home Loan"
+footer_vehicle_loan : "Vehicle Loan"
+footer_business_loan : "Business Loan"
+
+footer_follow_us : "Follow Us"
+
+footer_copyright : "© 2026 ABC Bank"
