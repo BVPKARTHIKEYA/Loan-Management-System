@@ -141,20 +141,6 @@
     </div>
   </section>
 
-  <!-- ADDRESS -->
-  <!-- <section class="bg-white shadow rounded-xl p-6 mb-6">
-    <header>
-      <h2 class="text-2xl font-bold mb-4" data-i18n="address_info_title">Address Information</h2>
-    </header>
-    <div class="grid md:grid-cols-2 gap-4 text-lg">
-      <article><p><b data-i18n="address">Address:</b> <span id="disp-address">—</span></p></article>
-      <article><p><b data-i18n="city">City:</b> <span id="disp-city">—</span></p></article>
-      <article><p><b data-i18n="state">State:</b> <span id="disp-state">—</span></p></article>
-      <article><p><b data-i18n="pincode">PIN Code:</b> <span id="disp-pincode">—</span></p></article>
-      <article><p><b data-i18n="country">Country:</b> <span id="disp-country">—</span></p></article>
-    </div>
-  </section> -->
-
   <!-- CIBIL REPORT -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
@@ -191,10 +177,8 @@
       <p class="text-gray-500 text-base mt-1">You can change your decision at any time before legal verification.</p>
     </header>
 
-    <!-- FIX: banner shows current status but never hides/disables the buttons -->
     <div id="decision-banner" class="hidden mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold"></div>
 
-    <!-- FIX: buttons are NEVER disabled — always clickable -->
     <div id="decision-buttons" class="flex gap-4">
       <button onclick="officerDecision('approve')"
               id="btn-approve"
@@ -252,16 +236,37 @@ if (navSel) {
   applyLang(savedLang);
 }
 
-// ── Data loading ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+//  loadAllSources()
+//
+//  Income field resolution order — each field tries all sources:
+//
+//  otherIncome:
+//    1. kyc_data.otherIncome       ← FIX: bank-account.html now saves here
+//    2. loan_application_data.otherIncome
+//    3. currentUser.otherIncome    (if abcBank stored it)
+//
+//  monthlyIncome:
+//    1. cibil_data.monthlyIncome   (entered on cibil form)
+//    2. kyc_data.monthlyNetIncome  ← FIX: bank-account.html now saves here
+//    3. currentUser.monthlyNetIncome
+//
+//  annualIncome / grossAnnualIncome:
+//    1. cibil_data.annualIncome
+//    2. kyc_data.grossAnnualIncome ← FIX: bank-account.html now saves here
+//    3. currentUser.grossAnnualIncome
+//    4. loanApplication.annualIncome
+// ══════════════════════════════════════════════════════════════
 function loadAllSources() {
   var out = {};
   function jp(key) { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e) { return null; } }
 
-  var session  = jp("abcBank_currentUser");
-  var bankUser = jp("bankUser");
-  var kyc      = jp("kyc_data");
-  var loanApp  = jp("loan_application_data");
-  var cibil    = jp("cibil_data");
+  var session      = jp("abcBank_currentUser");
+  var bankUser     = jp("bankUser");
+  var kyc          = jp("kyc_data");          // bank-account.html saves income here now
+  var loanApp      = jp("loan_application_data");
+  var cibil        = jp("cibil_data");
+  var loanApproval = jp("loanApplication");
 
   var userRecord = null;
   if (session && session.email) {
@@ -271,6 +276,7 @@ function loadAllSources() {
     } catch(e) {}
   }
 
+  // ── Name ──────────────────────────────────────────────────────────
   var name = "";
   if (session) {
     if (session.fullName) name = session.fullName;
@@ -285,63 +291,94 @@ function loadAllSources() {
   if (!name && bankUser) name = bankUser.name || "";
   out.name = name;
 
-  out.dob    = (session?.dob)    || (userRecord?.dob)    || (kyc?.dob)    || (cibil?.dob)    || "";
-  out.email  = (session?.email)  || (userRecord?.email)  || "";
-  out.mobile = (session?.mobile || session?.phone || session?.mobileNumber)
-            || (userRecord?.mobile || userRecord?.phone || userRecord?.mobileNumber)
-            || (kyc?.mobile) || "";
+  // ── Personal fields ───────────────────────────────────────────────
+  out.dob    = cibil?.dob || kyc?.dob || session?.dob || userRecord?.dob || "";
+  out.email  = session?.email  || userRecord?.email  || "";
+  out.mobile = session?.mobile || session?.phone || session?.mobileNumber
+            || userRecord?.mobile || userRecord?.phone
+            || kyc?.mobile || "";
 
-  out.aadhaar = (kyc?.aadhaar || kyc?.aadhaarNumber)
-             || (loanApp?.aadhaar || loanApp?.aadhaarNumber)
-             || (session?.aadhaar || session?.aadhaarNumber)
-             || (userRecord?.aadhaar || userRecord?.aadhaarNumber) || "";
+  out.aadhaar = kyc?.aadhaar || kyc?.aadhaarNumber
+             || loanApp?.aadhaar || loanApp?.aadhaarNumber
+             || session?.aadhaar || session?.aadhaarNumber
+             || userRecord?.aadhaar || userRecord?.aadhaarNumber || "";
 
-  out.pan = (kyc?.pan || kyc?.panNumber)
-         || (loanApp?.pan || loanApp?.panNumber)
-         || (session?.pan || session?.panNumber)
-         || (userRecord?.pan || userRecord?.panNumber) || "";
+  out.pan = kyc?.pan || kyc?.panNumber
+         || loanApp?.pan || loanApp?.panNumber
+         || session?.pan || session?.panNumber
+         || userRecord?.pan || userRecord?.panNumber || "";
 
-  out.fatherName = (kyc?.fatherName) || (loanApp?.fatherName) || (session?.fatherName) || (userRecord?.fatherName) || "";
-  out.motherName = (kyc?.motherName) || (loanApp?.motherName) || (session?.motherName) || (userRecord?.motherName) || "";
+  out.fatherName = kyc?.fatherName || loanApp?.fatherName || session?.fatherName || userRecord?.fatherName || "";
+  out.motherName = kyc?.motherName || loanApp?.motherName || session?.motherName || userRecord?.motherName || "";
 
   var addrObj = (session?.address && typeof session.address === "object") ? session.address
               : (userRecord?.address && typeof userRecord.address === "object") ? userRecord.address
               : null;
 
-  out.address = (loanApp?.address) || (kyc?.address) || (addrObj?.line)    || (typeof session?.address === "string" && session.address) || "";
-  out.city    = (loanApp?.city)    || (kyc?.city)    || (addrObj?.city)    || (session?.city)    || "";
-  out.state   = (loanApp?.state)   || (kyc?.state)   || (addrObj?.state)   || (session?.state)   || "";
-  out.pincode = (loanApp?.pincode || loanApp?.pin) || (kyc?.pincode || kyc?.pin) || (addrObj?.pincode) || (session?.pincode) || "";
-  out.country = (loanApp?.country) || (kyc?.country) || "India";
+  out.address = loanApp?.address || kyc?.address || addrObj?.line || (typeof session?.address === "string" && session.address) || "";
+  out.city    = loanApp?.city    || kyc?.city    || addrObj?.city    || session?.city    || "";
+  out.state   = loanApp?.state   || kyc?.state   || addrObj?.state   || session?.state   || "";
+  out.pincode = loanApp?.pincode || loanApp?.pin || kyc?.pincode || kyc?.pin || addrObj?.pincode || session?.pincode || "";
+  out.country = loanApp?.country || kyc?.country || "India";
 
-  var loanApproval = jp("loanApplication");
+  // ── Employment ────────────────────────────────────────────────────
+  out.employment = cibil?.employment || loanApproval?.employment || "";
 
-  out.employment    = (cibil?.employment)    || (loanApproval?.employment) || "";
-  out.monthlyIncome = (cibil?.monthlyIncome) || "";
-  out.annualIncome  = (cibil?.annualIncome)  || (loanApproval?.annualIncome) || "";
-  out.otherIncome   = (loanApp?.otherIncome) || "";
+  // ── Monthly income ────────────────────────────────────────────────
+  // Priority: cibil form → bank-account form (kyc_data) → user record
+  out.monthlyIncome = cibil?.monthlyIncome
+                   || kyc?.monthlyNetIncome
+                   || userRecord?.monthlyNetIncome
+                   || session?.monthlyNetIncome
+                   || "";
 
-  out.loanType   = (cibil?.loanTypeLabel || cibil?.loanType) || (loanApproval?.loanType) || localStorage.getItem("loan_type_selected") || "";
-  out.loanAmount = (cibil?.loanAmount)   || (loanApproval?.loanAmount)   || localStorage.getItem("loan_amount_requested") || "";
-  out.cibilScore = (cibil?.score)        || localStorage.getItem("loan_score") || "";
+  // ── Gross annual income ───────────────────────────────────────────
+  // Priority: cibil form → bank-account form (kyc_data) → user record → legacy
+  out.annualIncome  = cibil?.annualIncome
+                   || kyc?.grossAnnualIncome
+                   || userRecord?.grossAnnualIncome
+                   || session?.grossAnnualIncome
+                   || loanApproval?.annualIncome
+                   || "";
 
+  // ── Other income ──────────────────────────────────────────────────
+  // FIX: bank-account.html now saves otherIncome to kyc_data
+  // Priority: kyc_data → loan_application_data → user record
+  out.otherIncome   = kyc?.otherIncome
+                   || loanApp?.otherIncome
+                   || userRecord?.otherIncome
+                   || session?.otherIncome
+                   || "";
+
+  // ── CIBIL ─────────────────────────────────────────────────────────
+  out.cibilScore = cibil?.score || localStorage.getItem("loan_score") || "";
+
+  // ── Tenure: floor-based age (consistent with my-account.html fix) ─
   var tenure = null;
   if (out.dob) {
     var birth = new Date(out.dob);
-    tenure = Math.max(0, 60 - Math.ceil((new Date() - birth) / (1000 * 60 * 60 * 24 * 365.25)));
+    var today = new Date();
+    var age   = today.getFullYear() - birth.getFullYear() -
+                ((today.getMonth() < birth.getMonth() ||
+                 (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) ? 1 : 0);
+    tenure = Math.max(0, 60 - age);
   }
-  if (!tenure) tenure = parseInt(localStorage.getItem("loanTenure")) || null;
+  if (tenure === null) tenure = parseInt(localStorage.getItem("loanTenure")) || null;
   out.tenure = tenure;
 
-  out.loanDuration = (loanApp?.loanDuration) || tenure || "";
-  out.collateral   = (loanApproval?.collateral) || (loanApp?.collateral) || "";
+  // ── Loan fields ───────────────────────────────────────────────────
+  out.loanType     = cibil?.loanTypeLabel || cibil?.loanType || loanApproval?.loanType || localStorage.getItem("loan_type_selected") || "";
+  out.loanAmount   = cibil?.loanAmount   || loanApproval?.loanAmount || localStorage.getItem("loan_amount_requested") || "";
+  out.loanDuration = loanApp?.loanDuration || loanApp?.duration || tenure || "";
+  out.collateral   = loanApproval?.collateral || loanApp?.collateral || "";
 
   return out;
 }
 
+// ── Helpers ──────────────────────────────────────────────────────────
 function fmtCurr(n) {
   var num = parseInt(n);
-  return isNaN(num) || n === "" || n === null ? "—" : "₹" + num.toLocaleString("en-IN");
+  return isNaN(num) || n === "" || n === null || n === 0 ? "—" : "₹" + num.toLocaleString("en-IN");
 }
 function fmtDate(dobStr) {
   if (!dobStr) return "—";
@@ -361,6 +398,7 @@ function set(id, value) {
   if (el) el.textContent = (value !== undefined && value !== null && value !== "") ? value : "—";
 }
 
+// ── Populate page ────────────────────────────────────────────────────
 function populatePage() {
   var d = loadAllSources();
   set("disp-name",    d.name);
@@ -376,14 +414,8 @@ function populatePage() {
   set("disp-employment",     d.employment);
   set("disp-monthly-income", fmtCurr(d.monthlyIncome));
   set("disp-annual-income",  fmtCurr(d.annualIncome));
-  set("disp-other-income",   d.otherIncome ? fmtCurr(d.otherIncome) : "—");
+  set("disp-other-income",   fmtCurr(d.otherIncome));
   set("disp-income-scheme",  incomeScheme(d.employment));
-
-  set("disp-address", d.address);
-  set("disp-city",    d.city);
-  set("disp-state",   d.state);
-  set("disp-pincode", d.pincode);
-  set("disp-country", d.country);
 
   set("disp-cibil-score",      d.cibilScore);
   set("disp-cibil-employment", d.employment);
@@ -398,12 +430,7 @@ function populatePage() {
 
 populatePage();
 
-// ══════════════════════════════════════════════════════════════
-//  DECISION BANNER — shows current status, never locks buttons
-// ══════════════════════════════════════════════════════════════
-
-// FIX: updateDecisionBanner() only updates visuals — buttons stay enabled always.
-// Called on page load and after every new decision.
+// ── Decision banner ──────────────────────────────────────────────────
 function updateDecisionBanner(type) {
   var banner = document.getElementById("decision-banner");
 
@@ -433,15 +460,11 @@ function updateDecisionBanner(type) {
   }
 }
 
-// On page load: reflect any previously stored decision without locking
 updateDecisionBanner(localStorage.getItem("loan_officer_decision"));
 
-// ══════════════════════════════════════════════════════════════
-//  OFFICER DECISION — fully re-callable, no locking
-// ══════════════════════════════════════════════════════════════
+// ── Officer decision ─────────────────────────────────────────────────
 function officerDecision(action) {
   if (action === 'approve') {
-    // Save immediately so it persists even if user closes swal
     localStorage.setItem("loan_officer_decision", "approved");
     updateDecisionBanner("approved");
     swal({

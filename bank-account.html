@@ -4,56 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Open Bank Account</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="shared.js"></script>
     <script src="logic.js"></script>
-
     <style>
         #lang-switcher { display: none !important; }
         .preview-container { max-height: 120px; overflow: hidden; }
         .preview-img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; }
-
-        /* Subtle "already uploaded" indicator on file inputs */
-        .file-stored-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: #dcfce7; color: #16a34a;
-            font-size: 12px; font-weight: 700;
-            padding: 2px 10px; border-radius: 999px;
-            margin-top: 6px;
-        }
-        .file-stored-badge.pdf {
-            background: #fee2e2; color: #dc2626;
-        }
+        .file-stored-badge { display:inline-flex;align-items:center;gap:5px;background:#dcfce7;color:#16a34a;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-top:6px; }
+        .file-stored-badge.pdf { background:#fee2e2;color:#dc2626; }
     </style>
 </head>
 <body class="bg-gray-100">
 
-<!-- NAVBAR -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
-
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
         <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
         <h1 class="text-3xl font-bold" data-i18n="account">ABC Bank</h1>
       </a>
-
-      <a href="home.html"
-         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
-        <i class="fa fa-arrow-left"></i>
-        <span data-i18n="account_back_dashboard">Back to Dashboard</span>
+      <a href="home.html" class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i><span data-i18n="account_back_dashboard">Back to Dashboard</span>
       </a>
-
       <div class="flex items-center gap-4 flex-shrink-0">
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
-          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
-            <i class="fa fa-globe"></i> Lang:
-          </label>
-          <select id="nav-lang-select"
-                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;"><i class="fa fa-globe"></i> Lang:</label>
+          <select id="nav-lang-select" style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
             <option value="ta" style="background:#1e3a5f">தமிழ்</option>
@@ -62,7 +41,6 @@
             <option value="hi" style="background:#1e3a5f">हिन्दी</option>
           </select>
         </div>
-
         <div class="relative group">
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
@@ -77,14 +55,8 @@
               <p class="font-semibold text-lg" id="profileName">Loading...</p>
               <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
             </div>
-            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
-              <i class="fa fa-home mr-2"></i>
-              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-            </a>
-            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
-              <i class="fa fa-sign-out-alt mr-2"></i>
-              <span data-i18n="nav_logout">Logout</span>
-            </a>
+            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100"><i class="fa fa-home mr-2"></i><span data-i18n="account_back_dashboard">Back to Dashboard</span></a>
+            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600"><i class="fa fa-sign-out-alt mr-2"></i><span data-i18n="nav_logout">Logout</span></a>
           </div>
         </div>
       </div>
@@ -100,70 +72,31 @@
 <main class="max-w-7xl mx-auto p-6">
 <form id="accountForm" class="bg-white shadow-xl rounded-xl p-10 space-y-12">
 
-  <!-- Personal Information -->
   <section>
-    <header class="mb-6">
-      <h2 class="text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2>
-    </header>
+    <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
-      <div>
-        <label class="font-semibold text-lg" data-i18n="full_name">Full Name</label>
-        <input id="name" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="date_of_birth">Date of Birth</label>
-        <input id="dob" type="date" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="email">Email</label>
-        <input id="email" type="email" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="mobile_number">Mobile Number</label>
-        <input id="mobile" type="tel" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="aadhaar_number">Aadhaar Number</label>
-        <input id="aadhaar" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="pan_number">PAN Number</label>
-        <input id="pan" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-      </div>
+      <div><label class="font-semibold text-lg" data-i18n="full_name">Full Name</label><input id="name" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
+      <div><label class="font-semibold text-lg" data-i18n="date_of_birth">Date of Birth</label><input id="dob" type="date" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
+      <div><label class="font-semibold text-lg" data-i18n="email">Email</label><input id="email" type="email" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
+      <div><label class="font-semibold text-lg" data-i18n="mobile_number">Mobile Number</label><input id="mobile" type="tel" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
+      <div><label class="font-semibold text-lg" data-i18n="aadhaar_number">Aadhaar Number</label><input id="aadhaar" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
+      <div><label class="font-semibold text-lg" data-i18n="pan_number">PAN Number</label><input id="pan" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required></div>
     </div>
   </section>
 
-  <!-- Parent Details -->
   <section>
-    <header class="mb-6">
-      <h2 class="text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2>
-    </header>
+    <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
-      <div>
-        <label class="font-semibold text-lg" data-i18n="father_name">Father Name</label>
-        <input id="father" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="mother_name">Mother Name</label>
-        <input id="mother" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
+      <div><label class="font-semibold text-lg" data-i18n="father_name">Father Name</label><input id="father" type="text" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
+      <div><label class="font-semibold text-lg" data-i18n="mother_name">Mother Name</label><input id="mother" type="text" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
     </div>
   </section>
 
-  <!-- Address Information -->
   <section>
-    <header class="mb-6">
-      <h2 class="text-2xl font-bold" data-i18n="address_info_title">Address Information</h2>
-    </header>
+    <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="address_info_title">Address Information</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
-      <div class="md:col-span-2">
-        <label class="font-semibold text-lg" data-i18n="address">Address</label>
-        <textarea id="address" class="w-full border rounded-md p-3 mt-2 text-lg"></textarea>
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="city">City</label>
-        <input id="city" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
+      <div class="md:col-span-2"><label class="font-semibold text-lg" data-i18n="address">Address</label><textarea id="address" class="w-full border rounded-md p-3 mt-2 text-lg"></textarea></div>
+      <div><label class="font-semibold text-lg" data-i18n="city">City</label><input id="city" type="text" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
       <div>
         <label class="font-semibold text-lg" data-i18n="state">State</label>
         <select id="state" class="w-full border rounded-md p-3 mt-2 text-lg">
@@ -173,393 +106,261 @@
           <option data-i18n="state_karnataka">Karnataka</option>
         </select>
       </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="pincode">PIN Code</label>
-        <input id="pincode" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
+      <div><label class="font-semibold text-lg" data-i18n="pincode">PIN Code</label><input id="pincode" type="number" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
     </div>
   </section>
 
-  <!-- Account Type -->
   <section>
-    <header>
-      <h2 class="text-3xl font-bold text-blue-900 mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2>
-    </header>
+    <header><h2 class="text-3xl font-bold text-blue-900 mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2></header>
     <p class="text-lg text-gray-600 mb-6" data-i18n="account_type_desc">Choose the account that best fits your banking needs.</p>
     <div class="grid md:grid-cols-2 gap-8">
       <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer transition">
         <input type="radio" name="account" value="savings" class="mb-4" checked>
-        <div class="flex items-center gap-4 mb-4">
-          <span class="text-5xl">🏦</span>
-          <h3 class="text-2xl font-bold text-blue-900" data-i18n="savings_account">Savings Account</h3>
-        </div>
+        <div class="flex items-center gap-4 mb-4"><span class="text-5xl">🏦</span><h3 class="text-2xl font-bold text-blue-900" data-i18n="savings_account">Savings Account</h3></div>
         <p class="text-lg text-gray-700" data-i18n="savings_account_desc">Ideal for individuals who want to safely save money and earn interest.</p>
       </label>
       <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer transition">
         <input type="radio" name="account" value="current" class="mb-4">
-        <div class="flex items-center gap-4 mb-4">
-          <span class="text-5xl">💼</span>
-          <h3 class="text-2xl font-bold text-blue-900" data-i18n="current_account">Current Account</h3>
-        </div>
+        <div class="flex items-center gap-4 mb-4"><span class="text-5xl">💼</span><h3 class="text-2xl font-bold text-blue-900" data-i18n="current_account">Current Account</h3></div>
         <p class="text-lg text-gray-700" data-i18n="current_account_desc">Designed for businesses that perform frequent financial transactions.</p>
       </label>
     </div>
   </section>
 
-  <!-- Income Details -->
+  <!-- Income Details — all 3 fields -->
   <section>
-    <header>
-      <h2 class="text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2>
-    </header>
+    <header><h2 class="text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
-      <div>
-        <label class="font-semibold text-lg" data-i18n="gross_annual_income">Gross Annual Income</label>
-        <input id="grossIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="monthly_net_income">Monthly Net Income</label>
-        <input id="netIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
-      <div>
-        <label class="font-semibold text-lg" data-i18n="other_income">Other Income</label>
-        <input id="otherIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-      </div>
+      <div><label class="font-semibold text-lg" data-i18n="gross_annual_income">Gross Annual Income</label><input id="grossIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
+      <div><label class="font-semibold text-lg" data-i18n="monthly_net_income">Monthly Net Income</label><input id="netIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
+      <div><label class="font-semibold text-lg" data-i18n="other_income">Other Income</label><input id="otherIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
       <div>
         <label class="font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
         <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
-        <!-- FIX: restored-from-storage badge -->
         <div id="badge-incomeDoc"></div>
-        <div id="preview-incomeDoc" class="preview-container mt-2 hidden">
-          <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
-        </div>
+        <div id="preview-incomeDoc" class="preview-container mt-2 hidden"><img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview"></div>
       </div>
     </div>
   </section>
 
-  <!-- KYC Document Upload -->
   <section>
     <header class="mb-6">
       <h2 class="text-2xl font-bold" data-i18n="kyc_upload_title">KYC Document Upload</h2>
       <p class="text-gray-600" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card, signature and property document (if applicable) for verification.</p>
     </header>
     <div class="grid md:grid-cols-2 gap-6">
-
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
         <input id="aadhaarFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
         <div id="badge-aadhaarFile"></div>
-        <div id="preview-aadhaar" class="preview-container mt-2 hidden">
-          <img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview">
-        </div>
+        <div id="preview-aadhaar" class="preview-container mt-2 hidden"><img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview"></div>
       </div>
-
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
         <input id="panFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
         <div id="badge-panFile"></div>
-        <div id="preview-pan" class="preview-container mt-2 hidden">
-          <img id="img-pan" class="preview-img" src="" alt="PAN Preview">
-        </div>
+        <div id="preview-pan" class="preview-container mt-2 hidden"><img id="img-pan" class="preview-img" src="" alt="PAN Preview"></div>
       </div>
-
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
         <input id="signatureFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
         <div id="badge-signatureFile"></div>
-        <div id="preview-signature" class="preview-container mt-2 hidden">
-          <img id="img-signature" class="preview-img" src="" alt="Signature Preview">
-        </div>
+        <div id="preview-signature" class="preview-container mt-2 hidden"><img id="img-signature" class="preview-img" src="" alt="Signature Preview"></div>
       </div>
-
       <div>
         <label class="font-semibold text-lg" data-i18n="doc_property">Property Document (optional)</label>
         <input id="propertyFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
         <div id="badge-propertyFile"></div>
-        <div id="preview-property" class="preview-container mt-2 hidden">
-          <img id="img-property" class="preview-img" src="" alt="Property Preview">
-        </div>
+        <div id="preview-property" class="preview-container mt-2 hidden"><img id="img-property" class="preview-img" src="" alt="Property Preview"></div>
       </div>
-
     </div>
   </section>
 
-  <!-- Submit Button -->
   <section>
-    <button type="button" onclick="validateForm()"
-            class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
-      <i class="fa fa-check-circle mr-2"></i>
-      <span data-i18n="submit_account_application">Submit Account Application</span>
+    <button type="button" onclick="validateForm()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
+      <i class="fa fa-check-circle mr-2"></i><span data-i18n="submit_account_application">Submit Account Application</span>
     </button>
   </section>
 
 </form>
 </main>
-
-<footer class="text-center text-gray-500 text-sm py-6">
-  © 2026 ABC Bank. All rights reserved.
-</footer>
+<footer class="text-center text-gray-500 text-sm py-6">© 2026 ABC Bank. All rights reserved.</footer>
 
 <script>
-// ── Page protection ──────────────────────────────────────────────────
-if (!abcBank?.isLoggedIn?.()) {
-    window.location.replace("login.html");
-}
+if (!abcBank?.isLoggedIn?.()) window.location.replace("login.html");
 
-// ── Load current user ────────────────────────────────────────────────
-const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
+const currentUser = abcBank.getCurrentUser() || {};
 const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
-
 document.getElementById("username").textContent    = fullName;
 document.getElementById("profileName").textContent = fullName;
-
 if (currentUser.account?.accountNumber) {
-    const accNum = currentUser.account.accountNumber;
-    document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
-    document.getElementById("userid").textContent = `ID: ${accNum.slice(-6) || "—"}`;
+    const a = currentUser.account.accountNumber;
+    document.getElementById("profileAccount").textContent = "Account: " + a;
+    document.getElementById("userid").textContent = "ID: " + (a.slice(-6) || "—");
 } else {
     document.getElementById("profileAccount").textContent = "Account: Not Opened";
     document.getElementById("userid").textContent = "ID: —";
 }
 
-// ── Language setup ───────────────────────────────────────────────────
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-if (navSel) {
-    navSel.value = savedLang;
-    navSel.addEventListener('change', function() { applyLang(this.value); });
-    applyLang(savedLang);
-}
+if (navSel) { navSel.value = savedLang; navSel.addEventListener('change', function() { applyLang(this.value); }); applyLang(savedLang); }
 
-// ════════════════════════════════════════════════════════════════
-//  FILE CONFIG
-//  Each entry maps an <input id> → localStorage keys + preview IDs.
-//  This single config drives BOTH on-load restore AND change handler.
-// ════════════════════════════════════════════════════════════════
 const FILE_CONFIG = {
-    aadhaarFile:   { preview: "preview-aadhaar",   img: "img-aadhaar",   storage: "kyc_doc_aadhaar",   nameKey: "kyc_doc_aadhaar_name",   badge: "badge-aadhaarFile"   },
-    panFile:       { preview: "preview-pan",       img: "img-pan",       storage: "kyc_doc_pan",       nameKey: "kyc_doc_pan_name",       badge: "badge-panFile"       },
-    signatureFile: { preview: "preview-signature", img: "img-signature", storage: "kyc_doc_signature", nameKey: "kyc_doc_signature_name", badge: "badge-signatureFile" },
-    propertyFile:  { preview: "preview-property",  img: "img-property",  storage: "kyc_doc_property",  nameKey: "kyc_doc_property_name",  badge: "badge-propertyFile"  },
-    incomeDoc:     { preview: "preview-incomeDoc", img: "img-incomeDoc", storage: "kyc_doc_income",    nameKey: "kyc_doc_income_name",    badge: "badge-incomeDoc"     }
+    aadhaarFile:   {preview:"preview-aadhaar",  img:"img-aadhaar",  storage:"kyc_doc_aadhaar",  nameKey:"kyc_doc_aadhaar_name",  badge:"badge-aadhaarFile"},
+    panFile:       {preview:"preview-pan",      img:"img-pan",      storage:"kyc_doc_pan",      nameKey:"kyc_doc_pan_name",      badge:"badge-panFile"},
+    signatureFile: {preview:"preview-signature",img:"img-signature",storage:"kyc_doc_signature",nameKey:"kyc_doc_signature_name",badge:"badge-signatureFile"},
+    propertyFile:  {preview:"preview-property", img:"img-property", storage:"kyc_doc_property", nameKey:"kyc_doc_property_name", badge:"badge-propertyFile"},
+    incomeDoc:     {preview:"preview-incomeDoc",img:"img-incomeDoc",storage:"kyc_doc_income",   nameKey:"kyc_doc_income_name",   badge:"badge-incomeDoc"}
 };
 
-// ── Helper: show a preview image or PDF badge under an input ─────────
 function showStoredPreview(cfg, dataUrl, fileName) {
-    // Image preview
     if (dataUrl && dataUrl.startsWith("data:image")) {
-        const previewDiv = document.getElementById(cfg.preview);
-        const imgEl      = document.getElementById(cfg.img);
-        if (previewDiv && imgEl) {
-            imgEl.src = dataUrl;
-            previewDiv.classList.remove("hidden");
-        }
+        const p = document.getElementById(cfg.preview), i = document.getElementById(cfg.img);
+        if (p && i) { i.src = dataUrl; p.classList.remove("hidden"); }
     }
-    // Badge: "✓ filename.ext (already uploaded)" below the input
-    const badgeEl = document.getElementById(cfg.badge);
-    if (badgeEl && dataUrl) {
-        const isPdf = !dataUrl.startsWith("data:image");
-        badgeEl.innerHTML =
-            `<span class="file-stored-badge${isPdf ? " pdf" : ""}">` +
-            `<i class="fa ${isPdf ? "fa-file-pdf" : "fa-check"}"></i> ` +
-            `${fileName || "File already uploaded"}</span>`;
+    const b = document.getElementById(cfg.badge);
+    if (b && dataUrl) {
+        const pdf = !dataUrl.startsWith("data:image");
+        b.innerHTML = `<span class="file-stored-badge${pdf?" pdf":""}"><i class="fa ${pdf?"fa-file-pdf":"fa-check"}"></i> ${fileName||"File already uploaded"}</span>`;
     }
 }
 
-// ════════════════════════════════════════════════════════════════
-//  ON PAGE LOAD — restore previously saved files from localStorage
-//  so the user can see what was already uploaded in a prior session.
-// ════════════════════════════════════════════════════════════════
+// Restore saved file previews on load
 Object.keys(FILE_CONFIG).forEach(id => {
-    const cfg      = FILE_CONFIG[id];
-    const dataUrl  = localStorage.getItem(cfg.storage);
-    const fileName = localStorage.getItem(cfg.nameKey) || "";
-    if (dataUrl) {
-        showStoredPreview(cfg, dataUrl, fileName);
-    }
+    const cfg = FILE_CONFIG[id];
+    const d = localStorage.getItem(cfg.storage), n = localStorage.getItem(cfg.nameKey)||"";
+    if (d) showStoredPreview(cfg, d, n);
 });
 
-// ════════════════════════════════════════════════════════════════
-//  ON FILE CHANGE — save new file to localStorage + show preview
-// ════════════════════════════════════════════════════════════════
+// Save on new file select
 Object.keys(FILE_CONFIG).forEach(id => {
-    const input = document.getElementById(id);
-    if (!input) return;
-
+    const input = document.getElementById(id); if (!input) return;
     input.addEventListener("change", function() {
-        const file = this.files[0];
-        if (!file) return;
-
-        const cfg    = FILE_CONFIG[id];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
+        const file = this.files[0]; if (!file) return;
+        const cfg = FILE_CONFIG[id], reader = new FileReader();
+        reader.onload = e => {
             const dataUrl = e.target.result;
-
-            try {
-                localStorage.setItem(cfg.storage, dataUrl);
-                localStorage.setItem(cfg.nameKey,  file.name);
-            } catch (err) {
-                console.warn("File storage failed:", err);
-                swal("Warning", `File "${file.name}" is too large to store locally (> ~5MB).`, "warning");
-                return;
-            }
-
+            try { localStorage.setItem(cfg.storage, dataUrl); localStorage.setItem(cfg.nameKey, file.name); }
+            catch(err) { swal("Warning", `File "${file.name}" is too large to store locally.`, "warning"); return; }
             showStoredPreview(cfg, dataUrl, file.name);
         };
-
         reader.readAsDataURL(file);
     });
 });
 
-// ════════════════════════════════════════════════════════════════
-//  ALSO restore saved KYC text fields if user returns to this page
-// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+//  RESTORE TEXT FIELDS — including all 3 income fields
+// ════════════════════════════════════════════════════════
 (function restoreTextFields() {
     try {
         const kyc = JSON.parse(localStorage.getItem("kyc_data") || "null");
         if (!kyc) return;
-
         const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
-        set("name",    kyc.name);
-        set("dob",     kyc.dob);
-        set("email",   kyc.email);
-        set("mobile",  kyc.mobile);
-        set("aadhaar", kyc.aadhaar);
-        set("pan",     kyc.pan);
-        set("father",  kyc.fatherName);
-        set("mother",  kyc.motherName);
+        set("name", kyc.name); set("dob", kyc.dob); set("email", kyc.email);
+        set("mobile", kyc.mobile); set("aadhaar", kyc.aadhaar); set("pan", kyc.pan);
+        set("father", kyc.fatherName); set("mother", kyc.motherName);
         if (kyc.address) {
-            set("address", kyc.address.line);
-            set("city",    kyc.address.city);
-            set("pincode", kyc.address.pincode);
-            const stateEl = document.getElementById("state");
-            if (stateEl && kyc.address.state) {
-                // Match by text content of options (handles translated labels)
-                Array.from(stateEl.options).forEach(opt => {
-                    if (opt.value === kyc.address.state || opt.textContent.trim() === kyc.address.state) {
-                        stateEl.value = opt.value;
-                    }
-                });
-            }
+            set("address", kyc.address.line); set("city", kyc.address.city); set("pincode", kyc.address.pincode);
+            const stEl = document.getElementById("state");
+            if (stEl && kyc.address.state)
+                Array.from(stEl.options).forEach(o => { if (o.value===kyc.address.state||o.textContent.trim()===kyc.address.state) stEl.value=o.value; });
         }
-        // Restore gross income from account details if stored
-        const userRec = abcBank.getCurrentUser?.();
-        if (userRec?.grossAnnualIncome) {
-            const gi = document.getElementById("grossIncome");
-            if (gi) gi.value = userRec.grossAnnualIncome;
-        }
+        // ── Income fields ────────────────────────────────────────
+        if (kyc.grossAnnualIncome) set("grossIncome", kyc.grossAnnualIncome);
+        if (kyc.monthlyNetIncome)  set("netIncome",   kyc.monthlyNetIncome);
+        if (kyc.otherIncome)       set("otherIncome", kyc.otherIncome);
     } catch(e) {}
 })();
 
-// ── Form validation & submit ─────────────────────────────────────────
 function validateForm() {
     const lang = localStorage.getItem('abcbank_lang') || 'en';
     const d = I18N?.[lang] || {
-        alert_name_missing:           "Please enter your full name.",
-        alert_invalid_mobile_title:   "Invalid Mobile",
-        alert_invalid_mobile_text:    "Please enter a valid 10-digit mobile number.",
-        alert_invalid_aadhaar_title:  "Invalid Aadhaar",
-        alert_invalid_aadhaar_text:   "Aadhaar must be exactly 12 digits.",
-        alert_invalid_pan_title:      "Invalid PAN",
-        alert_invalid_pan_text:       "Please enter a valid PAN format (e.g. ABCDE1234F).",
-        alert_income_missing_title:   "Income Missing",
-        alert_income_missing_text:    "Please provide your gross annual income.",
-        alert_missing_document_title: "Missing Document",
-        alert_missing_aadhaar:        "Please upload your Aadhaar card.",
-        alert_missing_pan:            "Please upload your PAN card.",
-        alert_missing_signature:      "Please upload your signature.",
-        alert_application_success_title: "Application Submitted!",
-        alert_application_success_text:  "Your account has been opened successfully."
+        alert_name_missing:"Please enter your full name.",
+        alert_invalid_mobile_title:"Invalid Mobile",alert_invalid_mobile_text:"Please enter a valid 10-digit mobile number.",
+        alert_invalid_aadhaar_title:"Invalid Aadhaar",alert_invalid_aadhaar_text:"Aadhaar must be exactly 12 digits.",
+        alert_invalid_pan_title:"Invalid PAN",alert_invalid_pan_text:"Please enter a valid PAN format (e.g. ABCDE1234F).",
+        alert_income_missing_title:"Income Missing",alert_income_missing_text:"Please provide your gross annual income.",
+        alert_missing_document_title:"Missing Document",
+        alert_missing_aadhaar:"Please upload your Aadhaar card.",
+        alert_missing_pan:"Please upload your PAN card.",
+        alert_missing_signature:"Please upload your signature.",
+        alert_application_success_title:"Application Submitted!",
+        alert_application_success_text:"Your account has been opened successfully."
     };
 
-    const name        = document.getElementById("name").value.trim();
-    const dob         = document.getElementById("dob").value;
-    const email       = document.getElementById("email").value.trim();
-    const mobile      = document.getElementById("mobile").value.trim();
-    const aadhaar     = document.getElementById("aadhaar").value.trim();
-    const pan         = document.getElementById("pan").value.trim();
-    const father      = document.getElementById("father").value.trim();
-    const mother      = document.getElementById("mother").value.trim();
-    const address     = document.getElementById("address").value.trim();
-    const city        = document.getElementById("city").value.trim();
-    const state       = document.getElementById("state").value;
-    const pincode     = document.getElementById("pincode").value.trim();
-    const accountType = document.querySelector('input[name="account"]:checked')?.value;
+    const name=document.getElementById("name").value.trim(), dob=document.getElementById("dob").value,
+          email=document.getElementById("email").value.trim(), mobile=document.getElementById("mobile").value.trim(),
+          aadhaar=document.getElementById("aadhaar").value.trim(), pan=document.getElementById("pan").value.trim(),
+          father=document.getElementById("father").value.trim(), mother=document.getElementById("mother").value.trim(),
+          address=document.getElementById("address").value.trim(), city=document.getElementById("city").value.trim(),
+          state=document.getElementById("state").value, pincode=document.getElementById("pincode").value.trim(),
+          accountType=document.querySelector('input[name="account"]:checked')?.value;
+
+    // ── Read all 3 income fields ─────────────────────────────────
     const grossIncome = document.getElementById("grossIncome").value.trim();
+    const netIncome   = document.getElementById("netIncome").value.trim();
+    const otherIncome = document.getElementById("otherIncome").value.trim();
 
-    // FIX: accept file if EITHER a new file was chosen this session
-    //      OR one was already saved to localStorage in a previous session.
-    const hasAadhaar   = document.getElementById("aadhaarFile").files.length > 0
-                         || !!localStorage.getItem("kyc_doc_aadhaar");
-    const hasPan       = document.getElementById("panFile").files.length > 0
-                         || !!localStorage.getItem("kyc_doc_pan");
-    const hasSignature = document.getElementById("signatureFile").files.length > 0
-                         || !!localStorage.getItem("kyc_doc_signature");
+    const hasAadhaar  =document.getElementById("aadhaarFile").files.length>0||!!localStorage.getItem("kyc_doc_aadhaar");
+    const hasPan      =document.getElementById("panFile").files.length>0||!!localStorage.getItem("kyc_doc_pan");
+    const hasSignature=document.getElementById("signatureFile").files.length>0||!!localStorage.getItem("kyc_doc_signature");
 
-    if (!name)                                      return swal("Error", d.alert_name_missing, "error");
-    if (!/^[6-9]\d{9}$/.test(mobile))              return swal(d.alert_invalid_mobile_title, d.alert_invalid_mobile_text, "error");
-    if (!/^\d{12}$/.test(aadhaar))                 return swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error");
-    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan))        return swal(d.alert_invalid_pan_title, d.alert_invalid_pan_text, "error");
-    if (!grossIncome)                               return swal(d.alert_income_missing_title, d.alert_income_missing_text, "warning");
-    if (!hasAadhaar)                                return swal(d.alert_missing_document_title, d.alert_missing_aadhaar, "warning");
-    if (!hasPan)                                    return swal(d.alert_missing_document_title, d.alert_missing_pan, "warning");
-    if (!hasSignature)                              return swal(d.alert_missing_document_title, d.alert_missing_signature, "warning");
-    if (!accountType)                               return swal("Error", "Please select account type", "error");
+    if (!name)                               return swal("Error",d.alert_name_missing,"error");
+    if (!/^[6-9]\d{9}$/.test(mobile))       return swal(d.alert_invalid_mobile_title,d.alert_invalid_mobile_text,"error");
+    if (!/^\d{12}$/.test(aadhaar))           return swal(d.alert_invalid_aadhaar_title,d.alert_invalid_aadhaar_text,"error");
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan)) return swal(d.alert_invalid_pan_title,d.alert_invalid_pan_text,"error");
+    if (!grossIncome)                        return swal(d.alert_income_missing_title,d.alert_income_missing_text,"warning");
+    if (!hasAadhaar)                         return swal(d.alert_missing_document_title,d.alert_missing_aadhaar,"warning");
+    if (!hasPan)                             return swal(d.alert_missing_document_title,d.alert_missing_pan,"warning");
+    if (!hasSignature)                       return swal(d.alert_missing_document_title,d.alert_missing_signature,"warning");
+    if (!accountType)                        return swal("Error","Please select account type","error");
 
-    // Calculate age
-    let age = null;
+    let age=null;
     if (dob) {
-        const birth = new Date(dob);
-        const today = new Date();
-        age = today.getFullYear() - birth.getFullYear();
-        const m = today.getMonth() - birth.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-        if (age < 0 || age > 120) age = null;
+        const birth=new Date(dob),today=new Date();
+        age=today.getFullYear()-birth.getFullYear();
+        const m=today.getMonth()-birth.getMonth();
+        if (m<0||(m===0&&today.getDate()<birth.getDate())) age--;
+        if (age<0||age>120) age=null;
     }
 
-    // Save KYC text data
+    // ════════════════════════════════════════════════════════════
+    //  SAVE kyc_data — all 3 income fields stored here so that
+    //  officer-review.html can read them via loadAllSources()
+    //    kyc.grossAnnualIncome → disp-annual-income
+    //    kyc.monthlyNetIncome  → disp-monthly-income
+    //    kyc.otherIncome       → disp-other-income
+    // ════════════════════════════════════════════════════════════
     localStorage.setItem("kyc_data", JSON.stringify({
-        name, dob, ageInYears: age, email, mobile, aadhaar, pan,
-        fatherName: father, motherName: mother,
-        address: { line: address, city, state, pincode }
+        name, dob, ageInYears:age, email, mobile, aadhaar, pan,
+        fatherName:father, motherName:mother,
+        address:{line:address, city, state, pincode},
+        grossAnnualIncome: Number(grossIncome)||0,
+        monthlyNetIncome:  Number(netIncome)  ||0,
+        otherIncome:       Number(otherIncome)||0
     }));
 
     const accountDetails = {
-        fullName: name,
-        dob,
-        ageInYears: age,
-        mobile,
-        email,
-        aadhaar,
-        pan,
-        fatherName: father,
-        motherName: mother,
-        address: { line: address, city, state, pincode },
+        fullName:name, dob, ageInYears:age, mobile, email, aadhaar, pan,
+        fatherName:father, motherName:mother,
+        address:{line:address,city,state,pincode},
         accountType,
-        grossAnnualIncome: Number(grossIncome) || 0,
-        status: "Active",
-        documentsUploaded: {
-            aadhaar:   hasAadhaar,
-            pan:       hasPan,
-            signature: hasSignature
-        }
+        grossAnnualIncome: Number(grossIncome)||0,
+        monthlyNetIncome:  Number(netIncome)  ||0,
+        otherIncome:       Number(otherIncome)||0,
+        status:"Active",
+        documentsUploaded:{aadhaar:hasAadhaar,pan:hasPan,signature:hasSignature}
     };
 
     const result = abcBank.updateUserAccountDetails(accountDetails);
-
     if (result?.success) {
-        swal({
-            title: d.alert_application_success_title,
-            text:  d.alert_application_success_text + (age ? ` (Age: ${age} years)` : ""),
-            icon:  "success"
-        }).then(() => {
-            window.location.href = "home.html";
-        });
+        swal({title:d.alert_application_success_title,text:d.alert_application_success_text+(age?` (Age: ${age} years)`:""),icon:"success"})
+        .then(()=>{window.location.href="home.html";});
     } else {
-        swal("Error", result?.message || "Failed to save account", "error");
+        swal("Error",result?.message||"Failed to save account","error");
     }
 }
 </script>
-
 </body>
 </html>
