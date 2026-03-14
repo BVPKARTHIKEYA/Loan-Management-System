@@ -66,7 +66,7 @@
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
             <option value="ta" style="background:#1e3a5f">தமிழ்</option>
-            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
+            <option value="ml" style="background:#1e3a5f">മലయാളം</option>
             <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
             <option value="hi" style="background:#1e3a5f">हिन्दी</option>
           </select>
@@ -194,17 +194,16 @@
         <div>
           <label class="text-lg font-semibold" data-i18n="cibil_upload_report">Upload CIBIL Report</label>
           <input id="cibilFile" type="file" accept="image/*,application/pdf" class="w-full border p-3 rounded-md mt-2 text-lg">
-        </div>
-
-        <!-- Tenure display (auto-calculated from DOB)
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-5">
-          <h3 class="font-semibold text-blue-700 text-lg" data-i18n="cibil_tenure_title">Maximum Loan Tenure</h3>
-          <p class="text-gray-600 mt-1" data-i18n="cibil_tenure_desc">Calculated as: 60 − Your Current Age</p>
-          <div id="tenure-display" class="flex items-center gap-2 mt-2">
-            <i class="fa fa-clock text-green-500"></i>
-            <span id="tenure-display-text">Calculating…</span>
+          <!-- FIX: preview container for CIBIL report -->
+          <div id="preview-cibilFile" class="mt-2 hidden">
+            <img id="img-cibilFile" class="max-h-28 object-contain w-full rounded border" src="" alt="CIBIL Report Preview">
           </div>
-        </div> -->
+          <!-- Non-image file name indicator -->
+          <div id="cibil-file-name" class="hidden mt-2 flex items-center gap-2 text-blue-700 text-sm">
+            <i class="fa fa-file-pdf text-red-500 text-2xl"></i>
+            <span id="cibil-file-name-text" class="font-mono truncate"></span>
+          </div>
+        </div>
 
         <button type="button" onclick="validateCibil()"
                 class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
@@ -263,14 +262,13 @@ if (!abcBank?.isLoggedIn?.()) {
     window.location.replace("login.html");
 }
 
-// ── Load real current user (same as home.html / bank-account.html) ──
+// ── Load real current user ─────────────────────────────────────────
 const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
 const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
 document.getElementById("username").textContent     = fullName;
 document.getElementById("profileName").textContent  = fullName;
 
-// Account & ID display
 if (currentUser.account?.accountNumber) {
     const accNum = currentUser.account.accountNumber;
     document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
@@ -285,23 +283,18 @@ const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (navSel) {
     navSel.value = savedLang;
-    navSel.addEventListener('change', function() {
-        applyLang(this.value);
-    });
+    navSel.addEventListener('change', function() { applyLang(this.value); });
     applyLang(savedLang);
 }
 
 // ── DOB & Tenure from account (read-only) ──────────────────────────
-let accountDob = null;
+let accountDob    = null;
 let accountTenure = null;
 
 (function loadAccountInfo() {
-    // Primary: from current session
     if (currentUser.dob) {
         accountDob = currentUser.dob;
-    }
-    // Fallback: from full user record
-    else if (currentUser.email) {
+    } else if (currentUser.email) {
         try {
             const users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
             const found = users.find(u => u.email === currentUser.email);
@@ -313,28 +306,67 @@ let accountTenure = null;
         const birth = new Date(accountDob);
         const today = new Date();
         const age = today.getFullYear() - birth.getFullYear() -
-                    (today.getMonth() < birth.getMonth() || 
+                    (today.getMonth() < birth.getMonth() ||
                      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate()) ? 1 : 0);
-        
-        accountTenure = Math.max(0, 60 - age);
 
-        // Display DOB
+        accountTenure = Math.max(0, 60 - age);
         const dobParts = accountDob.split("-");
         const formattedDob = dobParts.length === 3 ? `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}` : accountDob;
         document.getElementById("dob-display-text").textContent = `${formattedDob} (Age: ${age} yrs)`;
-
-        // Display tenure
-        document.getElementById("tenure-display-text").textContent = `${accountTenure} Years (60 − ${age})`;
-
-        // Store for later pages
         localStorage.setItem("loanTenure", accountTenure);
     } else {
         document.getElementById("dob-display-text").textContent = "Not found — update your profile";
-        document.getElementById("tenure-display-text").textContent = "Unable to calculate";
     }
 })();
 
-// ── Score Meter ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  FILE CONFIG — all uploaded files are saved to localStorage so
+//  lawyer-verification.html can read and display them.
+//  KEY FIX: cibilFile is now included here.
+// ══════════════════════════════════════════════════════════════════
+const FILE_CONFIG = {
+    cibilFile: {
+        storage: "kyc_doc_cibil",
+        nameKey: "kyc_doc_cibil_name",
+        previewImg: "img-cibilFile",
+        previewDiv: "preview-cibilFile",
+        nameDiv:    "cibil-file-name",
+        nameDivText:"cibil-file-name-text"
+    }
+};
+
+// Wire up the CIBIL file input
+document.getElementById("cibilFile").addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+    const cfg    = FILE_CONFIG.cibilFile;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        try {
+            localStorage.setItem(cfg.storage, dataUrl);
+            localStorage.setItem(cfg.nameKey, file.name);
+        } catch(err) {
+            console.warn("CIBIL file storage failed:", err);
+            swal("Warning", `File "${file.name}" is too large to store locally (> ~5MB).`, "warning");
+            return;
+        }
+        if (file.type.startsWith("image/")) {
+            const imgEl = document.getElementById(cfg.previewImg);
+            const divEl = document.getElementById(cfg.previewDiv);
+            imgEl.src = dataUrl;
+            divEl.classList.remove("hidden");
+            document.getElementById(cfg.nameDiv).classList.add("hidden");
+        } else {
+            document.getElementById(cfg.previewDiv).classList.add("hidden");
+            document.getElementById(cfg.nameDivText).textContent = file.name;
+            document.getElementById(cfg.nameDiv).classList.remove("hidden");
+        }
+    };
+    reader.readAsDataURL(file);
+});
+
+// ── Score Meter ──────────────────────────────────────────────────────
 function updateMeter(val) {
     val = parseInt(val);
     const needle  = document.getElementById('meter-needle');
@@ -364,7 +396,7 @@ function updateMeter(val) {
     }
 }
 
-// ── Form validation & save ──────────────────────────────────────────
+// ── Form validation & save ───────────────────────────────────────────
 function validateCibil() {
     const score      = parseInt(document.getElementById("score").value);
     const employment = document.getElementById("employment").value;
@@ -373,36 +405,14 @@ function validateCibil() {
     const loanAmount = document.getElementById("loanAmount").value.trim();
     const hasFile    = document.getElementById("cibilFile").files.length > 0;
 
-    if (!accountDob) {
-        swal("Error", "Date of Birth not found in your account. Please update your profile first.", "error");
-        return;
-    }
-    if (isNaN(score) || score < 300 || score > 900) {
-        swal("Error", "Enter a valid CIBIL score (300–900).", "error");
-        return;
-    }
-    if (!employment) {
-        swal("Error", "Select employment status.", "error");
-        return;
-    }
-    if (!income) {
-        swal("Error", "Enter monthly income.", "error");
-        return;
-    }
-    if (!loanType) {
-        swal("Error", "Select loan type.", "error");
-        return;
-    }
-    if (!loanAmount) {
-        swal("Error", "Enter loan amount.", "error");
-        return;
-    }
-    if (!hasFile) {
-        swal("Error", "Upload your CIBIL report.", "warning");
-        return;
-    }
+    if (!accountDob)                               return swal("Error", "Date of Birth not found. Please update your profile first.", "error");
+    if (isNaN(score) || score < 300 || score > 900) return swal("Error", "Enter a valid CIBIL score (300–900).", "error");
+    if (!employment)                                return swal("Error", "Select employment status.", "error");
+    if (!income)                                    return swal("Error", "Enter monthly income.", "error");
+    if (!loanType)                                  return swal("Error", "Select loan type.", "error");
+    if (!loanAmount)                                return swal("Error", "Enter loan amount.", "error");
+    if (!hasFile)                                   return swal("Error", "Upload your CIBIL report.", "warning");
 
-    // Save data
     const cibilData = {
         dob: accountDob,
         score,
@@ -415,13 +425,12 @@ function validateCibil() {
         submittedAt: new Date().toISOString()
     };
 
-    localStorage.setItem("cibil_data", JSON.stringify(cibilData));
-    localStorage.setItem("loan_score", score);
-    localStorage.setItem("loan_type_selected", loanType);
-    localStorage.setItem("loan_amount_requested", loanAmount);
-    localStorage.setItem("loanTenure", accountTenure || 20);
+    localStorage.setItem("cibil_data",            JSON.stringify(cibilData));
+    localStorage.setItem("loan_score",             score);
+    localStorage.setItem("loan_type_selected",     loanType);
+    localStorage.setItem("loan_amount_requested",  loanAmount);
+    localStorage.setItem("loanTenure",             accountTenure || 20);
 
-    // Show result
     let title, text, icon;
     if (score >= 750) {
         title = "Approved";
@@ -437,15 +446,8 @@ function validateCibil() {
         icon  = "error";
     }
 
-    swal({
-        title,
-        text,
-        icon,
-        button: score >= 750 ? "Apply for Loan" : "Close"
-    }).then(value => {
-        if (value && score >= 750) {
-            window.location.href = "loan-application.html";
-        }
+    swal({ title, text, icon, button: score >= 750 ? "Apply for Loan" : "Close" }).then(value => {
+        if (value && score >= 750) window.location.href = "loan-application.html";
     });
 }
 </script>

@@ -15,6 +15,18 @@
         #lang-switcher { display: none !important; }
         .preview-container { max-height: 120px; overflow: hidden; }
         .preview-img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; }
+
+        /* Subtle "already uploaded" indicator on file inputs */
+        .file-stored-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #dcfce7; color: #16a34a;
+            font-size: 12px; font-weight: 700;
+            padding: 2px 10px; border-radius: 999px;
+            margin-top: 6px;
+        }
+        .file-stored-badge.pdf {
+            background: #fee2e2; color: #dc2626;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -36,7 +48,6 @@
       </a>
 
       <div class="flex items-center gap-4 flex-shrink-0">
-
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
           <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
             <i class="fa fa-globe"></i> Lang:
@@ -76,7 +87,6 @@
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </nav>
@@ -217,6 +227,8 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
         <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <!-- FIX: restored-from-storage badge -->
+        <div id="badge-incomeDoc"></div>
         <div id="preview-incomeDoc" class="preview-container mt-2 hidden">
           <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
         </div>
@@ -231,9 +243,11 @@
       <p class="text-gray-600" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card, signature and property document (if applicable) for verification.</p>
     </header>
     <div class="grid md:grid-cols-2 gap-6">
+
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
         <input id="aadhaarFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="badge-aadhaarFile"></div>
         <div id="preview-aadhaar" class="preview-container mt-2 hidden">
           <img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview">
         </div>
@@ -242,6 +256,7 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
         <input id="panFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="badge-panFile"></div>
         <div id="preview-pan" class="preview-container mt-2 hidden">
           <img id="img-pan" class="preview-img" src="" alt="PAN Preview">
         </div>
@@ -250,6 +265,7 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
         <input id="signatureFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="badge-signatureFile"></div>
         <div id="preview-signature" class="preview-container mt-2 hidden">
           <img id="img-signature" class="preview-img" src="" alt="Signature Preview">
         </div>
@@ -258,10 +274,12 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="doc_property">Property Document (optional)</label>
         <input id="propertyFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="badge-propertyFile"></div>
         <div id="preview-property" class="preview-container mt-2 hidden">
           <img id="img-property" class="preview-img" src="" alt="Property Preview">
         </div>
       </div>
+
     </div>
   </section>
 
@@ -282,17 +300,17 @@
 </footer>
 
 <script>
-// ── Page protection ────────────────────────────────────────────────
+// ── Page protection ──────────────────────────────────────────────────
 if (!abcBank?.isLoggedIn?.()) {
     window.location.replace("login.html");
 }
 
-// ── Load real current user (same as home.html) ─────────────────────
+// ── Load current user ────────────────────────────────────────────────
 const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
 const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
-document.getElementById("username").textContent     = fullName;
-document.getElementById("profileName").textContent  = fullName;
+document.getElementById("username").textContent    = fullName;
+document.getElementById("profileName").textContent = fullName;
 
 if (currentUser.account?.accountNumber) {
     const accNum = currentUser.account.accountNumber;
@@ -303,86 +321,157 @@ if (currentUser.account?.accountNumber) {
     document.getElementById("userid").textContent = "ID: —";
 }
 
-// ── Language setup ─────────────────────────────────────────────────
+// ── Language setup ───────────────────────────────────────────────────
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (navSel) {
     navSel.value = savedLang;
-    navSel.addEventListener('change', function() {
-        applyLang(this.value);
-    });
+    navSel.addEventListener('change', function() { applyLang(this.value); });
     applyLang(savedLang);
 }
 
-// ── Live file preview + base64 storage ─────────────────────────────
+// ════════════════════════════════════════════════════════════════
+//  FILE CONFIG
+//  Each entry maps an <input id> → localStorage keys + preview IDs.
+//  This single config drives BOTH on-load restore AND change handler.
+// ════════════════════════════════════════════════════════════════
 const FILE_CONFIG = {
-    aadhaarFile:   { preview: "preview-aadhaar",   img: "img-aadhaar",   storage: "kyc_doc_aadhaar",   nameKey: "kyc_doc_aadhaar_name"   },
-    panFile:       { preview: "preview-pan",       img: "img-pan",       storage: "kyc_doc_pan",       nameKey: "kyc_doc_pan_name"       },
-    signatureFile: { preview: "preview-signature", img: "img-signature", storage: "kyc_doc_signature",  nameKey: "kyc_doc_signature_name"  },
-    propertyFile:  { preview: "preview-property",  img: "img-property",  storage: "kyc_doc_property",   nameKey: "kyc_doc_property_name"   },
-    incomeDoc:     { preview: "preview-incomeDoc", img: "img-incomeDoc", storage: "kyc_doc_income",     nameKey: "kyc_doc_income_name"     }
+    aadhaarFile:   { preview: "preview-aadhaar",   img: "img-aadhaar",   storage: "kyc_doc_aadhaar",   nameKey: "kyc_doc_aadhaar_name",   badge: "badge-aadhaarFile"   },
+    panFile:       { preview: "preview-pan",       img: "img-pan",       storage: "kyc_doc_pan",       nameKey: "kyc_doc_pan_name",       badge: "badge-panFile"       },
+    signatureFile: { preview: "preview-signature", img: "img-signature", storage: "kyc_doc_signature", nameKey: "kyc_doc_signature_name", badge: "badge-signatureFile" },
+    propertyFile:  { preview: "preview-property",  img: "img-property",  storage: "kyc_doc_property",  nameKey: "kyc_doc_property_name",  badge: "badge-propertyFile"  },
+    incomeDoc:     { preview: "preview-incomeDoc", img: "img-incomeDoc", storage: "kyc_doc_income",    nameKey: "kyc_doc_income_name",    badge: "badge-incomeDoc"     }
 };
 
+// ── Helper: show a preview image or PDF badge under an input ─────────
+function showStoredPreview(cfg, dataUrl, fileName) {
+    // Image preview
+    if (dataUrl && dataUrl.startsWith("data:image")) {
+        const previewDiv = document.getElementById(cfg.preview);
+        const imgEl      = document.getElementById(cfg.img);
+        if (previewDiv && imgEl) {
+            imgEl.src = dataUrl;
+            previewDiv.classList.remove("hidden");
+        }
+    }
+    // Badge: "✓ filename.ext (already uploaded)" below the input
+    const badgeEl = document.getElementById(cfg.badge);
+    if (badgeEl && dataUrl) {
+        const isPdf = !dataUrl.startsWith("data:image");
+        badgeEl.innerHTML =
+            `<span class="file-stored-badge${isPdf ? " pdf" : ""}">` +
+            `<i class="fa ${isPdf ? "fa-file-pdf" : "fa-check"}"></i> ` +
+            `${fileName || "File already uploaded"}</span>`;
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  ON PAGE LOAD — restore previously saved files from localStorage
+//  so the user can see what was already uploaded in a prior session.
+// ════════════════════════════════════════════════════════════════
+Object.keys(FILE_CONFIG).forEach(id => {
+    const cfg      = FILE_CONFIG[id];
+    const dataUrl  = localStorage.getItem(cfg.storage);
+    const fileName = localStorage.getItem(cfg.nameKey) || "";
+    if (dataUrl) {
+        showStoredPreview(cfg, dataUrl, fileName);
+    }
+});
+
+// ════════════════════════════════════════════════════════════════
+//  ON FILE CHANGE — save new file to localStorage + show preview
+// ════════════════════════════════════════════════════════════════
 Object.keys(FILE_CONFIG).forEach(id => {
     const input = document.getElementById(id);
     if (!input) return;
 
-    input.addEventListener('change', function() {
+    input.addEventListener("change", function() {
         const file = this.files[0];
         if (!file) return;
 
-        const cfg = FILE_CONFIG[id];
+        const cfg    = FILE_CONFIG[id];
         const reader = new FileReader();
 
         reader.onload = function(e) {
             const dataUrl = e.target.result;
 
-            // Show preview if image
-            if (file.type.startsWith('image/')) {
-                const previewDiv = document.getElementById(cfg.preview);
-                const imgEl = document.getElementById(cfg.img);
-                if (previewDiv && imgEl) {
-                    imgEl.src = dataUrl;
-                    previewDiv.classList.remove('hidden');
-                }
-            }
-
-            // Store base64 + filename
             try {
                 localStorage.setItem(cfg.storage, dataUrl);
-                localStorage.setItem(cfg.nameKey, file.name);
+                localStorage.setItem(cfg.nameKey,  file.name);
             } catch (err) {
                 console.warn("File storage failed:", err);
                 swal("Warning", `File "${file.name}" is too large to store locally (> ~5MB).`, "warning");
+                return;
             }
+
+            showStoredPreview(cfg, dataUrl, file.name);
         };
 
         reader.readAsDataURL(file);
     });
 });
 
-// ── Form validation & submit ───────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+//  ALSO restore saved KYC text fields if user returns to this page
+// ════════════════════════════════════════════════════════════════
+(function restoreTextFields() {
+    try {
+        const kyc = JSON.parse(localStorage.getItem("kyc_data") || "null");
+        if (!kyc) return;
+
+        const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+        set("name",    kyc.name);
+        set("dob",     kyc.dob);
+        set("email",   kyc.email);
+        set("mobile",  kyc.mobile);
+        set("aadhaar", kyc.aadhaar);
+        set("pan",     kyc.pan);
+        set("father",  kyc.fatherName);
+        set("mother",  kyc.motherName);
+        if (kyc.address) {
+            set("address", kyc.address.line);
+            set("city",    kyc.address.city);
+            set("pincode", kyc.address.pincode);
+            const stateEl = document.getElementById("state");
+            if (stateEl && kyc.address.state) {
+                // Match by text content of options (handles translated labels)
+                Array.from(stateEl.options).forEach(opt => {
+                    if (opt.value === kyc.address.state || opt.textContent.trim() === kyc.address.state) {
+                        stateEl.value = opt.value;
+                    }
+                });
+            }
+        }
+        // Restore gross income from account details if stored
+        const userRec = abcBank.getCurrentUser?.();
+        if (userRec?.grossAnnualIncome) {
+            const gi = document.getElementById("grossIncome");
+            if (gi) gi.value = userRec.grossAnnualIncome;
+        }
+    } catch(e) {}
+})();
+
+// ── Form validation & submit ─────────────────────────────────────────
 function validateForm() {
     const lang = localStorage.getItem('abcbank_lang') || 'en';
     const d = I18N?.[lang] || {
-        alert_name_missing: "Please enter your full name.",
-        alert_invalid_mobile_title: "Invalid Mobile",
-        alert_invalid_mobile_text: "Please enter a valid 10-digit mobile number.",
-        alert_invalid_aadhaar_title: "Invalid Aadhaar",
-        alert_invalid_aadhaar_text: "Aadhaar must be exactly 12 digits.",
-        alert_invalid_pan_title: "Invalid PAN",
-        alert_invalid_pan_text: "Please enter a valid PAN format (e.g. ABCDE1234F).",
-        alert_income_missing_title: "Income Missing",
-        alert_income_missing_text: "Please provide your gross annual income.",
+        alert_name_missing:           "Please enter your full name.",
+        alert_invalid_mobile_title:   "Invalid Mobile",
+        alert_invalid_mobile_text:    "Please enter a valid 10-digit mobile number.",
+        alert_invalid_aadhaar_title:  "Invalid Aadhaar",
+        alert_invalid_aadhaar_text:   "Aadhaar must be exactly 12 digits.",
+        alert_invalid_pan_title:      "Invalid PAN",
+        alert_invalid_pan_text:       "Please enter a valid PAN format (e.g. ABCDE1234F).",
+        alert_income_missing_title:   "Income Missing",
+        alert_income_missing_text:    "Please provide your gross annual income.",
         alert_missing_document_title: "Missing Document",
-        alert_missing_aadhaar: "Please upload your Aadhaar card.",
-        alert_missing_pan: "Please upload your PAN card.",
-        alert_missing_signature: "Please upload your signature.",
+        alert_missing_aadhaar:        "Please upload your Aadhaar card.",
+        alert_missing_pan:            "Please upload your PAN card.",
+        alert_missing_signature:      "Please upload your signature.",
         alert_application_success_title: "Application Submitted!",
-        alert_application_success_text: "Your account has been opened successfully."
+        alert_application_success_text:  "Your account has been opened successfully."
     };
 
-    // Get values
     const name        = document.getElementById("name").value.trim();
     const dob         = document.getElementById("dob").value;
     const email       = document.getElementById("email").value.trim();
@@ -398,11 +487,15 @@ function validateForm() {
     const accountType = document.querySelector('input[name="account"]:checked')?.value;
     const grossIncome = document.getElementById("grossIncome").value.trim();
 
-    const hasAadhaar   = document.getElementById("aadhaarFile").files.length > 0;
-    const hasPan       = document.getElementById("panFile").files.length > 0;
-    const hasSignature = document.getElementById("signatureFile").files.length > 0;
+    // FIX: accept file if EITHER a new file was chosen this session
+    //      OR one was already saved to localStorage in a previous session.
+    const hasAadhaar   = document.getElementById("aadhaarFile").files.length > 0
+                         || !!localStorage.getItem("kyc_doc_aadhaar");
+    const hasPan       = document.getElementById("panFile").files.length > 0
+                         || !!localStorage.getItem("kyc_doc_pan");
+    const hasSignature = document.getElementById("signatureFile").files.length > 0
+                         || !!localStorage.getItem("kyc_doc_signature");
 
-    // Validation
     if (!name)                                      return swal("Error", d.alert_name_missing, "error");
     if (!/^[6-9]\d{9}$/.test(mobile))              return swal(d.alert_invalid_mobile_title, d.alert_invalid_mobile_text, "error");
     if (!/^\d{12}$/.test(aadhaar))                 return swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error");
@@ -431,7 +524,6 @@ function validateForm() {
         address: { line: address, city, state, pincode }
     }));
 
-    // Prepare account object
     const accountDetails = {
         fullName: name,
         dob,
@@ -447,8 +539,8 @@ function validateForm() {
         grossAnnualIncome: Number(grossIncome) || 0,
         status: "Active",
         documentsUploaded: {
-            aadhaar: hasAadhaar,
-            pan: hasPan,
+            aadhaar:   hasAadhaar,
+            pan:       hasPan,
             signature: hasSignature
         }
     };
@@ -458,8 +550,8 @@ function validateForm() {
     if (result?.success) {
         swal({
             title: d.alert_application_success_title,
-            text: d.alert_application_success_text + (age ? ` (Age: ${age} years)` : ""),
-            icon: "success"
+            text:  d.alert_application_success_text + (age ? ` (Age: ${age} years)` : ""),
+            icon:  "success"
         }).then(() => {
             window.location.href = "home.html";
         });

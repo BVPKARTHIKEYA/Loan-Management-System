@@ -64,6 +64,43 @@
   </nav>
 </header>
 
+<!-- ACCESS GATE -->
+<div id="accessGate" class="hidden max-w-2xl mx-auto mt-20 px-6">
+  <div id="gateRejected" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+    <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fa fa-circle-xmark text-5xl text-red-500"></i>
+    </div>
+    <h2 class="text-3xl font-bold text-red-600 mb-3">Loan Application Rejected</h2>
+    <p class="text-gray-600 text-lg mb-6">
+      Unfortunately, your loan application could not be approved at this time.
+      One or more review stages were not cleared. Please contact your branch
+      manager or apply again after 90 days.
+    </p>
+    <div id="gateDecisionSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base space-y-3"></div>
+    <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
+      <i class="fa fa-house"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <div id="gatePending" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+    <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fa fa-hourglass-half text-5xl text-yellow-500"></i>
+    </div>
+    <h2 class="text-3xl font-bold text-yellow-600 mb-3">Review In Progress</h2>
+    <p class="text-gray-600 text-lg mb-6">
+      Your loan application is still under review. The approval letter will be
+      available once both the Legal Verification and Officer Review stages are completed.
+    </p>
+    <div id="gatePendingSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base space-y-3"></div>
+    <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
+      <i class="fa fa-house"></i> Back to Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- MAIN APPROVAL CONTENT -->
+<div id="approvalContent" class="hidden">
+
 <div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold mt-1" data-i18n="approval_page_title">Loan Approval</h1>
   <p class="text-gray-500 text-lg mt-1" data-i18n="approval_page_desc">Official loan sanction letter and approval details.</p>
@@ -77,7 +114,6 @@
     <p class="text-lg opacity-90 mt-2" data-i18n="approval_banner_desc">Loan disbursement will be completed within 2–3 business days.</p>
     <div class="flex justify-center gap-4 mt-5 flex-wrap text-lg">
       <span class="bg-white/20 px-4 py-2 rounded"><span data-i18n="approval_loan_id">Loan ID</span>: #LN2024001</span>
-      <!-- FIX: date rendered by JS -->
       <span class="bg-white/20 px-4 py-2 rounded"><span data-i18n="approval_date">Approved</span>: <span id="approvedDateSpan">–</span></span>
     </div>
   </section>
@@ -93,7 +129,6 @@
       <article><p class="text-gray-500" data-i18n="loan_monthly_emi">Monthly EMI</p><p class="text-blue-600 font-semibold text-xl" id="detailEmi">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_total_payable">Total Payable</p><p class="text-lg" id="detailTotalPayable">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_processing_fee">Processing Fee</p><p class="text-lg">₹12,500</p></article>
-      <!-- Fields from loan-application.html -->
       <article><p class="text-gray-500" data-i18n="income_employment">Employment Type</p><p class="text-lg" id="detailEmployment">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_annual_income">Annual Income</p><p class="text-lg" id="detailAnnualIncome">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_collateral_val">Collateral</p><p class="text-lg" id="detailCollateral">–</p></article>
@@ -107,12 +142,10 @@
     <div class="grid md:grid-cols-2 gap-4 mb-6" id="branchGrid">
 
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="mumbai-central" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2">
-          <div>
-            <p class="font-bold text-lg" data-i18n="br_mumbai_name">Mumbai Central</p>
-            <p class="text-gray-500 text-base" data-i18n="br_mumbai_addr">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
-          </div>
-        </div>
+        <div class="flex justify-between items-start mb-2"><div>
+          <p class="font-bold text-lg" data-i18n="br_mumbai_name">Mumbai Central</p>
+          <p class="text-gray-500 text-base" data-i18n="br_mumbai_addr">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
+        </div></div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_rajan">Rajan Mehta</span></span>
           <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
@@ -121,12 +154,10 @@
       </div>
 
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="andheri-west" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2">
-          <div>
-            <p class="font-bold text-lg" data-i18n="br_andheri_name">Andheri West</p>
-            <p class="text-gray-500 text-base" data-i18n="br_andheri_addr">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
-          </div>
-        </div>
+        <div class="flex justify-between items-start mb-2"><div>
+          <p class="font-bold text-lg" data-i18n="br_andheri_name">Andheri West</p>
+          <p class="text-gray-500 text-base" data-i18n="br_andheri_addr">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
+        </div></div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_priya">Priya Sharma</span></span>
           <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
@@ -135,12 +166,10 @@
       </div>
 
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="connaught-place" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2">
-          <div>
-            <p class="font-bold text-lg" data-i18n="br_cp_name">Connaught Place</p>
-            <p class="text-gray-500 text-base" data-i18n="br_cp_addr">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
-          </div>
-        </div>
+        <div class="flex justify-between items-start mb-2"><div>
+          <p class="font-bold text-lg" data-i18n="br_cp_name">Connaught Place</p>
+          <p class="text-gray-500 text-base" data-i18n="br_cp_addr">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
+        </div></div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_amit">Amit Kapoor</span></span>
           <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_10to4">Mon–Sat, 10am–4pm</span></span>
@@ -149,12 +178,10 @@
       </div>
 
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="koramangala" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2">
-          <div>
-            <p class="font-bold text-lg" data-i18n="br_kora_name">Koramangala</p>
-            <p class="text-gray-500 text-base" data-i18n="br_kora_addr">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
-          </div>
-        </div>
+        <div class="flex justify-between items-start mb-2"><div>
+          <p class="font-bold text-lg" data-i18n="br_kora_name">Koramangala</p>
+          <p class="text-gray-500 text-base" data-i18n="br_kora_addr">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
+        </div></div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_deepa">Deepa Nair</span></span>
           <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
@@ -203,7 +230,6 @@
     </div>
   </section>
 
-  <!-- EMI schedule — tbody populated dynamically by buildEmiTable() -->
   <section class="bg-white rounded-xl shadow p-8 mb-6">
     <header><h2 class="text-2xl font-bold mb-5" data-i18n="emi_schedule_title">EMI Schedule (Sample)</h2></header>
     <div class="overflow-x-auto">
@@ -229,6 +255,8 @@
   </section>
 </main>
 
+</div><!-- /#approvalContent -->
+
 <footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
   <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
@@ -239,16 +267,50 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════
-//  INTEREST RATES PER LOAN TYPE
-//  Home loan rate adjusts based on CIBIL score.
-//  All other loan types keep fixed base rates.
+//  ACCESS GATE
+// ══════════════════════════════════════════════════════════════
+(function() {
+  var legalDecision   = (localStorage.getItem('loan_legal_decision')  || '').trim().toLowerCase();
+  var officerDecision = (localStorage.getItem('loan_officer_decision') || '').trim().toLowerCase();
+
+  if (legalDecision === 'approved' && officerDecision === 'approved') {
+    document.getElementById('approvalContent').classList.remove('hidden');
+    return;
+  }
+
+  document.getElementById('accessGate').classList.remove('hidden');
+  var anyRejected = legalDecision === 'rejected' || officerDecision === 'rejected';
+
+  function statusRow(label, value) {
+    var colour  = value === 'approved' ? 'text-green-600' : value === 'rejected' ? 'text-red-600' : 'text-yellow-600';
+    var icon    = value === 'approved' ? 'fa-circle-check' : value === 'rejected' ? 'fa-circle-xmark' : 'fa-hourglass-half';
+    var display = value ? (value.charAt(0).toUpperCase() + value.slice(1)) : 'Pending';
+    return '<div class="flex items-center justify-between py-2 border-b last:border-0">'
+         + '<span class="font-medium text-gray-700">' + label + '</span>'
+         + '<span class="flex items-center gap-2 font-semibold ' + colour + '">'
+         + '<i class="fa ' + icon + '"></i>' + display + '</span></div>';
+  }
+
+  var rows = statusRow('Legal Verification', legalDecision)
+           + statusRow('Officer Review',     officerDecision);
+
+  if (anyRejected) {
+    document.getElementById('gateRejected').classList.remove('hidden');
+    document.getElementById('gateDecisionSummary').innerHTML = rows;
+  } else {
+    document.getElementById('gatePending').classList.remove('hidden');
+    document.getElementById('gatePendingSummary').innerHTML = rows;
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  INTEREST RATES
 // ══════════════════════════════════════════════════════════════
 var LOAN_RATES = {
   home: 8.50, personal: 10.90, vehicle: 9.25,
   gold: 7.50, education: 8.25, business: 11.50
 };
 
-// CIBIL score brackets — only applied to home loan
 var CIBIL_BRACKETS = [
   { min: 750, max: 900, adj: -0.50, label: 'Excellent (750–900)' },
   { min: 700, max: 749, adj:  0.00, label: 'Good (700–749)'      },
@@ -276,20 +338,18 @@ function getRateForType(type, cibilScore) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  BRANCH DATA  (IFSC added per branch)
+//  BRANCH DATA
 // ══════════════════════════════════════════════════════════════
 var branchData = {
   'mumbai-central':  { nameKey:'Mumbai Central',  mgrKey:'mgr_rajan', initials:'RM', phone:'+91 98200 11234', email:'rajan.mehta@abcbank.in',  ifsc:'ABCB0001234' },
-  'andheri-west':    { nameKey:'Andheri West', mgrKey:'mgr_priya', initials:'PS', phone:'+91 98200 22345', email:'priya.sharma@abcbank.in', ifsc:'ABCB0001892' },
-  'connaught-place': { nameKey:'Connaught Place',      mgrKey:'mgr_amit',  initials:'AK', phone:'+91 98100 33456', email:'amit.kapoor@abcbank.in',  ifsc:'ABCB0002211' },
-  'koramangala':     { nameKey:'Koramangala',    mgrKey:'mgr_deepa', initials:'DN', phone:'+91 98440 44567', email:'deepa.nair@abcbank.in',   ifsc:'ABCB0003345' }
+  'andheri-west':    { nameKey:'Andheri West',    mgrKey:'mgr_priya', initials:'PS', phone:'+91 98200 22345', email:'priya.sharma@abcbank.in', ifsc:'ABCB0001892' },
+  'connaught-place': { nameKey:'Connaught Place', mgrKey:'mgr_amit',  initials:'AK', phone:'+91 98100 33456', email:'amit.kapoor@abcbank.in',  ifsc:'ABCB0002211' },
+  'koramangala':     { nameKey:'Koramangala',     mgrKey:'mgr_deepa', initials:'DN', phone:'+91 98440 44567', email:'deepa.nair@abcbank.in',   ifsc:'ABCB0003345' }
 };
 
 // ══════════════════════════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════════════════════════
-
-// Read a key from shared.js I18N object (populated by applyLang)
 function tr(key) {
   try {
     var lang = localStorage.getItem('abcbank_lang') || 'en';
@@ -301,27 +361,24 @@ function tr(key) {
   return key;
 }
 
-// Indian currency formatting
 function fmtINR(n) {
   var num = parseInt(n);
   if (!n || isNaN(num)) return '–';
   return '₹' + num.toLocaleString('en-IN');
 }
 
-// Recalculate EMI — never trust stored value
 function calcEMI(principal, annualRate, years) {
   principal = parseFloat(principal);
   years     = parseFloat(years);
   if (!principal || !years || years <= 0) return { emi: 0, total: 0 };
-  var r   = annualRate / 12 / 100;
-  var n   = Math.round(years * 12);
+  var r = annualRate / 12 / 100;
+  var n = Math.round(years * 12);
   var emi = r > 0
     ? Math.round(principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1))
     : Math.round(principal / n);
   return { emi: emi, total: emi * n };
 }
 
-// Build 3-row EMI schedule from real loan data
 function buildEmiTable(principal, annualRate, years) {
   var tbody = document.getElementById('emiTableBody');
   if (!tbody) return;
@@ -357,22 +414,14 @@ function buildEmiTable(principal, annualRate, years) {
   tbody.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  LOAN TYPE LABEL MAP
-//  Maps the loanType values saved by loan-application.html
-//  (which strips the "loan_" prefix, e.g. "home", "personal")
-//  back to display labels.
-// ══════════════════════════════════════════════════════════════
 var LOAN_TYPE_KEYS = {
   home:'loan_home', personal:'loan_personal', vehicle:'loan_vehicle',
   gold:'loan_gold', education:'loan_education', business:'loan_business'
 };
 
-// Also handle raw keys like "loan_home" stored by older code paths
 function normalizeLoanType(rawType) {
   if (!rawType) return '';
   var t = rawType.toLowerCase().trim();
-  // Strip "loan_" prefix if present (e.g. "loan_home" → "home")
   if (t.startsWith('loan_')) t = t.replace('loan_', '');
   return t;
 }
@@ -385,16 +434,12 @@ function getLoanTypeLabel(type) {
 
 // ══════════════════════════════════════════════════════════════
 //  NAVBAR USER
-//  Priority: abcBank.getCurrentUser() (logic.js) → bankUser fallback
 // ══════════════════════════════════════════════════════════════
 var currentUser = null;
 try {
-  if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) {
-    currentUser = abcBank.getCurrentUser();
-  }
+  if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) currentUser = abcBank.getCurrentUser();
 } catch(e) {}
 
-// Fallback to legacy bankUser key
 var legacyUser = null;
 try { legacyUser = JSON.parse(localStorage.getItem('bankUser') || 'null'); } catch(e) {}
 
@@ -403,7 +448,8 @@ var userAccount = '';
 
 if (currentUser) {
   userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ') || currentUser.name || 'User';
-  userAccount = (currentUser.account && currentUser.account.accountNumber) ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
+  userAccount = (currentUser.account && currentUser.account.accountNumber)
+                ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
 } else if (legacyUser) {
   userName    = legacyUser.name || 'User';
   userAccount = legacyUser.account || 'NIL';
@@ -421,10 +467,6 @@ document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.s
 
 // ══════════════════════════════════════════════════════════════
 //  READ ALL STORED DATA
-//  Priority order for each field:
-//    1. loan_application_data  (saved by loan-application.html)
-//    2. cibil_data             (merged/updated by loan-application.html)
-//    3. loanApplication        (legacy key used by older pages)
 // ══════════════════════════════════════════════════════════════
 var loanApp  = {};
 var cibil    = {};
@@ -434,11 +476,12 @@ try { loanApp  = JSON.parse(localStorage.getItem('loan_application_data') || '{}
 try { cibil    = JSON.parse(localStorage.getItem('cibil_data')            || '{}'); } catch(e) {}
 try { loanData = JSON.parse(localStorage.getItem('loanApplication')       || '{}'); } catch(e) {}
 
-// Helper: pick first truthy value across sources
+// pick() — returns first non-empty, non-null, non-NaN value
 function pick() {
   for (var i = 0; i < arguments.length; i++) {
-    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') {
-      return arguments[i];
+    var v = arguments[i];
+    if (v !== undefined && v !== null && v !== '' && !(typeof v === 'number' && isNaN(v))) {
+      return v;
     }
   }
   return '';
@@ -447,91 +490,134 @@ function pick() {
 var savedLang = localStorage.getItem('abcbank_lang') || 'en';
 document.getElementById('nav-lang-select').value = savedLang;
 
-// ── Today's date (dynamic) ──
-var td = new Date();
-var MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-document.getElementById('approvedDateSpan').innerText =
-  MN[td.getMonth()] + ' ' + String(td.getDate()).padStart(2, '0') + ' ' + td.getFullYear();
+// ── Only populate approval content if gate passed ──────────────
+if (!document.getElementById('approvalContent').classList.contains('hidden')) {
 
-// ── Customer name ──
-document.getElementById('detailCustomerName').innerText = userName || '–';
+  var td = new Date();
+  var MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('approvedDateSpan').innerText =
+    MN[td.getMonth()] + ' ' + String(td.getDate()).padStart(2, '0') + ' ' + td.getFullYear();
 
-// ── Loan type ──
-// loan-application.html saves loanType as the stripped key e.g. "home", "personal"
-var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType, '');
-var loanType    = normalizeLoanType(rawLoanType);
-document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
+  document.getElementById('detailCustomerName').innerText = userName || '–';
 
-// ── Loan amount ──
-var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
-document.getElementById('detailLoanAmount').innerText = principal ? fmtINR(principal) : '–';
+  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType, '');
+  var loanType    = normalizeLoanType(rawLoanType);
+  document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
 
-// ── Interest rate — home loan adjusted by CIBIL score ──
-var cibilScore = pick(cibil.score, localStorage.getItem('loan_score'), null);
-var rate       = getRateForType(loanType, cibilScore);
+  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
+  document.getElementById('detailLoanAmount').innerText = principal ? fmtINR(principal) : '–';
 
-var rateDisplay = rate + '% p.a';
-if (loanType === 'home' && cibilScore) {
-  var bracket = getCibilBracket(cibilScore);
-  if (bracket) {
-    var adjSign = bracket.adj > 0 ? '+' + bracket.adj : (bracket.adj < 0 ? String(bracket.adj) : '');
-    var adjPart = adjSign ? ' (' + adjSign + '%)' : '';
-    rateDisplay = rate + '% p.a' + adjPart + ' — CIBIL ' + bracket.label;
+  var cibilScore = pick(cibil.score, localStorage.getItem('loan_score'), null);
+  var rate       = getRateForType(loanType, cibilScore);
+
+  var rateDisplay = rate + '% p.a';
+  if (loanType === 'home' && cibilScore) {
+    var bracket = getCibilBracket(cibilScore);
+    if (bracket) {
+      var adjSign = bracket.adj > 0 ? '+' + bracket.adj : (bracket.adj < 0 ? String(bracket.adj) : '');
+      var adjPart = adjSign ? ' (' + adjSign + '%)' : '';
+      rateDisplay = rate + '% p.a' + adjPart + ' — CIBIL ' + bracket.label;
+    }
   }
-}
-document.getElementById('detailInterestRate').innerText = rateDisplay;
+  document.getElementById('detailInterestRate').innerText = rateDisplay;
 
-// ── Duration ──
-// loan-application.html saves loanDuration; older pages may use duration
-var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
-
-// If no duration stored, compute from age (same logic as loan-application.html)
-if (!duration || duration <= 0) {
-  var dob = pick(
-    (currentUser && currentUser.dob) ? currentUser.dob : null,
-    (legacyUser  && legacyUser.dob)  ? legacyUser.dob  : null,
-    localStorage.getItem('loanTenure') ? null : null
+  // ════════════════════════════════════════════════════════════
+  //  DURATION — corrected resolution order
+  //
+  //  Sources checked in priority order:
+  //    1. loan_application_data.loanDuration  (explicit user input on loan form)
+  //    2. loan_application_data.duration      (alternate field name on loan form)
+  //    3. loanApplication.duration            (legacy localStorage key)
+  //    4. loanApplication.loanDuration        (legacy alternate field name)
+  //    5. cibil_data.tenure       ← FIX: was "cibil.loanDuration" — wrong key,
+  //                                  cibil.html saves "tenure" not "loanDuration"
+  //    6. localStorage 'loanTenure'  ← FIX: moved BEFORE DOB fallback so the
+  //                                   value saved by cibil.html is always used
+  //                                   when available
+  //    7. DOB-based calc (60 − age)  ← last resort only
+  // ════════════════════════════════════════════════════════════
+  var duration = parseFloat(
+    pick(
+      loanApp.loanDuration,                 // 1
+      loanApp.duration,                     // 2
+      loanData.duration,                    // 3
+      loanData.loanDuration,                // 4
+      cibil.tenure,                         // 5 FIX
+      localStorage.getItem('loanTenure')    // 6 FIX
+    )
   );
-  if (dob) {
-    var birth = new Date(dob);
-    var age   = td.getFullYear() - birth.getFullYear() -
-                (td.getMonth() < birth.getMonth() ||
-                 (td.getMonth() === birth.getMonth() && td.getDate() < birth.getDate()) ? 1 : 0);
-    duration = Math.max(1, 60 - age);
-  } else {
-    var storedTenure = parseInt(localStorage.getItem('loanTenure'));
-    if (storedTenure && storedTenure > 0) duration = storedTenure;
+
+  // 7. DOB fallback — only if nothing above resolved
+  //
+  //  DOB is checked across ALL storage locations in priority order:
+  //    a. cibil_data.dob           ← cibil.html saves dob here (most reliable)
+  //    b. kyc_data.dob             ← bank-account.html / register.html saves here
+  //    c. currentUser.dob          ← top-level on session object
+  //    d. currentUser.account.dob  ← nested inside account object
+  //    e. abcBank_users[] record   ← full user record lookup by email
+  //    f. legacyUser.dob           ← bankUser legacy key
+  if (!duration || isNaN(duration) || duration <= 0) {
+
+    // Read kyc_data for dob
+    var kycData = {};
+    try { kycData = JSON.parse(localStorage.getItem('kyc_data') || '{}'); } catch(e) {}
+
+    // Try to find dob in full abcBank_users array (same lookup as cibil.html)
+    var userRecordDob = null;
+    try {
+      var sessionEmail = currentUser && currentUser.email ? currentUser.email : null;
+      if (sessionEmail) {
+        var allUsers = JSON.parse(localStorage.getItem('abcBank_users') || '[]');
+        var found    = allUsers.find(function(u) { return u.email === sessionEmail; });
+        if (found && found.dob) userRecordDob = found.dob;
+      }
+    } catch(e) {}
+
+    var dob = pick(
+      cibil.dob,                                                    // a. cibil_data.dob
+      kycData.dob,                                                  // b. kyc_data.dob
+      (currentUser && currentUser.dob) ? currentUser.dob : null,   // c. currentUser.dob
+      (currentUser && currentUser.account && currentUser.account.dob)
+        ? currentUser.account.dob : null,                          // d. currentUser.account.dob
+      userRecordDob,                                                // e. abcBank_users[].dob
+      (legacyUser && legacyUser.dob) ? legacyUser.dob : null       // f. legacyUser.dob
+    );
+
+    if (dob) {
+      var birth = new Date(dob);
+      var age   = td.getFullYear() - birth.getFullYear() -
+                  ((td.getMonth() < birth.getMonth() ||
+                   (td.getMonth() === birth.getMonth() && td.getDate() < birth.getDate())) ? 1 : 0);
+      duration = Math.max(1, 60 - age);
+    }
   }
+
+  // Safety clamp
+  duration = (duration && !isNaN(duration) && duration > 0) ? Math.round(duration) : 0;
+
+  document.getElementById('detailDuration').innerText = duration ? duration + ' Years' : '–';
+
+  var emiResult = calcEMI(principal, rate, duration);
+  document.getElementById('detailEmi').innerText          = emiResult.emi   ? fmtINR(emiResult.emi)   : '–';
+  document.getElementById('detailTotalPayable').innerText = emiResult.total ? fmtINR(emiResult.total) : '–';
+
+  document.getElementById('disbursementAccount').innerText   = userAccount || '–';
+  document.getElementById('disbursementIfsc').innerText      = pick(loanData.ifsc, 'ABCB0001234');
+  document.getElementById('disbursementAmountVal').innerText = principal ? fmtINR(principal) : '–';
+
+  var employment   = pick(loanApp.employment,   cibil.employment,   loanData.employment,   '–');
+  var annualIncome = pick(loanApp.annualIncome,  cibil.annualIncome, loanData.annualIncome, '');
+  var collateral   = pick(loanApp.collateral,    loanData.collateral,  '–');
+  var purpose      = pick(loanApp.purpose,       loanData.purpose,     '–');
+
+  document.getElementById('detailEmployment').innerText   = employment;
+  document.getElementById('detailAnnualIncome').innerText = fmtINR(annualIncome);
+  document.getElementById('detailCollateral').innerText   = collateral;
+  document.getElementById('detailPurpose').innerText      = purpose;
+
+  buildEmiTable(principal, rate, duration);
+  applyLang(savedLang);
 }
-document.getElementById('detailDuration').innerText = duration ? duration + ' Years' : '–';
-
-// ── EMI + Total (recalculated) ──
-var emiResult = calcEMI(principal, rate, duration);
-document.getElementById('detailEmi').innerText          = emiResult.emi   ? fmtINR(emiResult.emi)   : '–';
-document.getElementById('detailTotalPayable').innerText = emiResult.total ? fmtINR(emiResult.total) : '–';
-
-// ── Disbursement ──
-document.getElementById('disbursementAccount').innerText   = userAccount || '–';
-document.getElementById('disbursementIfsc').innerText      = pick(loanData.ifsc, 'ABCB0001234');
-document.getElementById('disbursementAmountVal').innerText = principal ? fmtINR(principal) : '–';
-
-// ── Extra fields from loan-application.html ──
-// employment: saved as "employment" in loan_application_data and cibil_data
-var employment   = pick(loanApp.employment, cibil.employment, loanData.employment, '–');
-var annualIncome = pick(loanApp.annualIncome, cibil.annualIncome, loanData.annualIncome, '');
-var collateral   = pick(loanApp.collateral,  loanData.collateral,  '–');
-var purpose      = pick(loanApp.purpose,     loanData.purpose,     '–');
-
-document.getElementById('detailEmployment').innerText   = employment;
-document.getElementById('detailAnnualIncome').innerText = fmtINR(annualIncome);
-document.getElementById('detailCollateral').innerText   = collateral;
-document.getElementById('detailPurpose').innerText      = purpose;
-
-// ── EMI schedule ──
-buildEmiTable(principal, rate, duration);
-
-// ── Apply shared translations ──
-applyLang(savedLang);
 
 // ══════════════════════════════════════════════════════════════
 //  BRANCH SELECTION
@@ -554,14 +640,14 @@ function updateManagerUI() {
   if (!selectedBranch) return;
   var d = branchData[selectedBranch];
   var branchWord = tr('branch_word') || 'Branch';
-  document.getElementById('managerInitials').textContent      = d.initials;
-  document.getElementById('managerName').textContent          = tr(d.mgrKey);
-  document.getElementById('managerBranch').textContent        = tr(d.nameKey) + ' ' + branchWord;
-  document.getElementById('managerPhone').textContent         = d.phone;
-  document.getElementById('managerEmail').textContent         = d.email;
-  document.getElementById('confirmBtnText').textContent       = tr(d.nameKey);
-  document.getElementById('disbursementBranch').textContent   = tr(d.nameKey);
-  document.getElementById('disbursementIfsc').textContent     = d.ifsc;
+  document.getElementById('managerInitials').textContent    = d.initials;
+  document.getElementById('managerName').textContent        = tr(d.mgrKey);
+  document.getElementById('managerBranch').textContent      = tr(d.nameKey) + ' ' + branchWord;
+  document.getElementById('managerPhone').textContent       = d.phone;
+  document.getElementById('managerEmail').textContent       = d.email;
+  document.getElementById('confirmBtnText').textContent     = tr(d.nameKey);
+  document.getElementById('disbursementBranch').textContent = tr(d.nameKey);
+  document.getElementById('disbursementIfsc').textContent   = d.ifsc;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -570,7 +656,8 @@ function updateManagerUI() {
 document.getElementById('nav-lang-select').addEventListener('change', function() {
   localStorage.setItem('abcbank_lang', this.value);
   applyLang(this.value);
-  document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
+  if (typeof rawLoanType !== 'undefined')
+    document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
   updateManagerUI();
 });
 

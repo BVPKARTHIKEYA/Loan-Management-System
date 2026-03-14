@@ -207,10 +207,8 @@
       <p class="text-gray-500 text-base mt-1">You can change your decision at any time before final submission.</p>
     </header>
 
-    <!-- FIX: banner always visible, updates on each decision, never hides buttons -->
     <div id="decision-banner" class="hidden mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold"></div>
 
-    <!-- FIX: buttons are NEVER disabled — always clickable -->
     <div id="decision-buttons" class="flex gap-6">
       <button onclick="legalDecision('approve')"
         id="btn-approve"
@@ -293,7 +291,6 @@ function loadAllSources() {
     } catch(e) {}
   }
 
-  // Name — check all possible field names across all sources
   var name = "";
   if (session) {
     if (session.fullName) name = session.fullName;
@@ -355,13 +352,22 @@ function populateSummary() {
 
 // ══════════════════════════════════════════════════════════════
 //  DOCUMENT CARDS
+//
+//  DOCS now includes ALL 6 documents:
+//    - 5 from bank-account.html  → kyc_doc_* keys
+//    - 1 from cibil.html         → kyc_doc_cibil  (KEY FIX)
+//
+//  Images are read FRESH from localStorage every time
+//  buildDocCards() runs — no caching, always up-to-date.
 // ══════════════════════════════════════════════════════════════
 var DOCS = [
-  { label:"PAN Card",          labelKey:"doc_pan",       icon:"fa-id-card",      storageKey:"kyc_doc_pan",       nameKey:"kyc_doc_pan_name"       },
-  { label:"Aadhaar Card",      labelKey:"doc_aadhaar",   icon:"fa-address-card", storageKey:"kyc_doc_aadhaar",   nameKey:"kyc_doc_aadhaar_name"   },
-  { label:"Property Document", labelKey:"doc_property",  icon:"fa-house",        storageKey:"kyc_doc_property",  nameKey:"kyc_doc_property_name"  },
-  { label:"Income Proof",      labelKey:"doc_income",    icon:"fa-file-invoice", storageKey:"kyc_doc_income",    nameKey:"kyc_doc_income_name"    },
-  { label:"Signature",         labelKey:"doc_signature", icon:"fa-pen-nib",      storageKey:"kyc_doc_signature", nameKey:"kyc_doc_signature_name" }
+  { label:"PAN Card",          labelKey:"doc_pan",       icon:"fa-id-card",         storageKey:"kyc_doc_pan",       nameKey:"kyc_doc_pan_name"       },
+  { label:"Aadhaar Card",      labelKey:"doc_aadhaar",   icon:"fa-address-card",    storageKey:"kyc_doc_aadhaar",   nameKey:"kyc_doc_aadhaar_name"   },
+  { label:"Property Document", labelKey:"doc_property",  icon:"fa-house",           storageKey:"kyc_doc_property",  nameKey:"kyc_doc_property_name"  },
+  { label:"Income Proof",      labelKey:"doc_income",    icon:"fa-file-invoice",    storageKey:"kyc_doc_income",    nameKey:"kyc_doc_income_name"    },
+  { label:"Signature",         labelKey:"doc_signature", icon:"fa-pen-nib",         storageKey:"kyc_doc_signature", nameKey:"kyc_doc_signature_name" },
+  // ── Added: CIBIL Report uploaded in cibil.html ──
+  { label:"CIBIL Report",      labelKey:"doc_cibil",     icon:"fa-chart-line",      storageKey:"kyc_doc_cibil",     nameKey:"kyc_doc_cibil_name"     }
 ];
 
 function buildDocCards() {
@@ -371,12 +377,13 @@ function buildDocCards() {
   var html = "";
 
   DOCS.forEach(function(doc, idx) {
+    // Always read fresh from localStorage — never from a cached variable
     var dataUrl  = localStorage.getItem(doc.storageKey);
     var fileName = localStorage.getItem(doc.nameKey) || "—";
     var hasFile  = !!dataUrl;
     if (hasFile) uploaded++;
 
-    var isImage = dataUrl && dataUrl.startsWith("data:image");
+    var isImage = hasFile && dataUrl.startsWith("data:image");
 
     var thumbHtml = "";
     if (hasFile && isImage) {
@@ -414,6 +421,7 @@ function buildDocCards() {
 
 function viewDoc(idx) {
   var doc      = DOCS[idx];
+  // Always fetch fresh from localStorage at view time
   var dataUrl  = localStorage.getItem(doc.storageKey);
   var fileName = localStorage.getItem(doc.nameKey) || "document";
 
@@ -476,16 +484,12 @@ function logoutUser() {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  DECISION BANNER — shows current status, never locks buttons
+//  DECISION BANNER
 // ══════════════════════════════════════════════════════════════
-
-// FIX: updateDecisionBanner() only updates the visual — buttons stay enabled always.
-// Called on page load (to reflect any stored decision) and after every new decision.
 function updateDecisionBanner(type) {
   var banner = document.getElementById("decision-banner");
 
   if (!type) {
-    // No decision yet — hide the banner, highlight both buttons equally
     banner.classList.add("hidden");
     document.getElementById("btn-approve").classList.remove("ring-4", "ring-green-400");
     document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
@@ -500,7 +504,6 @@ function updateDecisionBanner(type) {
       + '<span>Current decision: <strong>Approved</strong>. '
       + '<a href="loan-approval.html" class="underline font-semibold hover:text-green-700 ml-1">Proceed to Loan Approval →</a>'
       + ' &nbsp;|&nbsp; You can still change this decision below.</span>';
-    // Highlight the active button with a ring
     document.getElementById("btn-approve").classList.add("ring-4", "ring-green-400");
     document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
   } else {
@@ -512,15 +515,13 @@ function updateDecisionBanner(type) {
   }
 }
 
-// ── On page load: show whatever decision was last saved (if any) ──
 updateDecisionBanner(localStorage.getItem("loan_legal_decision"));
 
 // ══════════════════════════════════════════════════════════════
-//  LEGAL DECISION — fully re-callable, no locking
+//  LEGAL DECISION
 // ══════════════════════════════════════════════════════════════
 function legalDecision(action) {
   if (action === 'approve') {
-    // Save decision immediately so it persists even if user closes swal
     localStorage.setItem("loan_legal_decision", "approved");
     updateDecisionBanner("approved");
     swal({
