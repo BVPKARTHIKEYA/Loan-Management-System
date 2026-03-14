@@ -85,7 +85,7 @@
 <!-- MAIN -->
 <main class="w-full px-10 py-6">
 
-  <!-- HERO — same gradient as home.html -->
+  <!-- HERO -->
   <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-12 mb-10 flex flex-col md:flex-row justify-between gap-10">
 
     <!-- LEFT: Personal details -->
@@ -275,6 +275,75 @@ function fmtDate(iso) {
 }
 
 // ══════════════════════════════════════════════════════════════
+//  resolveDob()
+//
+//  Searches every localStorage location where DOB could have
+//  been saved by register.html / bank-account.html / cibil.html.
+//
+//  Priority:
+//    1. cibil_data.dob          — cibil.html copies it here explicitly
+//    2. kyc_data.dob            — bank-account.html saves full KYC here
+//    3. currentUser.dob         — top-level on session object
+//    4. currentUser.account.dob — nested inside account sub-object
+//    5. abcBank_users[].dob     — full user record lookup by email
+//    6. bankUser.dob            — legacy key
+// ══════════════════════════════════════════════════════════════
+function resolveDob(cu) {
+  function jp(key) {
+    try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; }
+  }
+
+  // 1. cibil_data.dob
+  var cibil = jp('cibil_data');
+  if (cibil && cibil.dob) return cibil.dob;
+
+  // 2. kyc_data.dob
+  var kyc = jp('kyc_data');
+  if (kyc && kyc.dob) return kyc.dob;
+
+  // 3. currentUser.dob (top-level)
+  if (cu && cu.dob) return cu.dob;
+
+  // 4. currentUser.account.dob
+  if (cu && cu.account && cu.account.dob) return cu.account.dob;
+
+  // 5. full abcBank_users[] lookup by email
+  if (cu && cu.email) {
+    try {
+      var users = JSON.parse(localStorage.getItem('abcBank_users') || '[]');
+      var found = users.find(function(u) { return u.email === cu.email; });
+      if (found && found.dob) return found.dob;
+    } catch(e) {}
+  }
+
+  // 6. legacy bankUser
+  var legacy = jp('bankUser');
+  if (legacy && legacy.dob) return legacy.dob;
+
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  calcAge(dobStr) — floor-based, accurate age
+//  Returns null if dob is missing/invalid.
+// ══════════════════════════════════════════════════════════════
+function calcAge(dobStr) {
+  if (!dobStr) return null;
+  var birth = new Date(dobStr);
+  if (isNaN(birth)) return null;
+  var today = new Date();
+  var age   = today.getFullYear() - birth.getFullYear();
+  // Subtract 1 if birthday hasn't occurred yet this year
+  if (
+    today.getMonth() < birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+  ) {
+    age--;
+  }
+  return age >= 0 ? age : null;
+}
+
+// ══════════════════════════════════════════════════════════════
 //  RENDER PAGE
 // ══════════════════════════════════════════════════════════════
 function renderPage() {
@@ -282,7 +351,7 @@ function renderPage() {
   var acct     = abcBank.getUserAccount();
   var fullName = ((cu.firstName||'') + ' ' + (cu.lastName||'')).trim() || 'User';
 
-  // ── Labels ─────────────────────────────────────────────────
+  // ── Labels ──────────────────────────────────────────────────
   var labelIds = [
     'pageTitle','pageSubtitle','lblWelcome','lblEmail','lblMobile','lblDob','lblAge',
     'lblAccountType','lblAccountNumber','lblBalance','lblStatus','sectionAccount',
@@ -293,32 +362,35 @@ function renderPage() {
     if (el) el.textContent = tr(id);
   });
 
-  // ── Personal / hero ────────────────────────────────────────
-  document.getElementById('heroName').textContent   = fullName;
-  document.getElementById('heroEmail').textContent  = cu.email  || '—';
-  document.getElementById('heroMobile').textContent = cu.mobile || '—';
-  document.getElementById('heroDob').textContent    = fmtDate(cu.dob);
+  // ── DOB — resolved from all storage sources ─────────────────
+  var dob    = resolveDob(cu);
+  var age    = calcAge(dob);
+  var tenure = (age !== null) ? Math.max(0, 60 - age) : null;
 
-  var age    = abcBank.getCeilAge(cu.dob);
-  var tenure = abcBank.getLoanTenure(cu.dob);  // 60 - ceilAge
-  document.getElementById('heroAge').textContent        = age    !== null ? age    + ' ' + tr('years')   : '—';
+  document.getElementById('heroDob').textContent  = dob ? fmtDate(dob) : '—';
+  document.getElementById('heroAge').textContent  = age    !== null ? age    + ' ' + tr('years')   : '—';
   document.getElementById('infoLoanTenure').textContent = tenure !== null ? tenure + ' ' + tr('yrAvail') : '—';
 
-  // ── Account ────────────────────────────────────────────────
+  // ── Personal / hero ──────────────────────────────────────────
+  document.getElementById('heroName').textContent   = fullName;
+  document.getElementById('heroEmail').textContent  = cu.email  || '—';
+  document.getElementById('heroMobile').textContent = cu.mobile || (cu.phone) || '—';
+
+  // ── Account ──────────────────────────────────────────────────
   if (acct && acct.accountNumber) {
-    var raw         = acct.accountNumber;
-    var acctType    = (acct.accountType || 'savings').toLowerCase();
-    var typeLabel   = acctType === 'current' ? tr('current') : tr('savings');
-    var statusVal   = (acct.status || 'Active').toLowerCase();
-    var statusTxt   = statusVal === 'active'   ? tr('statusActive')
-                    : statusVal === 'inactive' ? tr('statusInactive')
-                    : tr('statusPending');
-    var heroBg      = statusVal === 'active'   ? 'bg-green-400 text-green-900'
-                    : statusVal === 'inactive' ? 'bg-red-400 text-red-900'
-                    : 'bg-yellow-400 text-yellow-900';
-    var rowBg       = statusVal === 'active'   ? 'bg-green-100 text-green-700'
-                    : statusVal === 'inactive' ? 'bg-red-100 text-red-700'
-                    : 'bg-yellow-100 text-yellow-700';
+    var raw       = acct.accountNumber;
+    var acctType  = (acct.accountType || 'savings').toLowerCase();
+    var typeLabel = acctType === 'current' ? tr('current') : tr('savings');
+    var statusVal = (acct.status || 'Active').toLowerCase();
+    var statusTxt = statusVal === 'active'   ? tr('statusActive')
+                  : statusVal === 'inactive' ? tr('statusInactive')
+                  : tr('statusPending');
+    var heroBg    = statusVal === 'active'   ? 'bg-green-400 text-green-900'
+                  : statusVal === 'inactive' ? 'bg-red-400 text-red-900'
+                  : 'bg-yellow-400 text-yellow-900';
+    var rowBg     = statusVal === 'active'   ? 'bg-green-100 text-green-700'
+                  : statusVal === 'inactive' ? 'bg-red-100 text-red-700'
+                  : 'bg-yellow-100 text-yellow-700';
 
     var bal = (acct.balance !== undefined && acct.balance !== null) ? acct.balance : null;
 
