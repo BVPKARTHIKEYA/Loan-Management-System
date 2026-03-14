@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Application</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
-<style>
-  #lang-switcher { display: none !important; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="logic.js"></script>
+
+    <style>
+        #lang-switcher { display: none !important; }
+    </style>
 </head>
 <body class="bg-gray-100">
 
@@ -18,7 +21,7 @@
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
         <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
       </a>
       <a href="home.html" class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
@@ -27,7 +30,9 @@
       </a>
       <div class="flex items-center gap-4 flex-shrink-0">
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
-          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;"><i class="fa fa-globe"></i> Lang:</label>
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
+            <i class="fa fa-globe"></i> Lang:
+          </label>
           <select id="nav-lang-select" style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
@@ -37,25 +42,26 @@
             <option value="hi" style="background:#1e3a5f">हिन्दी</option>
           </select>
         </div>
+
         <div class="relative group">
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
             <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">User</span>
-              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+              <span id="username" class="text-base font-bold">Loading...</span>
+              <span id="userid" class="text-xs opacity-70">ID: —</span>
             </div>
             <i class="fa fa-chevron-down text-sm ml-1"></i>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">User</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+              <p class="font-semibold text-lg" id="profileName">Loading...</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
             </div>
             <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
               <i class="fa fa-home mr-2"></i>
               <span data-i18n="loan_back_dashboard">Back to Dashboard</span>
             </a>
-            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
               <i class="fa fa-sign-out-alt mr-2"></i>
               <span data-i18n="nav_logout">Logout</span>
             </a>
@@ -74,91 +80,103 @@
 <main class="max-w-6xl mx-auto p-6">
   <div class="grid md:grid-cols-3 gap-6">
 
-    <section class="md:col-span-2 bg-white shadow rounded-xl p-8">
-      <h2 class="text-2xl font-bold mb-4" data-i18n="loan_step1_title">Step 1 – Select Loan Type</h2>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 text-center text-lg">
-        <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
-          <p class="text-4xl">🏠</p>
-          <p class="font-semibold" data-i18n="loan_home">Home Loan</p>
-          <p class="text-gray-500">8.5%</p>
-        </article>
-        <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
-          <p class="text-4xl">👤</p>
-          <p class="font-semibold" data-i18n="loan_personal">Personal Loan</p>
-          <p class="text-gray-500">10.9%</p>
-        </article>
-        <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
-          <p class="text-4xl">🚗</p>
-          <p class="font-semibold" data-i18n="loan_vehicle">Vehicle Loan</p>
-          <p class="text-gray-500">9.2%</p>
-        </article>
-        <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
-          <p class="text-4xl">🥇</p>
-          <p class="font-semibold" data-i18n="loan_gold">Gold Loan</p>
-          <p class="text-gray-500">7.5%</p>
-        </article>
-        <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer">
-          <p class="text-4xl">🎓</p>
-          <p class="font-semibold" data-i18n="loan_education">Education Loan</p>
-          <p class="text-gray-500">8.2%</p>
-        </article>
+    <section class="md:col-span-2 bg-white shadow rounded-xl p-8 space-y-8">
+
+      <!-- STEP 1 – LOAN TYPE -->
+      <div>
+        <h2 class="text-2xl font-bold mb-4" data-i18n="loan_step1_title">Step 1 – Select Loan Type</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-2 text-center text-lg">
+          <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer transition-all loan-card" data-loan="home">
+            <p class="text-4xl">🏠</p>
+            <p class="font-semibold" data-i18n="loan_home">Home Loan</p>
+            <p class="text-gray-500">8.5%</p>
+          </article>
+          <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer transition-all loan-card" data-loan="personal">
+            <p class="text-4xl">👤</p>
+            <p class="font-semibold" data-i18n="loan_personal">Personal Loan</p>
+            <p class="text-gray-500">10.9%</p>
+          </article>
+          <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer transition-all loan-card" data-loan="vehicle">
+            <p class="text-4xl">🚗</p>
+            <p class="font-semibold" data-i18n="loan_vehicle">Vehicle Loan</p>
+            <p class="text-gray-500">9.2%</p>
+          </article>
+          <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer transition-all loan-card" data-loan="gold">
+            <p class="text-4xl">🥇</p>
+            <p class="font-semibold" data-i18n="loan_gold">Gold Loan</p>
+            <p class="text-gray-500">7.5%</p>
+          </article>
+          <article class="border rounded-lg p-5 hover:bg-blue-50 cursor-pointer transition-all loan-card" data-loan="education">
+            <p class="text-4xl">🎓</p>
+            <p class="font-semibold" data-i18n="loan_education">Education Loan</p>
+            <p class="text-gray-500">8.2%</p>
+          </article>
+        </div>
+        <p id="selectedLoanLabel" class="mt-2 text-blue-700 font-semibold text-base hidden">
+          <i class="fa fa-check-circle mr-1"></i>
+          <span id="selectedLoanText"></span>
+        </p>
       </div>
 
-      <h2 class="text-2xl font-bold mb-4" data-i18n="loan_step2_title">Step 2 – Loan Details</h2>
-      <form class="space-y-6">
-        <div class="grid md:grid-cols-2 gap-6">
-          <div>
-            <label class="text-lg font-semibold" data-i18n="loan_amount">Loan Amount</label>
-            <input type="number" placeholder="2500000" class="w-full border rounded-md p-3 mt-2 text-lg">
+      <!-- STEP 2 – LOAN DETAILS -->
+      <div>
+        <h2 class="text-2xl font-bold mb-4" data-i18n="loan_step2_title">Step 2 – Loan Details</h2>
+        <div class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="text-lg font-semibold" data-i18n="loan_amount">Loan Amount</label>
+              <input id="loanAmountInput" type="number" placeholder="2500000" class="w-full border rounded-md p-3 mt-2 text-lg">
+            </div>
+            <div>
+              <label class="text-lg font-semibold" data-i18n="loan_income">Annual Income</label>
+              <input id="annualIncomeInput" type="number" placeholder="600000" class="w-full border rounded-md p-3 mt-2 text-lg">
+            </div>
+            <div class="md:col-span-2">
+              <label class="text-lg font-semibold" data-i18n="loan_employment">Employment Type</label>
+              <select id="employmentTypeInput" class="w-full border rounded-md p-3 mt-2 text-lg">
+                <option value="" data-i18n="loan_employment_select">Select</option>
+                <option value="Salaried"      data-i18n="loan_employment_salaried">Salaried</option>
+                <option value="Self Employed" data-i18n="loan_employment_self">Self Employed</option>
+                <option value="Business"      data-i18n="loan_employment_business">Business</option>
+              </select>
+            </div>
           </div>
           <div>
-            <label class="text-lg font-semibold" data-i18n="loan_income">Annual Income</label>
-            <input type="number" placeholder="600000" class="w-full border rounded-md p-3 mt-2 text-lg">
+            <label class="text-lg font-semibold" data-i18n="loan_purpose">Loan Purpose</label>
+            <textarea id="loanPurposeInput" class="w-full border rounded-md p-3 mt-2 text-lg" placeholder="Purpose of loan"></textarea>
           </div>
-          <div class="md:col-span-2">
-            <label class="text-lg font-semibold" data-i18n="loan_employment">Employment Type</label>
-            <select class="w-full border rounded-md p-3 mt-2 text-lg">
-              <option data-i18n="loan_employment_select">Select</option>
-              <option data-i18n="loan_employment_salaried">Salaried</option>
-              <option data-i18n="loan_employment_self">Self Employed</option>
-              <option data-i18n="loan_employment_business">Business</option>
-            </select>
+          <div>
+            <label class="text-lg font-semibold" data-i18n="loan_collateral">Collateral Details</label>
+            <input id="collateralInput" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" placeholder="Property / Vehicle / Gold">
+          </div>
+          <div class="bg-green-50 border border-green-300 rounded-lg p-5">
+            <p class="text-lg font-semibold text-green-700" data-i18n="loan_tenure_title">Available Loan Tenure</p>
+            <p id="tenureDisplay" class="text-2xl font-bold text-green-600 mt-2">Calculating...</p>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label class="text-lg font-semibold" data-i18n="loan_purpose">Loan Purpose</label>
-          <textarea class="w-full border rounded-md p-3 mt-2 text-lg" placeholder="Purpose of loan"></textarea>
-        </div>
+      <!-- STEP 3 – SUBMIT -->
+      <div class="space-y-3 text-lg">
+        <label class="flex items-start gap-2">
+          <input type="checkbox" id="chk1" class="mt-1">
+          <span data-i18n="loan_confirm_accuracy">I confirm that all information is accurate.</span>
+        </label>
+        <label class="flex items-start gap-2">
+          <input type="checkbox" id="chk2" class="mt-1">
+          <span data-i18n="loan_authorize_cibil">I authorize ABC Bank to verify my CIBIL score and documents.</span>
+        </label>
+      </div>
 
-        <div>
-          <label class="text-lg font-semibold" data-i18n="loan_collateral">Collateral Details</label>
-          <input type="text" class="w-full border rounded-md p-3 mt-2 text-lg" placeholder="Property / Vehicle / Gold">
-        </div>
+      <button type="button" id="submitBtn"
+              class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
+        <i class="fa fa-paper-plane mr-2"></i>
+        <span data-i18n="loan_submit_btn">Submit Loan Application</span>
+      </button>
 
-        <section class="bg-green-50 border border-green-300 rounded-lg p-5">
-          <p class="text-lg font-semibold text-green-700" data-i18n="loan_tenure_title">Available Loan Tenure from CIBIL Report</p>
-          <p id="tenureDisplay" class="text-2xl font-bold text-green-600 mt-2" data-i18n="loan_tenure_calculating">Calculating...</p>
-        </section>
-
-        <div class="space-y-3 text-lg">
-          <label class="flex items-start gap-2">
-            <input type="checkbox" class="mt-1">
-            <span data-i18n="loan_confirm_accuracy">I confirm that all information is accurate.</span>
-          </label>
-          <label class="flex items-start gap-2">
-            <input type="checkbox" class="mt-1">
-            <span data-i18n="loan_authorize_cibil">I authorize ABC Bank to verify my CIBIL score and documents.</span>
-          </label>
-        </div>
-
-        <button type="button" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
-          <i class="fa fa-paper-plane mr-2"></i>
-          <span data-i18n="loan_submit_btn">Submit Loan Application</span>
-        </button>
-      </form>
     </section>
 
+    <!-- SIDEBAR -->
     <aside class="space-y-6">
       <section class="bg-white shadow rounded-xl p-6">
         <h3 class="text-xl font-bold mb-3" data-i18n="interest_rates_title">Interest Rates</h3>
@@ -191,6 +209,7 @@
         </ul>
       </section>
     </aside>
+
   </div>
 </main>
 
@@ -231,78 +250,165 @@
 </footer>
 
 <script>
-var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
-document.getElementById("username").innerText = user.name;
-document.getElementById("userid").innerText = "ID: " + user.id;
-document.getElementById("profileName").innerText = user.name;
-document.getElementById("profileAccount").innerText = "Account: " + user.account;
+// ── Page protection ────────────────────────────────────────────────
+if (!abcBank?.isLoggedIn?.()) {
+    window.location.replace("login.html");
+}
 
+// ── Load real current user (same as home.html) ─────────────────────
+const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
+const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
+
+document.getElementById("username").textContent     = fullName;
+document.getElementById("profileName").textContent  = fullName;
+
+// Account & ID display
+if (currentUser.account?.accountNumber) {
+    const accNum = currentUser.account.accountNumber;
+    document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
+    document.getElementById("userid").textContent = `ID: ${accNum.slice(-6) || "—"}`;
+} else {
+    document.getElementById("profileAccount").textContent = "Account: Not Opened";
+    document.getElementById("userid").textContent = "ID: —";
+}
+
+// ── Language setup ─────────────────────────────────────────────────
+const navSel = document.getElementById("nav-lang-select");
+const savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (navSel) {
+    navSel.value = savedLang;
+    navSel.addEventListener('change', function() {
+        applyLang(this.value);
+    });
+    applyLang(savedLang);
+}
+
+// ── Loan type selection ─────────────────────────────────────────────
 let selectedLoanType = "";
-const loanCards = document.querySelectorAll('main article.border');
+let selectedLoanLabel = "";
+
+const loanCards = document.querySelectorAll('.loan-card');
 loanCards.forEach(card => {
-  card.addEventListener('click', function() {
-    loanCards.forEach(c => c.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600'));
-    this.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600');
-    selectedLoanType = this.querySelector('[data-i18n]').getAttribute('data-i18n').replace('loan_', '');
-  });
+    card.addEventListener('click', function() {
+        loanCards.forEach(c => {
+            c.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600');
+        });
+        this.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600');
+
+        const labelEl = this.querySelector('[data-i18n]');
+        if (labelEl) {
+            const key = labelEl.getAttribute('data-i18n');
+            selectedLoanType = key.replace('loan_', '');
+            selectedLoanLabel = labelEl.textContent.trim();
+        }
+
+        document.getElementById("selectedLoanText").textContent = `Selected: ${selectedLoanLabel}`;
+        document.getElementById("selectedLoanLabel").classList.remove("hidden");
+    });
 });
 
-function logoutUser() {
-  localStorage.removeItem("bankUser");
-  window.location.href = "index.html";
-}
+// ── Tenure from account (if available) ─────────────────────────────
+(function showTenure() {
+    let tenure = null;
+    if (currentUser.dob) {
+        const birth = new Date(currentUser.dob);
+        const age = new Date().getFullYear() - birth.getFullYear() -
+                    (new Date().getMonth() < birth.getMonth() ||
+                     (new Date().getMonth() === birth.getMonth() && new Date().getDate() < birth.getDate()) ? 1 : 0);
+        tenure = Math.max(0, 60 - age);
+    }
+    // Fallback to previously saved value
+    if (!tenure) {
+        tenure = parseInt(localStorage.getItem("loanTenure")) || null;
+    }
+    if (tenure !== null) {
+        document.getElementById("tenureDisplay").textContent = `${tenure} Years Available`;
+    } else {
+        document.getElementById("tenureDisplay").textContent = "Please complete account details first";
+    }
+})();
 
-var navSel = document.getElementById("nav-lang-select");
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
-navSel.addEventListener('change', function() { applyLang(this.value); });
-applyLang(savedLang);
+// ── Submit logic (your original code, slightly cleaned) ─────────────
+document.getElementById("submitBtn").onclick = function submitLoanApplication() {
+    const amount     = document.getElementById("loanAmountInput").value.trim();
+    const income     = document.getElementById("annualIncomeInput").value.trim();
+    const employment = document.getElementById("employmentTypeInput").value;
+    const purpose    = document.getElementById("loanPurposeInput").value.trim();
+    const collateral = document.getElementById("collateralInput").value.trim();
+    const chk1       = document.getElementById("chk1").checked;
+    const chk2       = document.getElementById("chk2").checked;
 
-function submitLoanApplication() {
-  const amount = document.querySelector('input[placeholder="2500000"]').value;
-  const income = document.querySelector('input[placeholder="600000"]').value;
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  const tenure = parseInt(localStorage.getItem("loanTenure")) || 20;
+    if (!selectedLoanType) {
+        swal("Error", "Please select a loan type.", "error");
+        return;
+    }
+    if (!amount || !income) {
+        swal("Error", "Please enter loan amount and annual income.", "error");
+        return;
+    }
+    if (!employment) {
+        swal("Error", "Please select employment type.", "error");
+        return;
+    }
+    if (!chk1 || !chk2) {
+        swal("Authorization Required", "Please accept both checkboxes to proceed.", "warning");
+        return;
+    }
 
-  if (!selectedLoanType) { swal("Error", "Please select a loan type icon.", "error"); return; }
-  if (!amount || !income) { swal("Error", "Please complete all loan details.", "error"); return; }
-  if (!checkboxes[0].checked || !checkboxes[1].checked) { swal("Authorization", "Please accept the terms.", "warning"); return; }
+    // Disable button
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.classList.add("opacity-50", "cursor-not-allowed");
 
-  swal({ title: "Processing Application", text: "Sending details for Bank Officer verification...", icon: "info", buttons: false, closeOnClickOutside: false });
+    // Save application data
+    const loanAppData = {
+        loanType: selectedLoanType,
+        loanAmount: amount,
+        annualIncome: income,
+        employment,
+        purpose,
+        collateral,
+        submittedAt: new Date().toISOString()
+    };
+    localStorage.setItem("loan_application_data", JSON.stringify(loanAppData));
 
-  setTimeout(() => {
-    swal({ title: "Officer Verified", text: "Internal bank verification complete. Sending for Lawyer verification...", icon: "info", buttons: false });
+    // Update cibil_data if exists
+    let cibil = JSON.parse(localStorage.getItem("cibil_data") || "{}");
+    cibil = {
+        ...cibil,
+        loanType: selectedLoanType,
+        loanAmount: amount,
+        annualIncome: income,
+        employment
+    };
+    localStorage.setItem("cibil_data", JSON.stringify(cibil));
+
+    // Clear old decisions
+    localStorage.removeItem("loan_officer_decision");
+    localStorage.removeItem("loan_legal_decision");
+
+    // Success flow
+    swal({
+        title: "Processing Application",
+        text: "Sending details for Bank Officer verification...",
+        icon: "info",
+        buttons: false,
+        closeOnClickOutside: false
+    });
+
     setTimeout(() => {
-      swal({ title: "Lawyer Verified", text: "Legal document verification complete. Finalizing approval...", icon: "success", buttons: false });
-      setTimeout(() => {
-        const rates = { home: 8.5, personal: 10.9, vehicle: 9.2, gold: 7.5, education: 8.2 };
-        const rateYear = rates[selectedLoanType] || 8.5;
-        const rateMonth = rateYear / 12 / 100;
-        const months = tenure * 12;
-        const emi = Math.round((amount * rateMonth * Math.pow(1 + rateMonth, months)) / (Math.pow(1 + rateMonth, months) - 1));
-        
-        const applicationData = {
-          loanType: selectedLoanType,
-          loanAmount: amount,
-          duration: tenure,
-          interestRate: rateYear,
-          emi: emi,
-          totalPayable: emi * months,
-          date: new Date().toLocaleDateString()
-        };
-        localStorage.setItem("loanApplication", JSON.stringify(applicationData));
-        window.location.href = "loan-approval.html";
-      }, 1500);
+        swal({
+            title: "Officer Verified",
+            text: "Internal bank verification complete. Proceeding to Officer Review...",
+            icon: "info",
+            buttons: false
+        });
+        setTimeout(() => {
+            window.location.href = "officer-review.html";
+        }, 2000);
     }, 2000);
-  }, 2000);
-}
-
-document.querySelector('button[type="button"]').onclick = submitLoanApplication;
-
-document.addEventListener("DOMContentLoaded", function() {
-  var tenure = localStorage.getItem("loanTenure") || "20"; 
-  document.getElementById("tenureDisplay").textContent = tenure + " Years Available";
-});
+};
 </script>
+
 </body>
 </html>

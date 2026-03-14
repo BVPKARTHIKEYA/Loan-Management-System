@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Bank Account</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open Bank Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="logic.js"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
-
-<style>
-  /* Prevent shared.js from injecting its own fixed switcher */
-  #lang-switcher { display: none !important; }
-</style>
-
+    <style>
+        #lang-switcher { display: none !important; }
+        .preview-container { max-height: 120px; overflow: hidden; }
+        .preview-img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; }
+    </style>
 </head>
 <body class="bg-gray-100">
 
+<!-- NAVBAR -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
         <h1 class="text-3xl font-bold" data-i18n="account">ABC Bank</h1>
       </a>
 
       <a href="home.html"
-        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
         <i class="fa fa-arrow-left"></i>
         <span data-i18n="account_back_dashboard">Back to Dashboard</span>
       </a>
@@ -41,7 +42,7 @@
             <i class="fa fa-globe"></i> Lang:
           </label>
           <select id="nav-lang-select"
-            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
             <option value="ta" style="background:#1e3a5f">தமிழ்</option>
@@ -55,21 +56,21 @@
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
             <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">User</span>
-              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+              <span id="username" class="text-base font-bold">Loading...</span>
+              <span id="userid" class="text-xs opacity-70">ID: —</span>
             </div>
             <i class="fa fa-chevron-down text-sm ml-1"></i>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">User</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+              <p class="font-semibold text-lg" id="profileName">Loading...</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
             </div>
             <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
               <i class="fa fa-home mr-2"></i>
               <span data-i18n="account_back_dashboard">Back to Dashboard</span>
             </a>
-            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
               <i class="fa fa-sign-out-alt mr-2"></i>
               <span data-i18n="nav_logout">Logout</span>
             </a>
@@ -89,160 +90,189 @@
 <main class="max-w-7xl mx-auto p-6">
 <form id="accountForm" class="bg-white shadow-xl rounded-xl p-10 space-y-12">
 
-<section>
-<header class="mb-6">
-  <h2 class="text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2>
-</header>
-<div class="grid md:grid-cols-2 gap-6">
-  <div>
-    <label class="font-semibold text-lg" data-i18n="full_name">Full Name</label>
-    <input id="name" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="date_of_birth">Date of Birth</label>
-    <input id="dob" type="date" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="email">Email</label>
-    <input id="email" type="email" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="mobile_number">Mobile Number</label>
-    <input id="mobile" type="tel" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="aadhaar_number">Aadhaar Number</label>
-    <input id="aadhaar" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="pan_number">PAN Number</label>
-    <input id="pan" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
-  </div>
-</div>
-</section>
-
-<section>
-<header class="mb-6">
-  <h2 class="text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2>
-</header>
-<div class="grid md:grid-cols-2 gap-6">
-  <div>
-    <label class="font-semibold text-lg" data-i18n="father_name">Father Name</label>
-    <input id="father" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="mother_name">Mother Name</label>
-    <input id="mother" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-</div>
-</section>
-
-<section>
-<header class="mb-6">
-  <h2 class="text-2xl font-bold" data-i18n="address_info_title">Address Information</h2>
-</header>
-<div class="grid md:grid-cols-2 gap-6">
-  <div class="md:col-span-2">
-    <label class="font-semibold text-lg" data-i18n="address">Address</label>
-    <textarea id="address" class="w-full border rounded-md p-3 mt-2 text-lg"></textarea>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="city">City</label>
-    <input id="city" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="state">State</label>
-    <select id="state" class="w-full border rounded-md p-3 mt-2 text-lg">
-      <option value="" data-i18n="state_select">Select</option>
-      <option data-i18n="state_andhra">Andhra Pradesh</option>
-      <option data-i18n="state_maharashtra">Maharashtra</option>
-      <option data-i18n="state_karnataka">Karnataka</option>
-    </select>
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="pincode">PIN Code</label>
-    <input id="pincode" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-</div>
-</section>
-
-<section>
-<header>
-  <h2 class="text-3xl font-bold text-blue-900 mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2>
-</header>
-<p class="text-lg text-gray-600 mb-6" data-i18n="account_type_desc">Choose the account that best fits your banking needs.</p>
-<div class="grid md:grid-cols-2 gap-8">
-  <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
-    <input type="radio" name="account" value="savings" class="mb-4" checked>
-    <div class="flex items-center gap-4 mb-4">
-      <span class="text-5xl">🏦</span>
-      <h3 class="text-2xl font-bold text-blue-900" data-i18n="savings_account">Savings Account</h3>
+  <!-- Personal Information -->
+  <section>
+    <header class="mb-6">
+      <h2 class="text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label class="font-semibold text-lg" data-i18n="full_name">Full Name</label>
+        <input id="name" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="date_of_birth">Date of Birth</label>
+        <input id="dob" type="date" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="email">Email</label>
+        <input id="email" type="email" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="mobile_number">Mobile Number</label>
+        <input id="mobile" type="tel" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="aadhaar_number">Aadhaar Number</label>
+        <input id="aadhaar" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="pan_number">PAN Number</label>
+        <input id="pan" type="text" class="w-full border rounded-md p-3 mt-2 text-lg" required>
+      </div>
     </div>
-    <p class="text-lg text-gray-700" data-i18n="savings_account_desc">Ideal for individuals who want to safely save money and earn interest.</p>
-  </label>
-  <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer">
-    <input type="radio" name="account" value="current" class="mb-4">
-    <div class="flex items-center gap-4 mb-4">
-      <span class="text-5xl">💼</span>
-      <h3 class="text-2xl font-bold text-blue-900" data-i18n="current_account">Current Account</h3>
+  </section>
+
+  <!-- Parent Details -->
+  <section>
+    <header class="mb-6">
+      <h2 class="text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label class="font-semibold text-lg" data-i18n="father_name">Father Name</label>
+        <input id="father" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="mother_name">Mother Name</label>
+        <input id="mother" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
     </div>
-    <p class="text-lg text-gray-700" data-i18n="current_account_desc">Designed for businesses that perform frequent financial transactions.</p>
-  </label>
-</div>
-</section>
+  </section>
 
-<section>
-<header>
-  <h2 class="text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2>
-</header>
-<div class="grid md:grid-cols-2 gap-6">
-  <div>
-    <label class="font-semibold text-lg" data-i18n="gross_annual_income">Gross Annual Income</label>
-    <input id="grossIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="monthly_net_income">Monthly Net Income</label>
-    <input id="netIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="other_income">Other Income</label>
-    <input id="otherIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
-    <input id="incomeDoc" type="file" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-</div>
-</section>
+  <!-- Address Information -->
+  <section>
+    <header class="mb-6">
+      <h2 class="text-2xl font-bold" data-i18n="address_info_title">Address Information</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <label class="font-semibold text-lg" data-i18n="address">Address</label>
+        <textarea id="address" class="w-full border rounded-md p-3 mt-2 text-lg"></textarea>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="city">City</label>
+        <input id="city" type="text" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="state">State</label>
+        <select id="state" class="w-full border rounded-md p-3 mt-2 text-lg">
+          <option value="" data-i18n="state_select">Select</option>
+          <option data-i18n="state_andhra">Andhra Pradesh</option>
+          <option data-i18n="state_maharashtra">Maharashtra</option>
+          <option data-i18n="state_karnataka">Karnataka</option>
+        </select>
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="pincode">PIN Code</label>
+        <input id="pincode" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+    </div>
+  </section>
 
-<section>
-<header class="mb-6">
-  <h2 class="text-2xl font-bold" data-i18n="kyc_upload_title">KYC Document Upload</h2>
-  <p class="text-gray-600" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card and your signature image for verification.</p>
-</header>
-<div class="grid md:grid-cols-2 gap-6">
-  <div>
-    <label class="font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
-    <input id="aadhaarFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div>
-    <label class="font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
-    <input id="panFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-  <div class="md:col-span-2">
-    <label class="font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
-    <input id="signatureFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
-  </div>
-</div>
-</section>
+  <!-- Account Type -->
+  <section>
+    <header>
+      <h2 class="text-3xl font-bold text-blue-900 mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2>
+    </header>
+    <p class="text-lg text-gray-600 mb-6" data-i18n="account_type_desc">Choose the account that best fits your banking needs.</p>
+    <div class="grid md:grid-cols-2 gap-8">
+      <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer transition">
+        <input type="radio" name="account" value="savings" class="mb-4" checked>
+        <div class="flex items-center gap-4 mb-4">
+          <span class="text-5xl">🏦</span>
+          <h3 class="text-2xl font-bold text-blue-900" data-i18n="savings_account">Savings Account</h3>
+        </div>
+        <p class="text-lg text-gray-700" data-i18n="savings_account_desc">Ideal for individuals who want to safely save money and earn interest.</p>
+      </label>
+      <label class="border-2 border-blue-200 hover:border-blue-600 rounded-xl p-8 shadow-lg cursor-pointer transition">
+        <input type="radio" name="account" value="current" class="mb-4">
+        <div class="flex items-center gap-4 mb-4">
+          <span class="text-5xl">💼</span>
+          <h3 class="text-2xl font-bold text-blue-900" data-i18n="current_account">Current Account</h3>
+        </div>
+        <p class="text-lg text-gray-700" data-i18n="current_account_desc">Designed for businesses that perform frequent financial transactions.</p>
+      </label>
+    </div>
+  </section>
 
-<section>
-  <button type="button" onclick="validateForm()"
-    class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
-    <i class="fa fa-check-circle mr-2"></i>
-    <span data-i18n="submit_account_application">Submit Account Application</span>
-  </button>
-</section>
+  <!-- Income Details -->
+  <section>
+    <header>
+      <h2 class="text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2>
+    </header>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label class="font-semibold text-lg" data-i18n="gross_annual_income">Gross Annual Income</label>
+        <input id="grossIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="monthly_net_income">Monthly Net Income</label>
+        <input id="netIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="other_income">Other Income</label>
+        <input id="otherIncome" type="number" class="w-full border rounded-md p-3 mt-2 text-lg">
+      </div>
+      <div>
+        <label class="font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
+        <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="preview-incomeDoc" class="preview-container mt-2 hidden">
+          <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KYC Document Upload -->
+  <section>
+    <header class="mb-6">
+      <h2 class="text-2xl font-bold" data-i18n="kyc_upload_title">KYC Document Upload</h2>
+      <p class="text-gray-600" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card, signature and property document (if applicable) for verification.</p>
+    </header>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label class="font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
+        <input id="aadhaarFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="preview-aadhaar" class="preview-container mt-2 hidden">
+          <img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview">
+        </div>
+      </div>
+
+      <div>
+        <label class="font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
+        <input id="panFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="preview-pan" class="preview-container mt-2 hidden">
+          <img id="img-pan" class="preview-img" src="" alt="PAN Preview">
+        </div>
+      </div>
+
+      <div>
+        <label class="font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
+        <input id="signatureFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="preview-signature" class="preview-container mt-2 hidden">
+          <img id="img-signature" class="preview-img" src="" alt="Signature Preview">
+        </div>
+      </div>
+
+      <div>
+        <label class="font-semibold text-lg" data-i18n="doc_property">Property Document (optional)</label>
+        <input id="propertyFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="preview-property" class="preview-container mt-2 hidden">
+          <img id="img-property" class="preview-img" src="" alt="Property Preview">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Submit Button -->
+  <section>
+    <button type="button" onclick="validateForm()"
+            class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
+      <i class="fa fa-check-circle mr-2"></i>
+      <span data-i18n="submit_account_application">Submit Account Application</span>
+    </button>
+  </section>
 
 </form>
 </main>
@@ -252,34 +282,86 @@
 </footer>
 
 <script>
-// Protect page - redirect if not logged in
-if (!abcBank.isLoggedIn()) {
-    window.location.href = "login.html";
+// ── Page protection ────────────────────────────────────────────────
+if (!abcBank?.isLoggedIn?.()) {
+    window.location.replace("login.html");
 }
 
-const currentUser = abcBank.getCurrentUser();
-const fullName = (currentUser.firstName + " " + currentUser.lastName).trim() || "User";
+// ── Load real current user (same as home.html) ─────────────────────
+const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
+const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
-// Fill profile section with real user data
-document.getElementById("username").innerText       = fullName;
-document.getElementById("userid").innerText         = "ID: —";
-document.getElementById("profileName").innerText    = fullName;
-document.getElementById("profileAccount").innerText = "Account: —";  // will be updated later
+document.getElementById("username").textContent     = fullName;
+document.getElementById("profileName").textContent  = fullName;
 
-// Language setup (your existing code)
+if (currentUser.account?.accountNumber) {
+    const accNum = currentUser.account.accountNumber;
+    document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
+    document.getElementById("userid").textContent = `ID: ${accNum.slice(-6) || "—"}`;
+} else {
+    document.getElementById("profileAccount").textContent = "Account: Not Opened";
+    document.getElementById("userid").textContent = "ID: —";
+}
+
+// ── Language setup ─────────────────────────────────────────────────
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
+if (navSel) {
+    navSel.value = savedLang;
+    navSel.addEventListener('change', function() {
+        applyLang(this.value);
+    });
+    applyLang(savedLang);
+}
 
-navSel.addEventListener('change', function() {
-    applyLang(this.value);
-    const sharedSel = document.getElementById('lang-select');
-    if (sharedSel) sharedSel.value = this.value;
+// ── Live file preview + base64 storage ─────────────────────────────
+const FILE_CONFIG = {
+    aadhaarFile:   { preview: "preview-aadhaar",   img: "img-aadhaar",   storage: "kyc_doc_aadhaar",   nameKey: "kyc_doc_aadhaar_name"   },
+    panFile:       { preview: "preview-pan",       img: "img-pan",       storage: "kyc_doc_pan",       nameKey: "kyc_doc_pan_name"       },
+    signatureFile: { preview: "preview-signature", img: "img-signature", storage: "kyc_doc_signature",  nameKey: "kyc_doc_signature_name"  },
+    propertyFile:  { preview: "preview-property",  img: "img-property",  storage: "kyc_doc_property",   nameKey: "kyc_doc_property_name"   },
+    incomeDoc:     { preview: "preview-incomeDoc", img: "img-incomeDoc", storage: "kyc_doc_income",     nameKey: "kyc_doc_income_name"     }
+};
+
+Object.keys(FILE_CONFIG).forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const cfg = FILE_CONFIG[id];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
+
+            // Show preview if image
+            if (file.type.startsWith('image/')) {
+                const previewDiv = document.getElementById(cfg.preview);
+                const imgEl = document.getElementById(cfg.img);
+                if (previewDiv && imgEl) {
+                    imgEl.src = dataUrl;
+                    previewDiv.classList.remove('hidden');
+                }
+            }
+
+            // Store base64 + filename
+            try {
+                localStorage.setItem(cfg.storage, dataUrl);
+                localStorage.setItem(cfg.nameKey, file.name);
+            } catch (err) {
+                console.warn("File storage failed:", err);
+                swal("Warning", `File "${file.name}" is too large to store locally (> ~5MB).`, "warning");
+            }
+        };
+
+        reader.readAsDataURL(file);
+    });
 });
 
-applyLang(savedLang);
-
-// ── Form submission & save account details ────────────────────────────────
+// ── Form validation & submit ───────────────────────────────────────
 function validateForm() {
     const lang = localStorage.getItem('abcbank_lang') || 'en';
     const d = I18N?.[lang] || {
@@ -293,90 +375,87 @@ function validateForm() {
         alert_income_missing_title: "Income Missing",
         alert_income_missing_text: "Please provide your gross annual income.",
         alert_missing_document_title: "Missing Document",
-        alert_missing_aadhaar: "Please upload your Aadhaar card image.",
-        alert_missing_pan: "Please upload your PAN card image.",
-        alert_missing_signature: "Please upload your signature image.",
+        alert_missing_aadhaar: "Please upload your Aadhaar card.",
+        alert_missing_pan: "Please upload your PAN card.",
+        alert_missing_signature: "Please upload your signature.",
         alert_application_success_title: "Application Submitted!",
-        alert_application_success_text: "Your account has been opened successfully.",
-        alert_age_calc_error: "Could not calculate age from DOB."
+        alert_application_success_text: "Your account has been opened successfully."
     };
 
-    // Get form values
-    const name       = document.getElementById("name").value.trim();
-    const dob        = document.getElementById("dob").value;
-    const email      = document.getElementById("email").value.trim();
-    const mobile     = document.getElementById("mobile").value.trim();
-    const aadhaar    = document.getElementById("aadhaar").value.trim();
-    const pan        = document.getElementById("pan").value.trim();
-    const father     = document.getElementById("father").value.trim();
-    const mother     = document.getElementById("mother").value.trim();
-    const address    = document.getElementById("address").value.trim();
-    const city       = document.getElementById("city").value.trim();
-    const state      = document.getElementById("state").value;
-    const pincode    = document.getElementById("pincode").value.trim();
+    // Get values
+    const name        = document.getElementById("name").value.trim();
+    const dob         = document.getElementById("dob").value;
+    const email       = document.getElementById("email").value.trim();
+    const mobile      = document.getElementById("mobile").value.trim();
+    const aadhaar     = document.getElementById("aadhaar").value.trim();
+    const pan         = document.getElementById("pan").value.trim();
+    const father      = document.getElementById("father").value.trim();
+    const mother      = document.getElementById("mother").value.trim();
+    const address     = document.getElementById("address").value.trim();
+    const city        = document.getElementById("city").value.trim();
+    const state       = document.getElementById("state").value;
+    const pincode     = document.getElementById("pincode").value.trim();
     const accountType = document.querySelector('input[name="account"]:checked')?.value;
     const grossIncome = document.getElementById("grossIncome").value.trim();
 
-    const aadhaarFile   = document.getElementById("aadhaarFile").files.length;
-    const panFile       = document.getElementById("panFile").files.length;
-    const signatureFile = document.getElementById("signatureFile").files.length;
+    const hasAadhaar   = document.getElementById("aadhaarFile").files.length > 0;
+    const hasPan       = document.getElementById("panFile").files.length > 0;
+    const hasSignature = document.getElementById("signatureFile").files.length > 0;
 
-    // Basic validations
-    if (!name)                        { swal("Error", d.alert_name_missing, "error"); return; }
-    if (!/^[6-9][0-9]{9}$/.test(mobile)) { swal(d.alert_invalid_mobile_title, d.alert_invalid_mobile_text, "error"); return; }
-    if (!/^[0-9]{12}$/.test(aadhaar)) { swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error"); return; }
-    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) { swal(d.alert_invalid_pan_title, d.alert_invalid_pan_text, "error"); return; }
-    if (!grossIncome)                 { swal(d.alert_income_missing_title, d.alert_income_missing_text, "warning"); return; }
-    if (aadhaarFile === 0)            { swal(d.alert_missing_document_title, d.alert_missing_aadhaar, "warning"); return; }
-    if (panFile === 0)                { swal(d.alert_missing_document_title, d.alert_missing_pan, "warning"); return; }
-    if (signatureFile === 0)          { swal(d.alert_missing_document_title, d.alert_missing_signature, "warning"); return; }
-    if (!accountType)                 { swal("Error", "Please select account type", "error"); return; }
+    // Validation
+    if (!name)                                      return swal("Error", d.alert_name_missing, "error");
+    if (!/^[6-9]\d{9}$/.test(mobile))              return swal(d.alert_invalid_mobile_title, d.alert_invalid_mobile_text, "error");
+    if (!/^\d{12}$/.test(aadhaar))                 return swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error");
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan))        return swal(d.alert_invalid_pan_title, d.alert_invalid_pan_text, "error");
+    if (!grossIncome)                               return swal(d.alert_income_missing_title, d.alert_income_missing_text, "warning");
+    if (!hasAadhaar)                                return swal(d.alert_missing_document_title, d.alert_missing_aadhaar, "warning");
+    if (!hasPan)                                    return swal(d.alert_missing_document_title, d.alert_missing_pan, "warning");
+    if (!hasSignature)                              return swal(d.alert_missing_document_title, d.alert_missing_signature, "warning");
+    if (!accountType)                               return swal("Error", "Please select account type", "error");
 
-    // Calculate age from DOB
+    // Calculate age
     let age = null;
     if (dob) {
-        const birthDate = new Date(dob);
+        const birth = new Date(dob);
         const today = new Date();
-        age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
+        age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
         if (age < 0 || age > 120) age = null;
     }
 
-    // Prepare account details object
+    // Save KYC text data
+    localStorage.setItem("kyc_data", JSON.stringify({
+        name, dob, ageInYears: age, email, mobile, aadhaar, pan,
+        fatherName: father, motherName: mother,
+        address: { line: address, city, state, pincode }
+    }));
+
+    // Prepare account object
     const accountDetails = {
         fullName: name,
-        dob: dob,
-        ageInYears: age,               // ← stored age in years
-        mobile: mobile,
-        email: email,
-        aadhaar: aadhaar,
-        pan: pan,
+        dob,
+        ageInYears: age,
+        mobile,
+        email,
+        aadhaar,
+        pan,
         fatherName: father,
         motherName: mother,
-        address: {
-            line: address,
-            city: city,
-            state: state,
-            pincode: pincode
-        },
-        accountType: accountType,
-        grossAnnualIncome: parseFloat(grossIncome) || 0,
+        address: { line: address, city, state, pincode },
+        accountType,
+        grossAnnualIncome: Number(grossIncome) || 0,
         status: "Active",
-        // In real app you would store file paths or references - here we just note they were uploaded
         documentsUploaded: {
-            aadhaar: aadhaarFile > 0,
-            pan: panFile > 0,
-            signature: signatureFile > 0
+            aadhaar: hasAadhaar,
+            pan: hasPan,
+            signature: hasSignature
         }
     };
 
-    // Save to current user
     const result = abcBank.updateUserAccountDetails(accountDetails);
 
-    if (result.success) {
+    if (result?.success) {
         swal({
             title: d.alert_application_success_title,
             text: d.alert_application_success_text + (age ? ` (Age: ${age} years)` : ""),
@@ -385,7 +464,7 @@ function validateForm() {
             window.location.href = "home.html";
         });
     } else {
-        swal("Error", result.message || "Failed to save account", "error");
+        swal("Error", result?.message || "Failed to save account", "error");
     }
 }
 </script>

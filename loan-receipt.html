@@ -10,10 +10,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
 
 <style>
-  #lang-switcher { display: none !important; }
+  @keyframes pulse-ring {
+    0%   { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .pulse-ring  { animation: pulse-ring 1.8s ease-out infinite; }
+  .float-icon  { animation: float 3s ease-in-out infinite; }
+  .spin-slow   { animation: spin-slow 6s linear infinite; }
+
+  .fade-in-up   { animation: fadeInUp 0.7s ease both; }
+  .fade-in-up-2 { animation: fadeInUp 0.7s ease 0.15s both; }
+  .fade-in-up-3 { animation: fadeInUp 0.7s ease 0.3s  both; }
+  .fade-in-up-4 { animation: fadeInUp 0.7s ease 0.45s both; }
+  .fade-in-up-5 { animation: fadeInUp 0.7s ease 0.6s  both; }
+
+  .shimmer-text {
+    background: linear-gradient(90deg, #1e40af 25%, #60a5fa 50%, #1e40af 75%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 2.5s linear infinite;
+  }
+
+  .step-pending  { background: #f3f4f6; color: #9ca3af; }
+  .step-done     { background: #dcfce7; color: #16a34a; }
+  .step-active   { background: #dbeafe; color: #2563eb; }
+  .step-rejected { background: #fee2e2; color: #dc2626; }
 </style>
 
 </head>
@@ -26,259 +68,567 @@
 
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
         <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
-        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
+        <h1 class="text-3xl font-bold">ABC Bank</h1>
       </a>
 
-      <a href="home.html"
-        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
-        <i class="fa fa-arrow-left"></i>
-        <span data-i18n="receipt_back_dashboard">Back to Dashboard</span>
+      <a href="home.html" class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
       </a>
 
-      <div class="flex items-center gap-4 flex-shrink-0">
-
-        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
-          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
-            <i class="fa fa-globe"></i> Lang:
-          </label>
-          <select id="nav-lang-select"
-            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
-            <option value="en" style="background:#1e3a5f">English</option>
-            <option value="te" style="background:#1e3a5f">తెలుగు</option>
-            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
-            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
-            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
-            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
-          </select>
-        </div>
-
-        <div class="relative group">
-          <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
-            <i class="fa fa-user-circle text-2xl"></i>
-            <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">User</span>
-              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
-            </div>
-            <i class="fa fa-chevron-down text-sm ml-1"></i>
+      <div class="relative group flex-shrink-0">
+        <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
+          <i class="fa fa-user-circle text-2xl"></i>
+          <div class="flex flex-col leading-tight">
+            <span id="username" class="text-base font-bold">User</span>
+            <span class="text-xs opacity-70" id="userid">ID: NIL</span>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-            <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">User</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
-            </div>
-            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
-              <i class="fa fa-home mr-2"></i>
-              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-            </a>
-            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
-              <i class="fa fa-sign-out-alt mr-2"></i>
-              <span data-i18n="nav_logout">Logout</span>
-            </a>
-          </div>
+          <i class="fa fa-chevron-down text-sm ml-1"></i>
         </div>
-
+        <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="p-4 border-b">
+            <p class="font-semibold text-lg" id="profileName">User</p>
+            <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+          </div>
+          <a href="home.html" class="block px-4 py-3 hover:bg-gray-100"><i class="fa fa-home mr-2"></i>Back to Dashboard</a>
+          <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600"><i class="fa fa-sign-out-alt mr-2"></i>Logout</a>
+        </div>
       </div>
+
     </div>
   </nav>
 </header>
 
 
-<!-- PAGE HEADER -->
-<div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
-  <h1 class="text-4xl font-bold mt-1" data-i18n="receipt_page_title">Loan Processing Receipt</h1>
-  <p class="text-gray-500 text-lg mt-1" data-i18n="receipt_page_desc">Official receipt for your loan application</p>
+<!-- ═══════════════════════════════════════════════════════════
+     PENDING SCREEN
+═══════════════════════════════════════════════════════════════ -->
+<div id="pending-screen" class="hidden">
+  <div class="max-w-3xl mx-auto px-6 pt-14 pb-20 text-center">
+
+    <div class="relative inline-block mb-10 fade-in-up">
+      <span class="absolute inset-0 rounded-full bg-blue-200 pulse-ring" style="animation-delay:0s"></span>
+      <span class="absolute inset-0 rounded-full bg-blue-100 pulse-ring" style="animation-delay:0.6s"></span>
+      <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
+        <i class="fa fa-circle-notch text-blue-300 text-7xl absolute spin-slow" style="opacity:0.4"></i>
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shadow-2xl float-icon">
+          <i class="fa fa-hourglass-half text-white text-4xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="text-4xl font-extrabold shimmer-text mb-3 fade-in-up-2">Verification In Progress</h1>
+    <p class="text-gray-500 text-xl mb-10 fade-in-up-3">Your loan receipt will be available once all approvals are completed.</p>
+
+    <div class="bg-white shadow-lg rounded-2xl p-8 text-left mb-8 fade-in-up-4">
+      <h2 class="text-xl font-bold mb-6 text-gray-700">
+        <i class="fa fa-diagram-project text-blue-600 mr-2"></i>Approval Status
+      </h2>
+
+      <div class="space-y-5">
+
+        <!-- Step 1: always done -->
+        <div class="flex items-center gap-4">
+          <span class="w-11 h-11 rounded-full flex items-center justify-center step-done flex-shrink-0">
+            <i class="fa fa-check"></i>
+          </span>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">Application Submitted</p>
+            <p class="text-sm text-gray-400">Your loan application has been received.</p>
+          </div>
+          <span class="text-green-600 font-bold text-sm">Done</span>
+        </div>
+
+        <!-- Step 2: Loan Officer -->
+        <div class="flex items-center gap-4">
+          <span id="step-officer-icon" class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending">
+            <i id="step-officer-i" class="fa fa-user-tie"></i>
+          </span>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">Loan Officer Review</p>
+            <p id="step-officer-desc" class="text-sm text-gray-400">Waiting for officer decision.</p>
+          </div>
+          <span id="step-officer-label" class="font-bold text-sm text-gray-400">Pending</span>
+        </div>
+
+        <!-- Step 3: Legal -->
+        <div class="flex items-center gap-4">
+          <span id="step-legal-icon" class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending">
+            <i id="step-legal-i" class="fa fa-scale-balanced"></i>
+          </span>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">Legal Document Verification</p>
+            <p id="step-legal-desc" class="text-sm text-gray-400">Waiting for lawyer verification.</p>
+          </div>
+          <span id="step-legal-label" class="font-bold text-sm text-gray-400">Pending</span>
+        </div>
+
+        <!-- Step 4: Receipt locked -->
+        <div class="flex items-center gap-4">
+          <span class="w-11 h-11 rounded-full flex items-center justify-center step-pending flex-shrink-0">
+            <i class="fa fa-file-invoice text-gray-400"></i>
+          </span>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-400">Loan Receipt</p>
+            <p class="text-sm text-gray-400">Available after all verifications pass.</p>
+          </div>
+          <span class="font-bold text-sm text-gray-400">Locked</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bg-yellow-50 border border-yellow-300 rounded-xl p-5 text-yellow-900 text-base fade-in-up-5">
+      <i class="fa fa-circle-info mr-2 text-yellow-600"></i>
+      What's next? Please complete the
+      <a href="officer-review.html" class="underline font-semibold hover:text-yellow-700 mx-1">Loan Officer Review</a>
+      and
+      <a href="lawyer-verification.html" class="underline font-semibold hover:text-yellow-700 mx-1">Legal Verification</a>
+      steps. Once both are approved, your receipt will unlock automatically.
+    </div>
+
+  </div>
 </div>
 
 
-<!-- MAIN CONTENT -->
-<main class="max-w-5xl mx-auto p-6">
+<!-- ═══════════════════════════════════════════════════════════
+     RECEIPT SCREEN
+═══════════════════════════════════════════════════════════════ -->
+<div id="receipt-screen" class="hidden">
 
-  <!-- ACTION BUTTONS -->
-  <section class="flex gap-4 mb-6 flex-wrap text-lg">
-    <button onclick="window.print()"
-      class="px-5 py-3 border border-gray-400 rounded-md hover:bg-gray-200">
-      <i class="fa fa-print mr-2"></i>
-      <span data-i18n="receipt_print_btn">Print</span>
-    </button>
-    <a href="loan-approval.html"
-      class="px-5 py-3 bg-blue-700 text-white rounded-md hover:bg-blue-800">
-      <span data-i18n="receipt_proceed_approval">Proceed to Approval</span>
-    </a>
-  </section>
+  <div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
+    <h1 class="text-4xl font-bold mt-1">Loan Processing Receipt</h1>
+    <p class="text-gray-500 text-lg mt-1">Official receipt for your loan application</p>
+  </div>
 
-  <div class="grid md:grid-cols-3 gap-6">
+  <main class="max-w-5xl mx-auto p-6">
 
-    <!-- RECEIPT CARD -->
-    <section class="md:col-span-2 bg-white shadow-lg rounded-xl overflow-hidden">
-
-      <!-- RECEIPT HEADER -->
-      <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white text-center p-8">
-        <div class="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-3">
-          <i class="fa fa-landmark text-3xl"></i>
-        </div>
-        <h2 class="text-2xl font-bold font-[Playfair_Display]" data-i18n="receipt_bank_name">ABC Bank</h2>
-        <p class="text-lg text-gray-200" data-i18n="receipt_header_title">Official Loan Application Receipt</p>
-      </header>
-
-      <!-- RECEIPT BODY -->
-      <div class="p-8 space-y-8">
-
-        <!-- APPLICANT INFO -->
-        <article>
-          <h3 class="font-semibold text-xl mb-4" data-i18n="receipt_applicant_info">Applicant Information</h3>
-          <div class="space-y-3 text-lg">
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_applicant_name">Applicant Name</span>
-              <span id="rcptName">John Doe</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_account_number">Account Number</span>
-              <span class="font-mono">ACC-8765-4321</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_pan">PAN</span>
-              <span class="font-mono">ABCDE1234F</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_cibil_score">CIBIL Score</span>
-              <span class="text-green-600 font-semibold">780 Excellent</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- LOAN DETAILS -->
-        <article>
-          <h3 class="font-semibold text-xl mb-4" data-i18n="receipt_loan_details">Loan Details</h3>
-          <div class="space-y-3 text-lg">
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_loan_type">Loan Type</span>
-              <span>🏠 Home Loan</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_loan_amount">Loan Amount</span>
-              <span class="font-bold text-2xl text-blue-700">₹25,00,000</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_interest_rate">Interest Rate</span>
-              <span>8.5% p.a</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_duration">Duration</span>
-              <span>20 Years</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500" data-i18n="receipt_monthly_emi">Monthly EMI</span>
-              <span class="font-semibold text-blue-700 text-xl">₹21,740</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- LEGAL NOTICE -->
-        <section class="bg-yellow-50 border border-yellow-300 p-5 rounded-lg text-lg text-yellow-900">
-          <i class="fa fa-scale-balanced mr-2"></i>
-          <strong data-i18n="receipt_legal_notice_title">Legal Verification in Progress.</strong>
-          <span data-i18n="receipt_legal_notice_desc"> Documents are under review. Estimated completion 3–5 working days.</span>
-        </section>
-
-        <!-- SIGNATURE AREA -->
-        <section class="flex justify-between pt-6 border-t border-dashed text-lg">
-          <aside class="text-center">
-            <div class="h-12 border-b w-36"></div>
-            <p class="mt-2" data-i18n="receipt_customer_signature">Customer Signature</p>
-          </aside>
-          <aside class="text-center">
-            <div class="w-14 h-14 border-2 border-blue-700 rounded-full flex items-center justify-center">
-              <i class="fa fa-stamp text-blue-700 text-xl"></i>
-            </div>
-            <p data-i18n="receipt_bank_seal">Bank Seal</p>
-          </aside>
-          <aside class="text-center">
-            <div class="h-12 border-b w-36"></div>
-            <p class="mt-2" data-i18n="receipt_authorized_signatory">Authorized Signatory</p>
-          </aside>
-        </section>
-
-      </div>
+    <section class="flex gap-4 mb-6 flex-wrap text-lg">
+      <button onclick="window.print()" class="px-5 py-3 border border-gray-400 rounded-md hover:bg-gray-200">
+        <i class="fa fa-print mr-2"></i>Print
+      </button>
+      <a href="loan-approval.html" class="px-5 py-3 bg-blue-700 text-white rounded-md hover:bg-blue-800">
+        Proceed to Approval
+      </a>
     </section>
 
+    <div class="grid md:grid-cols-3 gap-6">
 
-    <!-- RIGHT SIDE STATUS -->
-    <aside class="space-y-6">
-      <section class="bg-white shadow rounded-xl p-6">
-        <h3 class="font-semibold text-xl mb-4">
-          <i class="fa fa-diagram-project text-blue-600 mr-2"></i>
-          <span data-i18n="receipt_processing_status">Processing Status</span>
-        </h3>
-        <div class="space-y-4 text-lg">
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <i class="fa fa-check text-green-600"></i>
+      <!-- RECEIPT CARD -->
+      <section class="md:col-span-2 bg-white shadow-lg rounded-xl overflow-hidden">
+
+        <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white text-center p-8">
+          <div class="w-20 h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-3">
+            <i class="fa fa-landmark text-3xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold font-[Playfair_Display]">ABC Bank</h2>
+          <p class="text-lg text-gray-200">Official Loan Application Receipt</p>
+        </header>
+
+        <div class="p-8 space-y-8">
+
+          <article>
+            <h3 class="font-semibold text-xl mb-4">Applicant Information</h3>
+            <div class="space-y-3 text-lg">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Applicant Name</span>
+                <span id="rcptName">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Account Number</span>
+                <span class="font-mono" id="rcptAccount">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">PAN</span>
+                <span class="font-mono" id="rcptPan">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">CIBIL Score</span>
+                <span class="text-green-600 font-semibold" id="rcptCibil">—</span>
+              </div>
+            </div>
+          </article>
+
+          <article>
+            <h3 class="font-semibold text-xl mb-4">Loan Details</h3>
+            <div class="space-y-3 text-lg">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Loan Type</span>
+                <span id="rcptLoanType">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Loan Amount</span>
+                <span class="font-bold text-2xl text-blue-700" id="rcptLoanAmount">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Interest Rate</span>
+                <span id="rcptInterestRate">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Duration</span>
+                <span id="rcptDuration">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Monthly EMI</span>
+                <span class="font-semibold text-blue-700 text-xl" id="rcptEmi">—</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="flex gap-4 flex-wrap">
+            <span class="flex items-center gap-2 bg-green-50 border border-green-300 text-green-700 px-4 py-2 rounded-full font-semibold text-base">
+              <i class="fa fa-user-tie"></i> Officer Approved
             </span>
-            <span data-i18n="receipt_status_application">Application Submitted</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <i class="fa fa-check text-green-600"></i>
+            <span class="flex items-center gap-2 bg-green-50 border border-green-300 text-green-700 px-4 py-2 rounded-full font-semibold text-base">
+              <i class="fa fa-scale-balanced"></i> Legally Verified
             </span>
-            <span data-i18n="receipt_status_officer">Loan Officer Assigned</span>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <i class="fa fa-spinner animate-spin text-blue-600"></i>
-            </span>
-            <span data-i18n="receipt_status_legal">Legal Verification</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">4</span>
-            <span data-i18n="receipt_status_credit">Credit Appraisal</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">5</span>
-            <span data-i18n="receipt_status_final">Final Approval</span>
-          </div>
+
+          <section class="bg-yellow-50 border border-yellow-300 p-5 rounded-lg text-lg text-yellow-900">
+            <i class="fa fa-scale-balanced mr-2"></i>
+            <strong>Legal Verification Completed.</strong>
+            All documents have been verified. Proceed to final approval.
+          </section>
+
+          <section class="flex justify-between pt-6 border-t border-dashed text-lg">
+            <aside class="text-center">
+              <div class="h-12 border-b w-36"></div>
+              <p class="mt-2">Customer Signature</p>
+            </aside>
+            <aside class="text-center">
+              <div class="w-14 h-14 border-2 border-blue-700 rounded-full flex items-center justify-center">
+                <i class="fa fa-stamp text-blue-700 text-xl"></i>
+              </div>
+              <p>Bank Seal</p>
+            </aside>
+            <aside class="text-center">
+              <div class="h-12 border-b w-36"></div>
+              <p class="mt-2">Authorized Signatory</p>
+            </aside>
+          </section>
+
         </div>
       </section>
-    </aside>
 
-  </div>
-</main>
+      <!-- RIGHT SIDE STATUS — all 5 green ticks (receipt only shows when both approvals done) -->
+      <aside class="space-y-6">
+        <section class="bg-white shadow rounded-xl p-6">
+          <h3 class="font-semibold text-xl mb-4">
+            <i class="fa fa-diagram-project text-blue-600 mr-2"></i>Processing Status
+          </h3>
+          <div class="space-y-4 text-lg">
+
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <i class="fa fa-check text-green-600"></i>
+              </span>
+              <span>Application Submitted</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <i class="fa fa-check text-green-600"></i>
+              </span>
+              <span>Officer Approved</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <i class="fa fa-check text-green-600"></i>
+              </span>
+              <span>Legal Verification</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <i class="fa fa-check text-green-600"></i>
+              </span>
+              <span>Credit Appraisal</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <i class="fa fa-check text-green-600"></i>
+              </span>
+              <span>Final Approval</span>
+            </div>
+
+          </div>
+        </section>
+      </aside>
+
+    </div>
+  </main>
+
+</div><!-- /receipt-screen -->
 
 
 <!-- FOOTER -->
 <footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
-  <p data-i18n="receipt_footer">© 2026 ABC Bank. All Rights Reserved.</p>
+  <p>© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
 
 
 <script>
 
-// ── Load user ──
-var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
-document.getElementById("username").innerText       = user.name;
-document.getElementById("userid").innerText         = "ID: " + user.id;
-document.getElementById("profileName").innerText    = user.name;
-document.getElementById("profileAccount").innerText = "Account: " + user.account;
-document.getElementById("rcptName").innerText       = user.name;
+// ══════════════════════════════════════════════════════════════
+//  INTEREST RATES — matches loan-application.html exactly
+// ══════════════════════════════════════════════════════════════
+var LOAN_RATES = {
+  home: 8.50, personal: 10.90, vehicle: 9.25,
+  gold: 7.50, education: 8.25, business: 11.50
+};
 
-// ── Logout ──
-function logoutUser() {
-  localStorage.removeItem("bankUser");
-  alert("Logged out successfully");
-  window.location.href = "index.html";
+var CIBIL_BRACKETS = [
+  { min: 750, max: 900, adj: -0.50 },
+  { min: 700, max: 749, adj:  0.00 },
+  { min: 650, max: 699, adj: +0.50 },
+  { min: 600, max: 649, adj: +1.00 },
+  { min: 300, max: 599, adj: +1.50 }
+];
+
+function getCibilAdj(score) {
+  var s = parseInt(score);
+  if (!s || isNaN(s)) return 0;
+  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
+    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i].adj;
+  }
+  return 0;
 }
 
-// ── Wire navbar lang select to shared.js applyLang ──
-var navSel = document.getElementById("nav-lang-select");
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+function normalizeLoanType(raw) {
+  if (!raw) return '';
+  var t = String(raw).toLowerCase().trim();
+  if (t.startsWith('loan_')) t = t.replace('loan_', '');
+  return t;
+}
 
-navSel.addEventListener('change', function() {
-  applyLang(this.value);
-  var sharedSel = document.getElementById('lang-select');
-  if (sharedSel) sharedSel.value = this.value;
-});
+var LOAN_TYPE_LABELS = {
+  home:      '🏠 Home Loan',
+  personal:  '👤 Personal Loan',
+  vehicle:   '🚗 Vehicle Loan',
+  gold:      '🥇 Gold Loan',
+  education: '🎓 Education Loan',
+  business:  '💼 Business Loan'
+};
 
-applyLang(savedLang);
+function loanTypeLabel(raw) {
+  var t = normalizeLoanType(raw);
+  return LOAN_TYPE_LABELS[t] || (raw ? String(raw) : '—');
+}
+
+function getRateForType(type, cibilScore) {
+  var t    = normalizeLoanType(type);
+  var base = LOAN_RATES[t] || 8.50;
+  if (t === 'home') {
+    return Math.round((base + getCibilAdj(cibilScore)) * 100) / 100;
+  }
+  return base;
+}
+
+function fmtCurr(n) {
+  var num = parseInt(n);
+  return isNaN(num) ? (n || '—') : '₹' + num.toLocaleString('en-IN');
+}
+
+function calcEMI(principal, annualRate, years) {
+  principal = parseFloat(principal);
+  years     = parseFloat(years);
+  if (!principal || !years || years <= 0) return '—';
+  var r = annualRate / 12 / 100;
+  var n = Math.round(years * 12);
+  if (r === 0) return fmtCurr(Math.round(principal / n));
+  var emi = principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  return fmtCurr(Math.round(emi));
+}
+
+function pick() {
+  for (var i = 0; i < arguments.length; i++) {
+    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') return arguments[i];
+  }
+  return '';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  APPROVAL GATE
+// ══════════════════════════════════════════════════════════════
+var officerOk = localStorage.getItem('loan_officer_decision') === 'approved';
+var legalOk   = localStorage.getItem('loan_legal_decision')   === 'approved';
+
+if (officerOk && legalOk) {
+  document.getElementById('receipt-screen').classList.remove('hidden');
+} else {
+  document.getElementById('pending-screen').classList.remove('hidden');
+  updatePendingSteps();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PENDING STEP DYNAMIC STATUS
+// ══════════════════════════════════════════════════════════════
+function updatePendingSteps() {
+  var officerDecision = localStorage.getItem('loan_officer_decision');
+  var legalDecision   = localStorage.getItem('loan_legal_decision');
+
+  var oIcon  = document.getElementById('step-officer-icon');
+  var oI     = document.getElementById('step-officer-i');
+  var oLabel = document.getElementById('step-officer-label');
+  var oDesc  = document.getElementById('step-officer-desc');
+
+  if (officerDecision === 'approved') {
+    oIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    oI.className       = 'fa fa-check';
+    oLabel.textContent = 'Approved';
+    oLabel.className   = 'font-bold text-sm text-green-600';
+    oDesc.textContent  = 'Loan officer has approved your application.';
+  } else if (officerDecision === 'rejected') {
+    oIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    oI.className       = 'fa fa-times';
+    oLabel.textContent = 'Rejected';
+    oLabel.className   = 'font-bold text-sm text-red-600';
+    oDesc.textContent  = 'Loan officer rejected your application.';
+  } else {
+    oIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-active';
+    oI.className       = 'fa fa-spinner fa-spin';
+    oLabel.textContent = 'In Review';
+    oLabel.className   = 'font-bold text-sm text-blue-600';
+    oDesc.textContent  = 'Waiting for officer decision.';
+  }
+
+  var lIcon  = document.getElementById('step-legal-icon');
+  var lI     = document.getElementById('step-legal-i');
+  var lLabel = document.getElementById('step-legal-label');
+  var lDesc  = document.getElementById('step-legal-desc');
+
+  if (legalDecision === 'approved') {
+    lIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    lI.className       = 'fa fa-check';
+    lLabel.textContent = 'Verified';
+    lLabel.className   = 'font-bold text-sm text-green-600';
+    lDesc.textContent  = 'Documents have been legally verified.';
+  } else if (legalDecision === 'rejected') {
+    lIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    lI.className       = 'fa fa-times';
+    lLabel.textContent = 'Rejected';
+    lLabel.className   = 'font-bold text-sm text-red-600';
+    lDesc.textContent  = 'Legal verification failed.';
+  } else {
+    lIcon.className    = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending';
+    lI.className       = 'fa fa-scale-balanced';
+    lLabel.textContent = 'Pending';
+    lLabel.className   = 'font-bold text-sm text-gray-400';
+    lDesc.textContent  = 'Waiting for lawyer verification.';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVBAR USER
+// ══════════════════════════════════════════════════════════════
+var currentUser = null;
+try { currentUser = JSON.parse(localStorage.getItem('abcBank_currentUser') || 'null'); } catch(e) {}
+
+var legacyUser = null;
+try { legacyUser = JSON.parse(localStorage.getItem('bankUser') || 'null'); } catch(e) {}
+
+var userName    = '';
+var userAccount = '';
+
+if (currentUser) {
+  userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ') || currentUser.name || 'User';
+  userAccount = (currentUser.account && currentUser.account.accountNumber)
+                  ? currentUser.account.accountNumber
+                  : (currentUser.account || 'NIL');
+} else if (legacyUser) {
+  userName    = legacyUser.name || 'User';
+  userAccount = legacyUser.account || 'NIL';
+} else {
+  userName    = 'User';
+  userAccount = 'NIL';
+}
+
+document.getElementById('username').innerText       = userName;
+document.getElementById('profileName').innerText    = userName;
+document.getElementById('profileAccount').innerText = 'Account: ' + userAccount;
+
+var acct = (userAccount && userAccount !== 'NIL') ? String(userAccount) : '';
+document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.slice(-6) : acct || '–');
+
+function logoutUser() {
+  localStorage.removeItem('bankUser');
+  localStorage.removeItem('abcBank_currentUser');
+  window.location.href = 'index.html';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  POPULATE RECEIPT
+// ══════════════════════════════════════════════════════════════
+if (officerOk && legalOk) { populateReceipt(); }
+
+function populateReceipt() {
+  var loanApp  = {};
+  var cibil    = {};
+  var loanData = {};
+  var kyc      = {};
+
+  try { loanApp  = JSON.parse(localStorage.getItem('loan_application_data') || '{}'); } catch(e) {}
+  try { cibil    = JSON.parse(localStorage.getItem('cibil_data')            || '{}'); } catch(e) {}
+  try { loanData = JSON.parse(localStorage.getItem('loanApplication')       || '{}'); } catch(e) {}
+  try { kyc      = JSON.parse(localStorage.getItem('kyc_data')              || '{}'); } catch(e) {}
+
+  // Name
+  document.getElementById('rcptName').textContent = userName || '—';
+
+  // Account
+  document.getElementById('rcptAccount').textContent = (userAccount && userAccount !== 'NIL') ? userAccount : '—';
+
+  // PAN
+  var pan = pick(kyc.pan, kyc.panNumber, loanApp.pan, loanApp.panNumber, cibil.pan, cibil.panNumber);
+  document.getElementById('rcptPan').textContent = pan || '—';
+
+  // CIBIL score
+  var cibilScore = pick(cibil.score, localStorage.getItem('loan_score'));
+  document.getElementById('rcptCibil').textContent = cibilScore || '—';
+
+  // Loan type
+  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType);
+  document.getElementById('rcptLoanType').textContent = loanTypeLabel(rawLoanType);
+
+  // Loan amount
+  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
+  document.getElementById('rcptLoanAmount').textContent = principal ? fmtCurr(principal) : '—';
+
+  // Interest rate
+  var rate = getRateForType(rawLoanType, cibilScore);
+  document.getElementById('rcptInterestRate').textContent = rate + '% p.a';
+
+  // Duration
+  var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
+
+  if (!duration || duration <= 0) {
+    var dob = pick(
+      currentUser && currentUser.dob ? currentUser.dob : null,
+      legacyUser  && legacyUser.dob  ? legacyUser.dob  : null,
+      kyc.dob,
+      cibil.dob
+    );
+    if (dob) {
+      var birth    = new Date(dob);
+      var exactAge = (new Date() - birth) / (1000 * 60 * 60 * 24 * 365.25);
+      duration = Math.max(1, 60 - Math.ceil(exactAge));
+    } else {
+      var storedTenure = parseInt(localStorage.getItem('loanTenure'));
+      if (storedTenure && storedTenure > 0) duration = storedTenure;
+    }
+  }
+
+  document.getElementById('rcptDuration').textContent = duration ? duration + ' Years' : '—';
+
+  // EMI
+  document.getElementById('rcptEmi').textContent = (principal && duration)
+    ? calcEMI(principal, rate, duration)
+    : '—';
+}
 
 </script>
 

@@ -77,7 +77,8 @@
     <p class="text-lg opacity-90 mt-2" data-i18n="approval_banner_desc">Loan disbursement will be completed within 2–3 business days.</p>
     <div class="flex justify-center gap-4 mt-5 flex-wrap text-lg">
       <span class="bg-white/20 px-4 py-2 rounded"><span data-i18n="approval_loan_id">Loan ID</span>: #LN2024001</span>
-      <span class="bg-white/20 px-4 py-2 rounded"><span data-i18n="approval_date">Approved</span>: Apr 02 2024</span>
+      <!-- FIX: date rendered by JS -->
+      <span class="bg-white/20 px-4 py-2 rounded"><span data-i18n="approval_date">Approved</span>: <span id="approvedDateSpan">–</span></span>
     </div>
   </section>
 
@@ -92,6 +93,11 @@
       <article><p class="text-gray-500" data-i18n="loan_monthly_emi">Monthly EMI</p><p class="text-blue-600 font-semibold text-xl" id="detailEmi">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_total_payable">Total Payable</p><p class="text-lg" id="detailTotalPayable">–</p></article>
       <article><p class="text-gray-500" data-i18n="loan_processing_fee">Processing Fee</p><p class="text-lg">₹12,500</p></article>
+      <!-- Fields from loan-application.html -->
+      <article><p class="text-gray-500" data-i18n="income_employment">Employment Type</p><p class="text-lg" id="detailEmployment">–</p></article>
+      <article><p class="text-gray-500" data-i18n="loan_annual_income">Annual Income</p><p class="text-lg" id="detailAnnualIncome">–</p></article>
+      <article><p class="text-gray-500" data-i18n="loan_collateral_val">Collateral</p><p class="text-lg" id="detailCollateral">–</p></article>
+      <article><p class="text-gray-500" data-i18n="loan_purpose">Purpose</p><p class="text-lg" id="detailPurpose">–</p></article>
     </div>
   </section>
 
@@ -99,14 +105,13 @@
     <header><h2 class="text-2xl font-bold mb-2" data-i18n="branch_select_title">Select Your Branch</h2></header>
     <p class="text-gray-500 mb-5" data-i18n="branch_select_desc">Choose the branch where your loan will be processed by the branch manager.</p>
     <div class="grid md:grid-cols-2 gap-4 mb-6" id="branchGrid">
-      
+
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="mumbai-central" onclick="selectBranch(this)">
         <div class="flex justify-between items-start mb-2">
           <div>
             <p class="font-bold text-lg" data-i18n="br_mumbai_name">Mumbai Central</p>
             <p class="text-gray-500 text-base" data-i18n="br_mumbai_addr">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
           </div>
-          <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold" data-i18n="branch_premium">Premium</span>
         </div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_rajan">Rajan Mehta</span></span>
@@ -121,7 +126,6 @@
             <p class="font-bold text-lg" data-i18n="br_andheri_name">Andheri West</p>
             <p class="text-gray-500 text-base" data-i18n="br_andheri_addr">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
           </div>
-          <span class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-semibold" data-i18n="branch_standard">Standard</span>
         </div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_priya">Priya Sharma</span></span>
@@ -136,7 +140,6 @@
             <p class="font-bold text-lg" data-i18n="br_cp_name">Connaught Place</p>
             <p class="text-gray-500 text-base" data-i18n="br_cp_addr">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
           </div>
-          <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold" data-i18n="branch_premium">Premium</span>
         </div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_amit">Amit Kapoor</span></span>
@@ -151,7 +154,6 @@
             <p class="font-bold text-lg" data-i18n="br_kora_name">Koramangala</p>
             <p class="text-gray-500 text-base" data-i18n="br_kora_addr">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
           </div>
-          <span class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-semibold" data-i18n="branch_standard">Standard</span>
         </div>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
           <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_deepa">Deepa Nair</span></span>
@@ -201,24 +203,23 @@
     </div>
   </section>
 
+  <!-- EMI schedule — tbody populated dynamically by buildEmiTable() -->
   <section class="bg-white rounded-xl shadow p-8 mb-6">
     <header><h2 class="text-2xl font-bold mb-5" data-i18n="emi_schedule_title">EMI Schedule (Sample)</h2></header>
-    <table class="w-full text-lg">
-      <thead class="bg-blue-900 text-white">
-        <tr>
-          <th class="p-3 text-left" data-i18n="emi_month">Month</th>
-          <th class="p-3 text-left" data-i18n="emi_amount">EMI</th>
-          <th class="p-3 text-left" data-i18n="emi_principal">Principal</th>
-          <th class="p-3 text-left" data-i18n="emi_interest">Interest</th>
-          <th class="p-3 text-left" data-i18n="emi_balance">Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-b"><td class="p-3">May 2024</td><td>₹21,740</td><td>₹4,115</td><td>₹17,625</td><td>₹24,95,885</td></tr>
-        <tr class="border-b"><td class="p-3">Jun 2024</td><td>₹21,740</td><td>₹4,144</td><td>₹17,596</td><td>₹24,91,741</td></tr>
-        <tr><td class="p-3">Jul 2024</td><td>₹21,740</td><td>₹4,173</td><td>₹17,567</td><td>₹24,87,568</td></tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="w-full text-lg">
+        <thead class="bg-blue-900 text-white">
+          <tr>
+            <th class="p-3 text-left" data-i18n="emi_month">Month</th>
+            <th class="p-3 text-left" data-i18n="emi_amount">EMI</th>
+            <th class="p-3 text-left" data-i18n="emi_principal">Principal</th>
+            <th class="p-3 text-left" data-i18n="emi_interest">Interest</th>
+            <th class="p-3 text-left" data-i18n="emi_balance">Balance</th>
+          </tr>
+        </thead>
+        <tbody id="emiTableBody"></tbody>
+      </table>
+    </div>
   </section>
 
   <section class="flex justify-between mt-12 text-center text-lg">
@@ -237,308 +238,304 @@
 </div>
 
 <script>
-// ── Unified Translations ──
-var APPROVAL_I18N = {
-  en: {
-    approval_back_dashboard: "Back to Dashboard",
-    approval_page_title: "Loan Approval",
-    approval_page_desc: "Official loan sanction letter and approval details.",
-    approval_banner_title: "Congratulations!",
-    approval_banner_text: "Your Loan Has Been Approved",
-    approval_banner_desc: "Loan disbursement will be completed within 2–3 business days.",
-    approval_loan_id: "Loan ID",
-    approval_date: "Approved",
-    loan_details_title: "Loan Details",
-    loan_customer_name: "Customer Name",
-    loan_interest_rate: "Interest Rate",
-    loan_duration: "Loan Duration",
-    loan_monthly_emi: "Monthly EMI",
-    loan_total_payable: "Total Payable",
-    loan_processing_fee: "Processing Fee",
-    branch_select_title: "Select Your Branch",
-    branch_select_desc: "Choose the branch where your loan will be processed by the branch manager.",
-    branch_premium: "Premium",
-    branch_standard: "Standard",
-    branch_select_prompt: "Please select a branch above to proceed.",
-    branch_assigned_manager: "Assigned Branch Manager",
-    branch_specialist: "Home Loan Specialist",
-    branch_confirm_btn: "Confirm Branch",
-    disbursement_title: "Disbursement Details",
-    disbursement_account: "Account Number",
-    disbursement_ifsc: "IFSC Code",
-    disbursement_branch: "Branch",
-    disbursement_amount: "Disbursement Amount",
-    emi_schedule_title: "EMI Schedule (Sample)",
-    emi_month: "Month",
-    emi_amount: "EMI",
-    emi_principal: "Principal",
-    emi_interest: "Interest",
-    emi_balance: "Balance",
-    signature_customer: "Customer Signature",
-    signature_bank_seal: "Bank Seal",
-    signature_authorized: "Authorized Signatory",
-    branch_confirmed_toast: "Branch confirmed!",
-    loan_home: "Home Loan", loan_personal: "Personal Loan", loan_vehicle: "Vehicle Loan", loan_gold: "Gold Loan", loan_education: "Education Loan", loan_business: "Business Loan",
-    // Branch Info
-    br_mumbai_name: "Mumbai Central", br_mumbai_addr: "123, Dr. Ambedkar Rd, Mumbai – 400 008",
-    br_andheri_name: "Andheri West", br_andheri_addr: "Plot 44, Versova Link Rd, Mumbai – 400 058",
-    br_cp_name: "Connaught Place", br_cp_addr: "F-12, Inner Circle, Connaught Place, Delhi – 110 001",
-    br_kora_name: "Koramangala", br_kora_addr: "80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034",
-    mgr_rajan: "Rajan Mehta", mgr_priya: "Priya Sharma", mgr_amit: "Amit Kapoor", mgr_deepa: "Deepa Nair",
-    time_9to5: "Mon–Sat, 9am–5pm", time_10to4: "Mon–Sat, 10am–4pm"
-  },
-  te: {
-    approval_back_dashboard: "డాష్‌బోర్డ్‌కు వెళ్ళు",
-    approval_page_title: "రుణ ఆమోదం",
-    approval_page_desc: "అధికారిక రుణ మంజూరు లేఖ మరియు ఆమోద వివరాలు.",
-    approval_banner_title: "అభినందనలు!",
-    approval_banner_text: "మీ రుణం ఆమోదించబడింది",
-    approval_banner_desc: "రుణ వితరణ 2–3 వ్యాపార దినాలలో పూర్తవుతుంది.",
-    approval_loan_id: "రుణ ID",
-    approval_date: "ఆమోదించిన తేదీ",
-    loan_details_title: "రుణ వివరాలు",
-    loan_customer_name: "కస్టమర్ పేరు",
-    loan_interest_rate: "వడ్డీ రేటు",
-    loan_duration: "రుణ వ్యవధి",
-    loan_monthly_emi: "నెలవారీ EMI",
-    loan_total_payable: "మొత్తం చెల్లించవలసింది",
-    loan_processing_fee: "ప్రాసెసింగ్ రుసుము",
-    branch_select_title: "మీ శాఖను ఎంచుకోండి",
-    branch_select_desc: "బ్రాంచ్ మేనేజర్ ద్వారా మీ రుణం ప్రాసెస్ చేయబడే శాఖను ఎంచుకోండి.",
-    branch_premium: "ప్రీమియమ్",
-    branch_standard: "స్టాండర్డ్",
-    branch_select_prompt: "దయచేసి పైన శాఖను ఎంచుకోండి.",
-    branch_assigned_manager: "నియమించిన బ్రాంచ్ మేనేజర్",
-    branch_specialist: "హోమ్ లోన్ స్పెషలిస్ట్",
-    branch_confirm_btn: "శాఖను నిర్ధారించండి",
-    disbursement_title: "వితరణ వివరాలు",
-    disbursement_account: "ఖాతా సంఖ్య",
-    disbursement_ifsc: "IFSC కోడ్",
-    disbursement_branch: "శాఖ",
-    disbursement_amount: "వితరణ మొత్తం",
-    emi_schedule_title: "EMI షెడ్యూల్ (నమూనా)",
-    emi_month: "నెల",
-    emi_amount: "EMI",
-    emi_principal: "అసలు",
-    emi_interest: "వడ్డీ",
-    emi_balance: "బాకీ",
-    signature_customer: "కస్టమర్ సంతకం",
-    signature_bank_seal: "బ్యాంకు ముద్ర",
-    signature_authorized: "అధికారిత సంతకదారు",
-    branch_confirmed_toast: "శాఖ నిర్ధారించబడింది!",
-    loan_home: "గృహ రుణం", loan_personal: "వ్యక్తిగత రుణం", loan_vehicle: "వాహన రుణం", loan_gold: "బంగారు రుణం", loan_education: "విద్య రుణం", loan_business: "వ్యాపార రుణం",
-    br_mumbai_name: "ముంబై సెంట్రల్", br_mumbai_addr: "123, డాక్టర్ అంబేద్కర్ రోడ్, ముంబై – 400 008",
-    br_andheri_name: "అంధేరీ వెస్ట్", br_andheri_addr: "ప్లాట్ 44, వర్సోవా లింక్ రోడ్, ముంబై – 400 058",
-    br_cp_name: "కన్నాట్ ప్లేస్", br_cp_addr: "F-12, ఇన్నర్ సర్కిల్, కన్నాట్ ప్లేస్, ఢిల్లీ – 110 001",
-    br_kora_name: "కోరమంగళ", br_kora_addr: "80 ఫీట్ రోడ్, 4వ బ్లాక్, కోరమంగళ, బెంగళూరు – 560 034",
-    mgr_rajan: "రాజన్ మెహతా", mgr_priya: "ప్రియా శర్మ", mgr_amit: "అమిత్ కపూర్", mgr_deepa: "దీపా నాయర్",
-    time_9to5: "సోమ-శని, ఉదయం 9 - సా 5", time_10to4: "సోమ-శని, ఉదయం 10 - సా 4"
-  },
-  ta: {
-    approval_back_dashboard: "டாஷ்போர்டுக்கு செல்",
-    approval_page_title: "கடன் அனுமதி",
-    approval_page_desc: "அதிகாரப்பூர்வ கடன் அனுமதி கடிதம் மற்றும் விவரங்கள்.",
-    approval_banner_title: "வாழ்த்துகள்!",
-    approval_banner_text: "உங்கள் கடன் அனுமதிக்கப்பட்டது",
-    approval_banner_desc: "கடன் வழங்கல் 2–3 வணிக நாட்களில் நிறைவடையும்.",
-    approval_loan_id: "கடன் ID",
-    approval_date: "அனுமதிக்கப்பட்டது",
-    loan_details_title: "கடன் விவரங்கள்",
-    loan_customer_name: "வாடிக்கையாளர் பெயர்",
-    loan_interest_rate: "வட்டி விகிதம்",
-    loan_duration: "கடன் கால அளவு",
-    loan_monthly_emi: "மாதாந்திர EMI",
-    loan_total_payable: "மொத்த செலுத்தவேண்டியது",
-    loan_processing_fee: "செயலாக்க கட்டணம்",
-    branch_select_title: "உங்கள் கிளையை தேர்ந்தெடுக்கவும்",
-    branch_select_desc: "கிளை மேலாளரால் உங்கள் கடன் செயல்படுத்தப்படும் கிளையை தேர்ந்தெடுக்கவும்.",
-    branch_premium: "பிரீமியம்",
-    branch_standard: "நிலையான",
-    branch_select_prompt: "தொடர மேலே ஒரு கிளையை தேர்ந்தெடுக்கவும்.",
-    branch_assigned_manager: "நியமிக்கப்பட்ட கிளை மேலாளர்",
-    branch_specialist: "வீட்டு கடன் நிபுணர்",
-    branch_confirm_btn: "கிளையை உறுதிப்படுத்து",
-    disbursement_title: "வழங்கல் விவரங்கள்",
-    disbursement_account: "கணக்கு எண்",
-    disbursement_ifsc: "IFSC குறியீடு",
-    disbursement_branch: "கிளை",
-    disbursement_amount: "வழங்கல் தொகை",
-    emi_schedule_title: "EMI அட்டவணை (மாதிரி)",
-    emi_month: "மாதம்",
-    emi_amount: "EMI",
-    emi_principal: "அசல்",
-    emi_interest: "வட்டி",
-    emi_balance: "இருப்பு",
-    signature_customer: "வாடிக்கையாளர் கையெழுத்து",
-    signature_bank_seal: "வங்கி முத்திரை",
-    signature_authorized: "அங்கீகரிக்கப்பட்ட கையெழுத்தாளர்",
-    branch_confirmed_toast: "கிளை உறுதிப்படுத்தப்பட்டது!",
-    loan_home: "வீட்டு கடன்", loan_personal: "தனி நபர் கடன்", loan_vehicle: "வாகன கடன்", loan_gold: "தங்க கடன்", loan_education: "கல்விக் கடன்", loan_business: "வணிக கடன்",
-    br_mumbai_name: "மும்பை சென்ட்ரல்", br_mumbai_addr: "123, டாக்டர் அம்பேத்கர் சாலை, மும்பை – 400 008",
-    br_andheri_name: "அந்தேரி மேற்கு", br_andheri_addr: "பிளாட் 44, வெர்சோவா லிங்க் சாலை, மும்பை – 400 058",
-    br_cp_name: "கன்னாட் பிளேஸ்", br_cp_addr: "F-12, இன்னர் சர்க்கிள், கன்னாட் பிளேஸ், டெல்லி – 110 001",
-    br_kora_name: "கோரமங்களா", br_kora_addr: "80 அடி சாலை, 4வது பிளாக், கோரமங்களா, பெங்களூரு – 560 034",
-    mgr_rajan: "ராஜன் மேத்தா", mgr_priya: "பிரியா சர்மா", mgr_amit: "அமித் கபூர்", mgr_deepa: "தீபா நாயர்",
-    time_9to5: "திங்கள்-சனி, காலை 9 - மாலை 5", time_10to4: "திங்கள்-சனி, காலை 10 - மாலை 4"
-  },
-  ml: {
-    approval_back_dashboard: "ഡാഷ്‌ബോർഡിലേക്ക് പോകൂ",
-    approval_page_title: "വായ്പ അംഗീകാരം",
-    approval_page_desc: "ഔദ്യോഗിക വായ്പ അംഗീകാര കത്ത് മരിയും വിവരങ്ങളും.",
-    approval_banner_title: "അഭിനന്ദനങ്ങൾ!",
-    approval_banner_text: "നിങ്ങളുടെ വായ്പ അംഗീകരിച്ചു",
-    approval_banner_desc: "വായ്പ വിതരണം 2–3 ബിസിനസ് ദിവസങ്ങൾക്കുള്ളിൽ പൂർത്തിയാകും.",
-    approval_loan_id: "വായ്പ ID",
-    approval_date: "അംഗീകരിച്ചത്",
-    loan_details_title: "വായ്പ വിവരങ്ങൾ",
-    loan_customer_name: "ഉപഭോക്തൃ പേര്",
-    loan_interest_rate: "പലിശ നിരക്ക്",
-    loan_duration: "വായ്പ കാലാവധി",
-    loan_monthly_emi: "മാസ EMI",
-    loan_total_payable: "ആകെ അടക്കേണ്ടത്",
-    loan_processing_fee: "പ്രോസസ്സിംഗ് ഫീ",
-    branch_select_title: "നിങ്ങളുടെ ശാഖ തിരഞ്ഞെടുക്കുക",
-    branch_select_desc: "ബ്രാഞ്ച് മാനേജർ വഴി നിങ്ങളുടെ വായ്പ പ്രോസസ് ചെയ്യുന്ന ശാഖ തിരഞ്ഞെടുക്കുക.",
-    branch_premium: "പ്രീമിയം",
-    branch_standard: "സ്റ്റാൻഡേർഡ്",
-    branch_select_prompt: "തുടരാൻ മുകളിൽ ഒരു ശാഖ തിരഞ്ഞെടുക്കുക.",
-    branch_assigned_manager: "നിയമിക്കപ്പെട്ട ബ്രാഞ്ച് മാനേജർ",
-    branch_specialist: "ഹോം ലോൺ സ്പെഷ്യലിസ്റ്റ്",
-    branch_confirm_btn: "ശാഖ സ്ഥിരീകരിക്കുക",
-    disbursement_title: "വിതരണ വിവരങ്ങൾ",
-    disbursement_account: "അക്കൗണ്ട് നമ്പർ",
-    disbursement_ifsc: "IFSC കോഡ്",
-    disbursement_branch: "ശാഖ",
-    disbursement_amount: "വിതരണ തുക",
-    emi_schedule_title: "EMI ഷെഡ്യൂൾ (സാമ്പിൾ)",
-    emi_month: "മാസം",
-    emi_amount: "EMI",
-    emi_principal: "മൂലധനം",
-    emi_interest: "പലിശ",
-    emi_balance: "ബാക്കി",
-    signature_customer: "ഉപഭോക്തൃ ഒപ്പ്",
-    signature_bank_seal: "ബാങ്ക് മുദ്ര",
-    signature_authorized: "അധികൃത ഒപ്പുകാരൻ",
-    branch_confirmed_toast: "ശാഖ സ്ഥിരീകരിച്ചു!",
-    loan_home: "ഭവന വായ്പ", loan_personal: "വ്യക്തിഗത വായ്പ", loan_vehicle: "വാഹന വായ്പ", loan_gold: "സ്വർണ്ണ വായ്പ", loan_education: "വിദ്യാഭ്യാസ വായ്പ", loan_business: "ബിസിനസ് വായ്പ",
-    br_mumbai_name: "മുംബൈ സെൻട്രൽ", br_mumbai_addr: "123, ഡോ. അംബേദ്കർ റോഡ്, മുംബൈ - 400 008",
-    br_andheri_name: "അന്ധേരി വെസ്റ്റ്", br_andheri_addr: "പ്ലോട്ട് 44, വെർസോവ ലിങ്ക് റോഡ്, മുംബൈ - 400 058",
-    br_cp_name: "കനോട്ട് പ്ലേസ്", br_cp_addr: "F-12, ഇന്നർ സർക്കിൾ, കനോട്ട് പ്ലേസ്, ഡൽഹി - 110 001",
-    br_kora_name: "കോറമംഗല", br_kora_addr: "80 ഫീറ്റ് റോഡ്, നാലാം ബ്ലോക്ക്, കോറമംഗല, ബാംഗ്ലൂർ - 560 034",
-    mgr_rajan: "രാജൻ മേത്ത", mgr_priya: "പ്രിയ ശർമ്മ", mgr_amit: "അമിത് കപൂർ", mgr_deepa: "ദീപ നായർ",
-    time_9to5: "തിങ്കൾ-ശനി, 9am-5pm", time_10to4: "തിങ്കൾ-ശനി, 10am-4pm"
-  },
-  kn: {
-    approval_back_dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹೋಗಿ",
-    approval_page_title: "ಸಾಲ ಅನುಮೋದನೆ",
-    approval_page_desc: "ಅಧಿಕೃತ ಸಾಲ ಮಂಜೂರಾತಿ ಪತ್ರ ಮತ್ತು ವಿವರಗಳು.",
-    approval_banner_title: "ಅಭಿನಂದನೆಗಳು!",
-    approval_banner_text: "ನಿಮ್ಮ ಸಾಲ ಅನುಮೋದಿಸಲಾಗಿದೆ",
-    approval_banner_desc: "ಸಾಲ ವಿತರಣೆ 2–3 ವ್ಯಾಪಾರ ದಿನಗಳಲ್ಲಿ ಪೂರ್ಣಗೊಳ್ಳುತ್ತದೆ.",
-    approval_loan_id: "ಸಾಲ ID",
-    approval_date: "ಅನುಮೋದಿಸಲಾಗಿದೆ",
-    loan_details_title: "ಸಾಲ ವಿವರಗಳು",
-    loan_customer_name: "ಗ್ರಾಹಕರ ಹೆಸರು",
-    loan_interest_rate: "ಬಡ್ಡಿ ದರ",
-    loan_duration: "ಸಾಲ ಅವಧಿ",
-    loan_monthly_emi: "ಮಾಸಿಕ EMI",
-    loan_total_payable: "ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ",
-    loan_processing_fee: "ಪ್ರಕ್ರಿಯೆ ಶುಲ್ಕ",
-    branch_select_title: "ನಿಮ್ಮ ಶಾಖೆ ಆಯ್ಕೆ ಮಾಡಿ",
-    branch_select_desc: "ಶಾಖಾ ವ್ಯವಸ್ಥಾಪಕರಿಂದ ನಿಮ್ಮ ಸಾಲ ಪ್ರಕ್ರಿಯೆಗೊಳ್ಳುವ ಶಾಖೆ ಆಯ್ಕೆ ಮಾಡಿ.",
-    branch_premium: "ಪ್ರೀಮಿಯಂ",
-    branch_standard: "ಸ್ಟ್ಯಾಂಡರ್ಡ್",
-    branch_select_prompt: "ಮುಂದುವರಿಯಲು ಮೇಲೆ ಶಾಖೆ ಆಯ್ಕೆ ಮಾಡಿ.",
-    branch_assigned_manager: "ನಿಯೋಜಿಸಲಾದ ಶಾಖಾ ವ್ಯವಸ್ಥಾಪಕ",
-    branch_specialist: "ಹೋಮ್ ಲೋನ್ ಸ್ಪೆಷಲಿಸ್ಟ್",
-    branch_confirm_btn: "ಶಾಖೆ ದೃಢೀಕರಿಸಿ",
-    disbursement_title: "ವಿತರಣೆ ವಿವರಗಳು",
-    disbursement_account: "ಖಾತೆ ಸಂಖ್ಯೆ",
-    disbursement_ifsc: "IFSC ಕೋಡ್",
-    disbursement_branch: "ಶಾಖೆ",
-    disbursement_amount: "ವಿತರಣೆ ಮೊತ್ತ",
-    emi_schedule_title: "EMI ವೇಳಾಪಟ್ಟಿ (ಮಾದರಿ)",
-    emi_month: "ತಿಂಗಳು",
-    emi_amount: "EMI",
-    emi_principal: "ಮೂಲಧನ",
-    emi_interest: "ಬಡ್ಡಿ",
-    emi_balance: "ಶಿಲ್ಕು",
-    signature_customer: "ಗ್ರಾಹಕ ಸಹಿ",
-    signature_bank_seal: "ಬ್ಯಾಂಕ್ ಮುದ್ರೆ",
-    signature_authorized: "ಅಧಿಕೃತ ಸಹಿದಾರ",
-    branch_confirmed_toast: "ಶಾಖೆ ದೃಢೀಕರಿಸಲಾಗಿದೆ!",
-    loan_home: "ಗೃಹ ಸಾಲ", loan_personal: "ವೈಯಕ್ತಿಕ ಸಾಲ", loan_vehicle: "ವಾಹನ ಸಾಲ", loan_gold: "ಚಿನ್ನ ಸಾಲ", loan_education: "ಶಿಕ್ಷಣ ಸಾಲ", loan_business: "ವ್ಯಾಪಾರ ಸಾಲ",
-    br_mumbai_name: "ಮುಂಬೈ ಸೆಂಟ್ರಲ್", br_mumbai_addr: "123, ಡಾ. ಅಂಬೇಡ್ಕರ್ ರಸ್ತೆ, ಮುಂಬೈ - 400 008",
-    br_andheri_name: "ಅಂಧೇರಿ ವೆಸ್ಟ್", br_andheri_addr: "ಪ್ಲಾಟ್ 44, ವರ್ಸೋವಾ ಲಿಂಕ್ ರಸ್ತೆ, ಮುಂಬೈ - 400 058",
-    br_cp_name: "ಕನ್ನಾಟ್ ಪ್ಲೇಸ್", br_cp_addr: "F-12, ಇನ್ನರ್ ಸರ್ಕಲ್, ಕನ್ನಾಟ್ ಪ್ಲೇಸ್, ದೆಹಲಿ - 110 001",
-    br_kora_name: "ಕೋರಮಂಗಲ", br_kora_addr: "80 ಅಡಿ ರಸ್ತೆ, 4 ನೇ ಬ್ಲಾಕ್, ಕೋರಮಂಗಲ, ಬೆಂಗಳೂರು - 560 034",
-    mgr_rajan: "ರಾಜನ್ ಮೆಹ್ತಾ", mgr_priya: "ಪ್ರಿಯಾ ಶರ್ಮಾ", mgr_amit: "ಅಮಿತ್ ಕಪೂರ್", mgr_deepa: "ದೀಪಾ ನಾಯರ್",
-    time_9to5: "ಸೋಮ-ಶನಿ, ಬೆಳಿಗ್ಗೆ 9 - ಸಂಜೆ 5", time_10to4: "ಸೋಮ-ಶನಿ, ಬೆಳಿಗ್ಗೆ 10 - ಸಂಜೆ 4"
-  },
-  hi: {
-    approval_back_dashboard: "डैशबोर्ड पर जाएं",
-    approval_page_title: "ऋण स्वीकृति",
-    approval_page_desc: "आधिकारिक ऋण स्वीकृति पत्र और विवरण।",
-    approval_banner_title: "बधाई हो!",
-    approval_banner_text: "आपका ऋण स्वीकृत हो गया",
-    approval_banner_desc: "ऋण वितरण 2–3 कार्य दिवसों में पूरा होगा।",
-    approval_loan_id: "ऋण ID",
-    approval_date: "स्वीकृत",
-    loan_details_title: "ऋण विवरण",
-    loan_customer_name: "ग्राहक का नाम",
-    loan_interest_rate: "ब्याज दर",
-    loan_duration: "ऋण अवधि",
-    loan_monthly_emi: "मासिक EMI",
-    loan_total_payable: "कुल देय",
-    loan_processing_fee: "प्रसंस्करण शुल्क",
-    branch_select_title: "अपनी शाखा चुनें",
-    branch_select_desc: "वह शाखा चुनें जहाँ शाखा प्रबंधक द्वारा आपका ऋण संसाधित किया जाएगा।",
-    branch_premium: "प्रीमियम",
-    branch_standard: "स्टैंडर्ड",
-    branch_select_prompt: "आगे बढ़ने के लिए ऊपर एक शाखा चुनें।",
-    branch_assigned_manager: "नियुक्त शाखा प्रबंधक",
-    branch_specialist: "होम लोन विशेषज्ञ",
-    branch_confirm_btn: "शाखा की पुष्टि करें",
-    disbursement_title: "वितरण विवरण",
-    disbursement_account: "खाता संख्या",
-    disbursement_ifsc: "IFSC कोड",
-    disbursement_branch: "शाखा",
-    disbursement_amount: "वितरण राशि",
-    emi_schedule_title: "EMI अनुसूची (नमूना)",
-    emi_month: "महीना",
-    emi_amount: "EMI",
-    emi_principal: "मूलधन",
-    emi_interest: "ब्याज",
-    emi_balance: "शेष",
-    signature_customer: "ग्राहक हस्ताक्षर",
-    signature_bank_seal: "बैंक मुहर",
-    signature_authorized: "अधिकृत हस्ताक्षरकर्ता",
-    branch_confirmed_toast: "शाखा की पुष्टि हो गई!",
-    loan_home: "गृह ऋण", loan_personal: "व्यक्तिगत ऋण", loan_vehicle: "वाहन ऋण", loan_gold: "सोना ऋण", loan_education: "शिक्षा ऋण", loan_business: "व्यापार ऋण",
-    br_mumbai_name: "मुंबई सेंट्रल", br_mumbai_addr: "123, डॉ. अंबेडकर रोड, मुंबई - 400 008",
-    br_andheri_name: "अंधेरी वेस्ट", br_andheri_addr: "प्लॉट 44, वर्सोवा लिंक रोड, मुंबई - 400 058",
-    br_cp_name: "कनॉट प्लेस", br_cp_addr: "एफ-12, इनर सर्कल, कनॉट प्लेस, दिल्ली - 110 001",
-    br_kora_name: "कोरमंगला", br_kora_addr: "80 फीट रोड, चौथा ब्लॉक, कोरमंगला, बैंगलोर - 560 034",
-    mgr_rajan: "राजन मेहता", mgr_priya: "प्रिया शर्मा", mgr_amit: "अमित कपूर", mgr_deepa: "दीपा नायर",
-    time_9to5: "सोम-शनि, सुबह 9 - शाम 5", time_10to4: "सोम-शनि, सुबह 10 - शाम 4"
-  }
+// ══════════════════════════════════════════════════════════════
+//  INTEREST RATES PER LOAN TYPE
+//  Home loan rate adjusts based on CIBIL score.
+//  All other loan types keep fixed base rates.
+// ══════════════════════════════════════════════════════════════
+var LOAN_RATES = {
+  home: 8.50, personal: 10.90, vehicle: 9.25,
+  gold: 7.50, education: 8.25, business: 11.50
 };
 
-// Merge translations
-if (typeof I18N !== 'undefined') {
-  ['en','te','ta','ml','kn','hi'].forEach(function(lang) {
-    if (I18N[lang] && APPROVAL_I18N[lang]) Object.assign(I18N[lang], APPROVAL_I18N[lang]);
-  });
+// CIBIL score brackets — only applied to home loan
+var CIBIL_BRACKETS = [
+  { min: 750, max: 900, adj: -0.50, label: 'Excellent (750–900)' },
+  { min: 700, max: 749, adj:  0.00, label: 'Good (700–749)'      },
+  { min: 650, max: 699, adj: +0.50, label: 'Fair (650–699)'      },
+  { min: 600, max: 649, adj: +1.00, label: 'Poor (600–649)'      },
+  { min: 300, max: 599, adj: +1.50, label: 'Low (300–599)'       }
+];
+
+function getCibilBracket(score) {
+  var s = parseInt(score);
+  if (!s || isNaN(s)) return null;
+  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
+    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i];
+  }
+  return null;
 }
 
-// Global branch data keys for easy access
+function getRateForType(type, cibilScore) {
+  var base = LOAN_RATES[(type || '').toLowerCase()] || 8.50;
+  if ((type || '').toLowerCase() === 'home') {
+    var bracket = getCibilBracket(cibilScore);
+    if (bracket) return Math.round((base + bracket.adj) * 100) / 100;
+  }
+  return base;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  BRANCH DATA  (IFSC added per branch)
+// ══════════════════════════════════════════════════════════════
 var branchData = {
-  'mumbai-central': { nameKey: 'br_mumbai_name', mgrKey: 'mgr_rajan', initials: 'RM', phone: '+91 98200 11234', email: 'rajan.mehta@abcbank.in' },
-  'andheri-west': { nameKey: 'br_andheri_name', mgrKey: 'mgr_priya', initials: 'PS', phone: '+91 98200 22345', email: 'priya.sharma@abcbank.in' },
-  'connaught-place': { nameKey: 'br_cp_name', mgrKey: 'mgr_amit', initials: 'AK', phone: '+91 98100 33456', email: 'amit.kapoor@abcbank.in' },
-  'koramangala': { nameKey: 'br_kora_name', mgrKey: 'mgr_deepa', initials: 'DN', phone: '+91 98440 44567', email: 'deepa.nair@abcbank.in' }
+  'mumbai-central':  { nameKey:'Mumbai Central',  mgrKey:'mgr_rajan', initials:'RM', phone:'+91 98200 11234', email:'rajan.mehta@abcbank.in',  ifsc:'ABCB0001234' },
+  'andheri-west':    { nameKey:'Andheri West', mgrKey:'mgr_priya', initials:'PS', phone:'+91 98200 22345', email:'priya.sharma@abcbank.in', ifsc:'ABCB0001892' },
+  'connaught-place': { nameKey:'Connaught Place',      mgrKey:'mgr_amit',  initials:'AK', phone:'+91 98100 33456', email:'amit.kapoor@abcbank.in',  ifsc:'ABCB0002211' },
+  'koramangala':     { nameKey:'Koramangala',    mgrKey:'mgr_deepa', initials:'DN', phone:'+91 98440 44567', email:'deepa.nair@abcbank.in',   ifsc:'ABCB0003345' }
 };
 
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+
+// Read a key from shared.js I18N object (populated by applyLang)
+function tr(key) {
+  try {
+    var lang = localStorage.getItem('abcbank_lang') || 'en';
+    if (typeof I18N !== 'undefined') {
+      if (I18N[lang] && I18N[lang][key] !== undefined) return I18N[lang][key];
+      if (I18N['en'] && I18N['en'][key] !== undefined) return I18N['en'][key];
+    }
+  } catch (e) {}
+  return key;
+}
+
+// Indian currency formatting
+function fmtINR(n) {
+  var num = parseInt(n);
+  if (!n || isNaN(num)) return '–';
+  return '₹' + num.toLocaleString('en-IN');
+}
+
+// Recalculate EMI — never trust stored value
+function calcEMI(principal, annualRate, years) {
+  principal = parseFloat(principal);
+  years     = parseFloat(years);
+  if (!principal || !years || years <= 0) return { emi: 0, total: 0 };
+  var r   = annualRate / 12 / 100;
+  var n   = Math.round(years * 12);
+  var emi = r > 0
+    ? Math.round(principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1))
+    : Math.round(principal / n);
+  return { emi: emi, total: emi * n };
+}
+
+// Build 3-row EMI schedule from real loan data
+function buildEmiTable(principal, annualRate, years) {
+  var tbody = document.getElementById('emiTableBody');
+  if (!tbody) return;
+  principal = parseFloat(principal);
+  years     = parseFloat(years);
+  if (!principal || !years || years <= 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-gray-400 text-center">No loan data available</td></tr>';
+    return;
+  }
+  var r       = annualRate / 12 / 100;
+  var n       = Math.round(years * 12);
+  var emi     = r > 0
+    ? Math.round(principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1))
+    : Math.round(principal / n);
+  var balance = principal;
+  var now     = new Date();
+  var MON     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var html    = '';
+  for (var i = 0; i < 3; i++) {
+    var d        = new Date(now.getFullYear(), now.getMonth() + i + 1, 1);
+    var label    = MON[d.getMonth()] + ' ' + d.getFullYear();
+    var interest = Math.round(balance * r);
+    var princ    = Math.max(0, emi - interest);
+    balance      = Math.max(0, balance - princ);
+    html += '<tr class="border-b">'
+          + '<td class="p-3">' + label + '</td>'
+          + '<td class="p-3">' + fmtINR(emi) + '</td>'
+          + '<td class="p-3">' + fmtINR(princ) + '</td>'
+          + '<td class="p-3">' + fmtINR(interest) + '</td>'
+          + '<td class="p-3">' + fmtINR(balance) + '</td>'
+          + '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  LOAN TYPE LABEL MAP
+//  Maps the loanType values saved by loan-application.html
+//  (which strips the "loan_" prefix, e.g. "home", "personal")
+//  back to display labels.
+// ══════════════════════════════════════════════════════════════
+var LOAN_TYPE_KEYS = {
+  home:'loan_home', personal:'loan_personal', vehicle:'loan_vehicle',
+  gold:'loan_gold', education:'loan_education', business:'loan_business'
+};
+
+// Also handle raw keys like "loan_home" stored by older code paths
+function normalizeLoanType(rawType) {
+  if (!rawType) return '';
+  var t = rawType.toLowerCase().trim();
+  // Strip "loan_" prefix if present (e.g. "loan_home" → "home")
+  if (t.startsWith('loan_')) t = t.replace('loan_', '');
+  return t;
+}
+
+function getLoanTypeLabel(type) {
+  var normalized = normalizeLoanType(type);
+  var key = LOAN_TYPE_KEYS[normalized];
+  return (key ? tr(key) : (type || '')) || '–';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVBAR USER
+//  Priority: abcBank.getCurrentUser() (logic.js) → bankUser fallback
+// ══════════════════════════════════════════════════════════════
+var currentUser = null;
+try {
+  if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) {
+    currentUser = abcBank.getCurrentUser();
+  }
+} catch(e) {}
+
+// Fallback to legacy bankUser key
+var legacyUser = null;
+try { legacyUser = JSON.parse(localStorage.getItem('bankUser') || 'null'); } catch(e) {}
+
+var userName    = '';
+var userAccount = '';
+
+if (currentUser) {
+  userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ') || currentUser.name || 'User';
+  userAccount = (currentUser.account && currentUser.account.accountNumber) ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
+} else if (legacyUser) {
+  userName    = legacyUser.name || 'User';
+  userAccount = legacyUser.account || 'NIL';
+} else {
+  userName    = 'User';
+  userAccount = 'NIL';
+}
+
+document.getElementById('username').innerText       = userName;
+document.getElementById('profileName').innerText    = userName;
+document.getElementById('profileAccount').innerText = 'Account: ' + userAccount;
+
+var acct = (userAccount && userAccount !== 'NIL') ? String(userAccount) : '';
+document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.slice(-6) : acct || '–');
+
+// ══════════════════════════════════════════════════════════════
+//  READ ALL STORED DATA
+//  Priority order for each field:
+//    1. loan_application_data  (saved by loan-application.html)
+//    2. cibil_data             (merged/updated by loan-application.html)
+//    3. loanApplication        (legacy key used by older pages)
+// ══════════════════════════════════════════════════════════════
+var loanApp  = {};
+var cibil    = {};
+var loanData = {};
+
+try { loanApp  = JSON.parse(localStorage.getItem('loan_application_data') || '{}'); } catch(e) {}
+try { cibil    = JSON.parse(localStorage.getItem('cibil_data')            || '{}'); } catch(e) {}
+try { loanData = JSON.parse(localStorage.getItem('loanApplication')       || '{}'); } catch(e) {}
+
+// Helper: pick first truthy value across sources
+function pick() {
+  for (var i = 0; i < arguments.length; i++) {
+    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') {
+      return arguments[i];
+    }
+  }
+  return '';
+}
+
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+document.getElementById('nav-lang-select').value = savedLang;
+
+// ── Today's date (dynamic) ──
+var td = new Date();
+var MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('approvedDateSpan').innerText =
+  MN[td.getMonth()] + ' ' + String(td.getDate()).padStart(2, '0') + ' ' + td.getFullYear();
+
+// ── Customer name ──
+document.getElementById('detailCustomerName').innerText = userName || '–';
+
+// ── Loan type ──
+// loan-application.html saves loanType as the stripped key e.g. "home", "personal"
+var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType, '');
+var loanType    = normalizeLoanType(rawLoanType);
+document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
+
+// ── Loan amount ──
+var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
+document.getElementById('detailLoanAmount').innerText = principal ? fmtINR(principal) : '–';
+
+// ── Interest rate — home loan adjusted by CIBIL score ──
+var cibilScore = pick(cibil.score, localStorage.getItem('loan_score'), null);
+var rate       = getRateForType(loanType, cibilScore);
+
+var rateDisplay = rate + '% p.a';
+if (loanType === 'home' && cibilScore) {
+  var bracket = getCibilBracket(cibilScore);
+  if (bracket) {
+    var adjSign = bracket.adj > 0 ? '+' + bracket.adj : (bracket.adj < 0 ? String(bracket.adj) : '');
+    var adjPart = adjSign ? ' (' + adjSign + '%)' : '';
+    rateDisplay = rate + '% p.a' + adjPart + ' — CIBIL ' + bracket.label;
+  }
+}
+document.getElementById('detailInterestRate').innerText = rateDisplay;
+
+// ── Duration ──
+// loan-application.html saves loanDuration; older pages may use duration
+var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
+
+// If no duration stored, compute from age (same logic as loan-application.html)
+if (!duration || duration <= 0) {
+  var dob = pick(
+    (currentUser && currentUser.dob) ? currentUser.dob : null,
+    (legacyUser  && legacyUser.dob)  ? legacyUser.dob  : null,
+    localStorage.getItem('loanTenure') ? null : null
+  );
+  if (dob) {
+    var birth = new Date(dob);
+    var age   = td.getFullYear() - birth.getFullYear() -
+                (td.getMonth() < birth.getMonth() ||
+                 (td.getMonth() === birth.getMonth() && td.getDate() < birth.getDate()) ? 1 : 0);
+    duration = Math.max(1, 60 - age);
+  } else {
+    var storedTenure = parseInt(localStorage.getItem('loanTenure'));
+    if (storedTenure && storedTenure > 0) duration = storedTenure;
+  }
+}
+document.getElementById('detailDuration').innerText = duration ? duration + ' Years' : '–';
+
+// ── EMI + Total (recalculated) ──
+var emiResult = calcEMI(principal, rate, duration);
+document.getElementById('detailEmi').innerText          = emiResult.emi   ? fmtINR(emiResult.emi)   : '–';
+document.getElementById('detailTotalPayable').innerText = emiResult.total ? fmtINR(emiResult.total) : '–';
+
+// ── Disbursement ──
+document.getElementById('disbursementAccount').innerText   = userAccount || '–';
+document.getElementById('disbursementIfsc').innerText      = pick(loanData.ifsc, 'ABCB0001234');
+document.getElementById('disbursementAmountVal').innerText = principal ? fmtINR(principal) : '–';
+
+// ── Extra fields from loan-application.html ──
+// employment: saved as "employment" in loan_application_data and cibil_data
+var employment   = pick(loanApp.employment, cibil.employment, loanData.employment, '–');
+var annualIncome = pick(loanApp.annualIncome, cibil.annualIncome, loanData.annualIncome, '');
+var collateral   = pick(loanApp.collateral,  loanData.collateral,  '–');
+var purpose      = pick(loanApp.purpose,     loanData.purpose,     '–');
+
+document.getElementById('detailEmployment').innerText   = employment;
+document.getElementById('detailAnnualIncome').innerText = fmtINR(annualIncome);
+document.getElementById('detailCollateral').innerText   = collateral;
+document.getElementById('detailPurpose').innerText      = purpose;
+
+// ── EMI schedule ──
+buildEmiTable(principal, rate, duration);
+
+// ── Apply shared translations ──
+applyLang(savedLang);
+
+// ══════════════════════════════════════════════════════════════
+//  BRANCH SELECTION
+// ══════════════════════════════════════════════════════════════
 var selectedBranch = null;
 
 function selectBranch(el) {
@@ -556,70 +553,46 @@ function selectBranch(el) {
 function updateManagerUI() {
   if (!selectedBranch) return;
   var d = branchData[selectedBranch];
-  var currentLang = localStorage.getItem('abcbank_lang') || 'en';
-  var t = APPROVAL_I18N[currentLang] || APPROVAL_I18N['en'];
-
-  document.getElementById('managerInitials').textContent = d.initials;
-  document.getElementById('managerName').textContent = t[d.mgrKey];
-  document.getElementById('managerBranch').textContent = t[d.nameKey] + ' ' + (currentLang === 'en' ? 'Branch' : 'శాఖ');
-  document.getElementById('managerPhone').textContent = d.phone;
-  document.getElementById('managerEmail').textContent = d.email;
-  document.getElementById('confirmBtnText').textContent = t.branch_confirm_btn + ' – ' + t[d.nameKey];
-  document.getElementById('disbursementBranch').textContent = t[d.nameKey];
+  var branchWord = tr('branch_word') || 'Branch';
+  document.getElementById('managerInitials').textContent      = d.initials;
+  document.getElementById('managerName').textContent          = tr(d.mgrKey);
+  document.getElementById('managerBranch').textContent        = tr(d.nameKey) + ' ' + branchWord;
+  document.getElementById('managerPhone').textContent         = d.phone;
+  document.getElementById('managerEmail').textContent         = d.email;
+  document.getElementById('confirmBtnText').textContent       = tr(d.nameKey);
+  document.getElementById('disbursementBranch').textContent   = tr(d.nameKey);
+  document.getElementById('disbursementIfsc').textContent     = d.ifsc;
 }
 
-// Navbar Lang listener
-document.getElementById("nav-lang-select").addEventListener('change', function() {
+// ══════════════════════════════════════════════════════════════
+//  LANG CHANGE
+// ══════════════════════════════════════════════════════════════
+document.getElementById('nav-lang-select').addEventListener('change', function() {
+  localStorage.setItem('abcbank_lang', this.value);
   applyLang(this.value);
+  document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
   updateManagerUI();
-  // Refresh Loan Type
-  var loanData2 = JSON.parse(localStorage.getItem("loanApplication")) || {};
-  document.getElementById("detailLoanType").innerText = getLoanTypeLabel(loanData2.loanType, this.value);
 });
 
-// INITIAL LOAD
-var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
-document.getElementById("username").innerText = user.name;
-document.getElementById("userid").innerText = "ID: " + user.id;
-document.getElementById("profileName").innerText = user.name;
-document.getElementById("profileAccount").innerText = "Account: " + user.account;
-
-var loanData = JSON.parse(localStorage.getItem("loanApplication")) || {};
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-document.getElementById("nav-lang-select").value = savedLang;
-
-document.getElementById("detailCustomerName").innerText = user.name || '–';
-document.getElementById("detailLoanAmount").innerText = loanData.loanAmount ? '₹' + loanData.loanAmount : '–';
-document.getElementById("detailInterestRate").innerText = loanData.interestRate ? loanData.interestRate + '% p.a' : '–';
-document.getElementById("detailDuration").innerText = loanData.duration ? loanData.duration + (savedLang === 'en' ? ' Years' : ' సంవత్సరాలు') : '–';
-document.getElementById("detailEmi").innerText = loanData.emi ? '₹' + loanData.emi : '–';
-document.getElementById("detailTotalPayable").innerText = loanData.totalPayable ? '₹' + loanData.totalPayable : '–';
-document.getElementById("disbursementAccount").innerText = user.account || '–';
-document.getElementById("disbursementIfsc").innerText = loanData.ifsc || 'ABCB0001234';
-document.getElementById("disbursementAmountVal").innerText = loanData.loanAmount ? '₹' + loanData.loanAmount : '–';
-
-function getLoanTypeLabel(type, lang) {
-  var key = ({ home:'loan_home', personal:'loan_personal', vehicle:'loan_vehicle', gold:'loan_gold', education:'loan_education', business:'loan_business' })[type] || type;
-  return (APPROVAL_I18N[lang] && APPROVAL_I18N[lang][key]) ? APPROVAL_I18N[lang][key] : type;
-}
-
-document.getElementById("detailLoanType").innerText = getLoanTypeLabel(loanData.loanType, savedLang);
-applyLang(savedLang);
-
+// ══════════════════════════════════════════════════════════════
+//  CONFIRM BRANCH TOAST
+// ══════════════════════════════════════════════════════════════
 function confirmBranch() {
   if (!selectedBranch) return;
-  var d = branchData[selectedBranch];
-  var lang = localStorage.getItem('abcbank_lang') || 'en';
-  var t = APPROVAL_I18N[lang] || APPROVAL_I18N['en'];
+  var d     = branchData[selectedBranch];
   var toast = document.getElementById('successToast');
-  document.getElementById('toastMsg').textContent = t.branch_confirmed_toast + ' ' + t[d.mgrKey];
+  document.getElementById('toastMsg').textContent = tr('branch_confirmed') + ' ' + tr(d.mgrKey);
   toast.classList.remove('hidden');
   setTimeout(function() { toast.classList.add('hidden'); }, 4000);
 }
 
+// ══════════════════════════════════════════════════════════════
+//  LOGOUT
+// ══════════════════════════════════════════════════════════════
 function logoutUser() {
-  localStorage.removeItem("bankUser");
-  window.location.href = "index.html";
+  localStorage.removeItem('bankUser');
+  localStorage.removeItem('abcBank_currentUser');
+  window.location.href = 'index.html';
 }
 </script>
 </body>

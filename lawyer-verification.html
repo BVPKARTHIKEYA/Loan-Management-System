@@ -13,10 +13,71 @@
 
 <style>
   #lang-switcher { display: none !important; }
+
+  #doc-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #doc-modal.active { display: flex; }
+
+  #doc-modal-inner {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: 720px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  }
+  #doc-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: #1e3a8a; color: #fff;
+  }
+  #doc-modal-body {
+    flex: 1; overflow: auto; padding: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: #f8fafc; min-height: 300px;
+  }
+  #doc-modal-body img { max-width: 100%; max-height: 65vh; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+
+  .doc-card { transition: box-shadow 0.2s; }
+  .doc-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .badge-uploaded { background:#dcfce7; color:#16a34a; }
+  .badge-missing  { background:#fee2e2; color:#dc2626; }
 </style>
 
 </head>
 <body class="bg-gray-100">
+
+<!-- DOCUMENT VIEWER MODAL -->
+<div id="doc-modal">
+  <div id="doc-modal-inner">
+    <div id="doc-modal-header">
+      <div class="flex items-center gap-3">
+        <i class="fa fa-file-image text-xl"></i>
+        <span id="doc-modal-title" class="text-lg font-bold">Document</span>
+      </div>
+      <button onclick="closeDocModal()" class="text-white hover:text-yellow-300 text-2xl leading-none">&times;</button>
+    </div>
+    <div id="doc-modal-body">
+      <p id="doc-modal-placeholder" class="text-gray-400 text-lg">No document uploaded.</p>
+      <img id="doc-modal-img" src="" alt="Document" class="hidden">
+    </div>
+    <div class="px-6 py-4 bg-gray-50 border-t flex justify-between items-center">
+      <span id="doc-modal-filename" class="text-sm text-gray-500 font-mono"></span>
+      <a id="doc-modal-download" href="#" download class="text-blue-700 font-semibold text-sm hover:underline hidden">
+        <i class="fa fa-download mr-1"></i> Download
+      </a>
+    </div>
+  </div>
+</div>
+
 
 <!-- NAVBAR -->
 <header>
@@ -35,7 +96,6 @@
       </a>
 
       <div class="flex items-center gap-4 flex-shrink-0">
-
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
           <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
             <i class="fa fa-globe"></i> Lang:
@@ -75,7 +135,6 @@
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </nav>
@@ -106,73 +165,62 @@
     </figure>
   </section>
 
-
-  <!-- DOCUMENT LIST -->
-  <section class="bg-white shadow rounded-xl p-8 mb-8">
-    <header class="mb-6">
-      <h2 class="text-2xl font-bold" data-i18n="documents_title">Uploaded Documents</h2>
-    </header>
-    <div class="grid md:grid-cols-2 gap-6 text-lg">
-
-      <article class="border rounded-lg p-4 flex justify-between items-center">
-        <div>
-          <p class="font-semibold" data-i18n="doc_pan">PAN Card</p>
-          <p class="text-gray-500 text-sm" data-i18n="doc_pan_file">pan-card.pdf</p>
-        </div>
-        <button class="text-blue-700 font-semibold" data-i18n="doc_view_btn">View</button>
-      </article>
-
-      <article class="border rounded-lg p-4 flex justify-between items-center">
-        <div>
-          <p class="font-semibold" data-i18n="doc_aadhaar">Aadhaar Card</p>
-          <p class="text-gray-500 text-sm" data-i18n="doc_aadhaar_file">aadhaar.pdf</p>
-        </div>
-        <button class="text-blue-700 font-semibold" data-i18n="doc_view_btn">View</button>
-      </article>
-
-      <article class="border rounded-lg p-4 flex justify-between items-center">
-        <div>
-          <p class="font-semibold" data-i18n="doc_property">Property Document</p>
-          <p class="text-gray-500 text-sm" data-i18n="doc_property_file">property-doc.pdf</p>
-        </div>
-        <button class="text-blue-700 font-semibold" data-i18n="doc_view_btn">View</button>
-      </article>
-
-      <article class="border rounded-lg p-4 flex justify-between items-center">
-        <div>
-          <p class="font-semibold" data-i18n="doc_income">Income Proof</p>
-          <p class="text-gray-500 text-sm" data-i18n="doc_income_file">salary-slip.pdf</p>
-        </div>
-        <button class="text-blue-700 font-semibold" data-i18n="doc_view_btn">View</button>
-      </article>
-
+  <!-- APPLICANT SUMMARY -->
+  <section class="bg-white shadow rounded-xl p-6 mb-8">
+    <h2 class="text-xl font-bold mb-4" data-i18n="personal_info_title">Applicant Summary</h2>
+    <div class="grid md:grid-cols-3 gap-4 text-lg">
+      <p><b data-i18n="personal_name">Name:</b> <span id="lv-name">—</span></p>
+      <p><b data-i18n="personal_email">Email:</b> <span id="lv-email">—</span></p>
+      <p><b data-i18n="personal_mobile">Mobile:</b> <span id="lv-mobile">—</span></p>
+      <p><b data-i18n="personal_aadhaar">Aadhaar:</b> <span id="lv-aadhaar">—</span></p>
+      <p><b data-i18n="personal_pan">PAN:</b> <span id="lv-pan">—</span></p>
+      <p><b data-i18n="loan_type">Loan Type:</b> <span id="lv-loantype">—</span></p>
+      <p><b data-i18n="loan_amount">Loan Amount:</b> <span id="lv-loanamount">—</span></p>
     </div>
   </section>
 
+  <!-- DOCUMENT LIST -->
+  <section class="bg-white shadow rounded-xl p-8 mb-8">
+    <header class="mb-6 flex items-center justify-between">
+      <h2 class="text-2xl font-bold" data-i18n="documents_title">Uploaded Documents</h2>
+      <span id="docs-summary" class="text-sm text-gray-500 font-medium"></span>
+    </header>
+    <div id="doc-grid" class="grid md:grid-cols-2 gap-6 text-lg">
+      <!-- built by JS -->
+    </div>
+  </section>
 
   <!-- LEGAL REVIEW NOTES -->
   <section class="bg-white shadow rounded-xl p-8 mb-8">
     <header class="mb-6">
       <h2 class="text-2xl font-bold" data-i18n="legal_review_title">Legal Review Notes</h2>
     </header>
-    <textarea class="w-full border rounded-lg p-4" rows="4"
+    <textarea id="legal-notes" class="w-full border rounded-lg p-4 text-lg" rows="4"
       placeholder="Add verification comments here..."
       data-i18n-placeholder="legal_review_placeholder"></textarea>
   </section>
 
-
   <!-- LEGAL DECISION -->
   <section class="bg-white shadow rounded-xl p-8">
-    <header class="mb-6">
+    <header class="mb-4">
       <h2 class="text-2xl font-bold" data-i18n="legal_decision_title">Legal Decision</h2>
+      <p class="text-gray-500 text-base mt-1">You can change your decision at any time before final submission.</p>
     </header>
-    <div class="flex gap-6">
-      <a href="loan-approval.html"
-        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+
+    <!-- FIX: banner always visible, updates on each decision, never hides buttons -->
+    <div id="decision-banner" class="hidden mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold"></div>
+
+    <!-- FIX: buttons are NEVER disabled — always clickable -->
+    <div id="decision-buttons" class="flex gap-6">
+      <button onclick="legalDecision('approve')"
+        id="btn-approve"
+        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all">
         <i class="fa fa-check mr-2"></i>
         <span data-i18n="approve_documents">Approve Documents</span>
-      </a>
-      <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold">
+      </button>
+      <button onclick="legalDecision('reject')"
+        id="btn-reject"
+        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all">
         <i class="fa fa-times mr-2"></i>
         <span data-i18n="reject_application">Reject Application</span>
       </button>
@@ -185,22 +233,19 @@
 <!-- FOOTER -->
 <footer class="bg-blue-900 text-white mt-16">
   <div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
-
     <section>
       <h3 class="text-xl font-bold" data-i18n="footer_bank_title">ABC Bank</h3>
       <p class="mt-3 opacity-80" data-i18n="footer_bank_desc">Secure banking and loan verification services.</p>
     </section>
-
     <nav>
       <h4 class="font-semibold mb-3" data-i18n="footer_quick_links">Quick Links</h4>
       <ul class="space-y-2">
-        <li><a href="home.html"              class="hover:text-yellow-300" data-i18n="footer_home">Home</a></li>
-        <li><a href="loan-application.html"  class="hover:text-yellow-300" data-i18n="footer_loans">Loans</a></li>
-        <li><a href="officer-review.html"    class="hover:text-yellow-300" data-i18n="footer_officer_review">Officer Review</a></li>
-        <li><a href="loan-approval.html"     class="hover:text-yellow-300" data-i18n="footer_loan_approval">Loan Approval</a></li>
+        <li><a href="home.html"             class="hover:text-yellow-300" data-i18n="footer_home">Home</a></li>
+        <li><a href="loan-application.html" class="hover:text-yellow-300" data-i18n="footer_loans">Loans</a></li>
+        <li><a href="officer-review.html"   class="hover:text-yellow-300" data-i18n="footer_officer_review">Officer Review</a></li>
+        <li><a href="loan-approval.html"    class="hover:text-yellow-300" data-i18n="footer_loan_approval">Loan Approval</a></li>
       </ul>
     </nav>
-
     <section>
       <h4 class="font-semibold mb-3" data-i18n="footer_loan_services">Loan Services</h4>
       <ul class="space-y-2">
@@ -210,7 +255,6 @@
         <li data-i18n="loan_business">Business Loan</li>
       </ul>
     </section>
-
     <aside>
       <h4 class="font-semibold mb-3" data-i18n="footer_follow_us">Follow Us</h4>
       <div class="flex gap-4 text-2xl">
@@ -220,42 +264,302 @@
         <i class="fab fa-twitter hover:text-yellow-300 cursor-pointer"></i>
       </div>
     </aside>
-
   </div>
-  <div class="text-center border-t border-blue-700 py-4" data-i18n="footer_copyright">
-    © 2026 ABC Bank
-  </div>
+  <div class="text-center border-t border-blue-700 py-4" data-i18n="footer_copyright">© 2026 ABC Bank</div>
 </footer>
 
 
 <script>
 
-// ── Load user ──
+// ══════════════════════════════════════════════════════════════
+//  loadAllSources
+// ══════════════════════════════════════════════════════════════
+function loadAllSources() {
+  var out = {};
+  function jp(key) { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e) { return null; } }
+
+  var session      = jp("abcBank_currentUser");
+  var bankUser     = jp("bankUser");
+  var kyc          = jp("kyc_data");
+  var loanApp      = jp("loan_application_data");
+  var cibil        = jp("cibil_data");
+  var loanApproval = jp("loanApplication");
+
+  var userRecord = null;
+  if (session && session.email) {
+    try {
+      var users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
+      userRecord = users.find(function(u) { return u.email === session.email; }) || null;
+    } catch(e) {}
+  }
+
+  // Name — check all possible field names across all sources
+  var name = "";
+  if (session) {
+    if (session.fullName) name = session.fullName;
+    else if (session.firstName || session.lastName) name = ((session.firstName||"")+" "+(session.lastName||"")).trim();
+    else if (session.name) name = session.name;
+  }
+  if (!name && userRecord) {
+    if (userRecord.fullName) name = userRecord.fullName;
+    else if (userRecord.firstName || userRecord.lastName) name = ((userRecord.firstName||"")+" "+(userRecord.lastName||"")).trim();
+    else if (userRecord.name) name = userRecord.name;
+  }
+  if (!name && bankUser) name = bankUser.name || "";
+  out.name = name;
+
+  out.email  = (session && session.email)  || (userRecord && userRecord.email)  || "";
+  out.mobile = (session && (session.mobile || session.phone)) || (userRecord && (userRecord.mobile || userRecord.phone)) || (bankUser && bankUser.mobile) || "";
+
+  out.aadhaar = (kyc && (kyc.aadhaar || kyc.aadhaarNumber))
+    || (loanApp && (loanApp.aadhaar || loanApp.aadhaarNumber))
+    || (session && (session.aadhaar || session.aadhaarNumber))
+    || (userRecord && (userRecord.aadhaar || userRecord.aadhaarNumber)) || "";
+
+  out.pan = (kyc && (kyc.pan || kyc.panNumber))
+    || (loanApp && (loanApp.pan || loanApp.panNumber))
+    || (session && (session.pan || session.panNumber))
+    || (userRecord && (userRecord.pan || userRecord.panNumber)) || "";
+
+  out.loanType   = (cibil && (cibil.loanTypeLabel || cibil.loanType))
+    || (loanApproval && loanApproval.loanType)
+    || localStorage.getItem("loan_type_selected") || "";
+
+  out.loanAmount = (cibil && cibil.loanAmount)
+    || (loanApproval && loanApproval.loanAmount)
+    || localStorage.getItem("loan_amount_requested") || "";
+
+  return out;
+}
+
+function fmtCurr(n) {
+  var num = parseInt(n);
+  return isNaN(num) || n === "" || n === null ? "—" : "₹" + num.toLocaleString("en-IN");
+}
+
+function set(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = (value !== undefined && value !== null && value !== "") ? value : "—";
+}
+
+function populateSummary() {
+  var d = loadAllSources();
+  set("lv-name",       d.name);
+  set("lv-email",      d.email);
+  set("lv-mobile",     d.mobile);
+  set("lv-aadhaar",    d.aadhaar);
+  set("lv-pan",        d.pan);
+  set("lv-loantype",   d.loanType);
+  set("lv-loanamount", fmtCurr(d.loanAmount));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DOCUMENT CARDS
+// ══════════════════════════════════════════════════════════════
+var DOCS = [
+  { label:"PAN Card",          labelKey:"doc_pan",       icon:"fa-id-card",      storageKey:"kyc_doc_pan",       nameKey:"kyc_doc_pan_name"       },
+  { label:"Aadhaar Card",      labelKey:"doc_aadhaar",   icon:"fa-address-card", storageKey:"kyc_doc_aadhaar",   nameKey:"kyc_doc_aadhaar_name"   },
+  { label:"Property Document", labelKey:"doc_property",  icon:"fa-house",        storageKey:"kyc_doc_property",  nameKey:"kyc_doc_property_name"  },
+  { label:"Income Proof",      labelKey:"doc_income",    icon:"fa-file-invoice", storageKey:"kyc_doc_income",    nameKey:"kyc_doc_income_name"    },
+  { label:"Signature",         labelKey:"doc_signature", icon:"fa-pen-nib",      storageKey:"kyc_doc_signature", nameKey:"kyc_doc_signature_name" }
+];
+
+function buildDocCards() {
+  var grid    = document.getElementById("doc-grid");
+  var summary = document.getElementById("docs-summary");
+  var uploaded = 0;
+  var html = "";
+
+  DOCS.forEach(function(doc, idx) {
+    var dataUrl  = localStorage.getItem(doc.storageKey);
+    var fileName = localStorage.getItem(doc.nameKey) || "—";
+    var hasFile  = !!dataUrl;
+    if (hasFile) uploaded++;
+
+    var isImage = dataUrl && dataUrl.startsWith("data:image");
+
+    var thumbHtml = "";
+    if (hasFile && isImage) {
+      thumbHtml = '<div class="mt-3 rounded overflow-hidden border max-h-28 flex items-center justify-center bg-gray-50">'
+                + '<img src="' + dataUrl + '" alt="' + doc.label + '" class="max-h-28 object-contain w-full"></div>';
+    } else if (hasFile && !isImage) {
+      thumbHtml = '<div class="mt-3 flex items-center gap-2 text-blue-700 text-sm">'
+                + '<i class="fa fa-file-pdf text-red-500 text-2xl"></i>'
+                + '<span class="font-mono truncate">' + fileName + '</span></div>';
+    }
+
+    var badge = hasFile
+      ? '<span class="badge-uploaded text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1"><i class="fa fa-check"></i> Uploaded</span>'
+      : '<span class="badge-missing text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1"><i class="fa fa-exclamation-triangle"></i> Not Uploaded</span>';
+
+    var viewBtn = hasFile
+      ? '<button onclick="viewDoc(' + idx + ')" class="text-blue-700 font-semibold hover:underline flex items-center gap-1"><i class="fa fa-eye"></i> View</button>'
+      : '<button disabled class="text-gray-300 font-semibold cursor-not-allowed flex items-center gap-1"><i class="fa fa-eye-slash"></i> View</button>';
+
+    html += '<article class="doc-card border rounded-xl p-5 flex flex-col gap-2">'
+          + '<div class="flex justify-between items-start">'
+          + '<div class="flex items-center gap-3">'
+          + '<i class="fa ' + doc.icon + ' text-blue-600 text-2xl"></i>'
+          + '<div><p class="font-semibold" data-i18n="' + doc.labelKey + '">' + doc.label + '</p>'
+          + '<p class="text-gray-400 text-sm font-mono truncate max-w-xs">' + (hasFile ? fileName : "—") + '</p></div>'
+          + '</div>'
+          + '<div class="flex flex-col items-end gap-2">' + badge + viewBtn + '</div>'
+          + '</div>' + thumbHtml + '</article>';
+  });
+
+  grid.innerHTML = html;
+  summary.textContent = uploaded + " / " + DOCS.length + " documents uploaded";
+  applyLang(localStorage.getItem('abcbank_lang') || 'en');
+}
+
+function viewDoc(idx) {
+  var doc      = DOCS[idx];
+  var dataUrl  = localStorage.getItem(doc.storageKey);
+  var fileName = localStorage.getItem(doc.nameKey) || "document";
+
+  document.getElementById("doc-modal-title").textContent    = doc.label;
+  document.getElementById("doc-modal-filename").textContent = fileName;
+
+  var imgEl       = document.getElementById("doc-modal-img");
+  var placeholder = document.getElementById("doc-modal-placeholder");
+  var downloadEl  = document.getElementById("doc-modal-download");
+
+  if (dataUrl) {
+    if (dataUrl.startsWith("data:image")) {
+      imgEl.src = dataUrl;
+      imgEl.classList.remove("hidden");
+      placeholder.classList.add("hidden");
+    } else {
+      imgEl.classList.add("hidden");
+      placeholder.textContent = "Preview not available. Use the Download button below.";
+      placeholder.classList.remove("hidden");
+    }
+    downloadEl.href     = dataUrl;
+    downloadEl.download = fileName;
+    downloadEl.classList.remove("hidden");
+  } else {
+    imgEl.classList.add("hidden");
+    placeholder.textContent = "No document uploaded.";
+    placeholder.classList.remove("hidden");
+    downloadEl.classList.add("hidden");
+  }
+
+  document.getElementById("doc-modal").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeDocModal() {
+  document.getElementById("doc-modal").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("doc-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeDocModal();
+});
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeDocModal();
+});
+
+// ══════════════════════════════════════════════════════════════
+//  NAVBAR
+// ══════════════════════════════════════════════════════════════
 var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
 document.getElementById("username").innerText       = user.name;
 document.getElementById("userid").innerText         = "ID: " + user.id;
 document.getElementById("profileName").innerText    = user.name;
 document.getElementById("profileAccount").innerText = "Account: " + user.account;
 
-// ── Logout ──
 function logoutUser() {
   localStorage.removeItem("bankUser");
-  alert("Logged out successfully");
+  localStorage.removeItem("abcBank_currentUser");
   window.location.href = "index.html";
 }
 
-// ── Wire navbar lang select to shared.js applyLang ──
-var navSel = document.getElementById("nav-lang-select");
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
+// ══════════════════════════════════════════════════════════════
+//  DECISION BANNER — shows current status, never locks buttons
+// ══════════════════════════════════════════════════════════════
 
+// FIX: updateDecisionBanner() only updates the visual — buttons stay enabled always.
+// Called on page load (to reflect any stored decision) and after every new decision.
+function updateDecisionBanner(type) {
+  var banner = document.getElementById("decision-banner");
+
+  if (!type) {
+    // No decision yet — hide the banner, highlight both buttons equally
+    banner.classList.add("hidden");
+    document.getElementById("btn-approve").classList.remove("ring-4", "ring-green-400");
+    document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
+    return;
+  }
+
+  banner.classList.remove("hidden");
+
+  if (type === "approved") {
+    banner.className = "mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold bg-green-50 border border-green-300 text-green-800";
+    banner.innerHTML = '<i class="fa fa-check-circle text-green-600 text-2xl"></i>'
+      + '<span>Current decision: <strong>Approved</strong>. '
+      + '<a href="loan-approval.html" class="underline font-semibold hover:text-green-700 ml-1">Proceed to Loan Approval →</a>'
+      + ' &nbsp;|&nbsp; You can still change this decision below.</span>';
+    // Highlight the active button with a ring
+    document.getElementById("btn-approve").classList.add("ring-4", "ring-green-400");
+    document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
+  } else {
+    banner.className = "mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold bg-red-50 border border-red-300 text-red-800";
+    banner.innerHTML = '<i class="fa fa-times-circle text-red-600 text-2xl"></i>'
+      + '<span>Current decision: <strong>Rejected</strong>. You can still change this decision below.</span>';
+    document.getElementById("btn-reject").classList.add("ring-4", "ring-red-400");
+    document.getElementById("btn-approve").classList.remove("ring-4", "ring-green-400");
+  }
+}
+
+// ── On page load: show whatever decision was last saved (if any) ──
+updateDecisionBanner(localStorage.getItem("loan_legal_decision"));
+
+// ══════════════════════════════════════════════════════════════
+//  LEGAL DECISION — fully re-callable, no locking
+// ══════════════════════════════════════════════════════════════
+function legalDecision(action) {
+  if (action === 'approve') {
+    // Save decision immediately so it persists even if user closes swal
+    localStorage.setItem("loan_legal_decision", "approved");
+    updateDecisionBanner("approved");
+    swal({
+      title: "Documents Approved",
+      text:  "All documents have been legally verified and approved. You can proceed to Loan Approval.",
+      icon:  "success",
+      button: "Continue to Loan Approval"
+    }).then(function() {
+      window.location.href = "loan-approval.html";
+    });
+  } else {
+    localStorage.setItem("loan_legal_decision", "rejected");
+    updateDecisionBanner("rejected");
+    swal({
+      title: "Documents Rejected",
+      text:  "The documents have been marked as rejected. You can approve them again if needed.",
+      icon:  "error",
+      button: "OK"
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  LANGUAGE
+// ══════════════════════════════════════════════════════════════
+var navSel    = document.getElementById("nav-lang-select");
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+navSel.value  = savedLang;
 navSel.addEventListener('change', function() {
+  localStorage.setItem('abcbank_lang', this.value);
   applyLang(this.value);
   var sharedSel = document.getElementById('lang-select');
   if (sharedSel) sharedSel.value = this.value;
 });
-
 applyLang(savedLang);
+
+// ── Init ──
+populateSummary();
+buildDocCards();
 
 </script>
 

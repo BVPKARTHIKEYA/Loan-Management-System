@@ -1,35 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIL Verification</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CIBIL Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="logic.js"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
-
-<style>
-  /* Prevent shared.js from injecting its own fixed switcher */
-  #lang-switcher { display: none !important; }
-</style>
-
+    <style>
+        #lang-switcher { display: none !important; }
+        #dob-display {
+            background: #f0f4ff;
+            border: 1px solid #c7d2fe;
+            color: #1e40af;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 1.125rem;
+            width: 100%;
+        }
+        #tenure-display {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #166534;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 1.125rem;
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 
+<!-- NAVBAR -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
         <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
       </a>
 
       <a href="home.html"
-        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
         <i class="fa fa-arrow-left"></i>
         <span data-i18n="account_back_dashboard">Back to Dashboard</span>
       </a>
@@ -41,7 +62,7 @@
             <i class="fa fa-globe"></i> Lang:
           </label>
           <select id="nav-lang-select"
-            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
             <option value="ta" style="background:#1e3a5f">தமிழ்</option>
@@ -55,21 +76,21 @@
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
             <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">User</span>
-              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+              <span id="username" class="text-base font-bold">Loading...</span>
+              <span id="userid" class="text-xs opacity-70">ID: —</span>
             </div>
             <i class="fa fa-chevron-down text-sm ml-1"></i>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">User</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+              <p class="font-semibold text-lg" id="profileName">Loading...</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
             </div>
             <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
               <i class="fa fa-home mr-2"></i>
               <span data-i18n="account_back_dashboard">Back to Dashboard</span>
             </a>
-            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
               <i class="fa fa-sign-out-alt mr-2"></i>
               <span data-i18n="nav_logout">Logout</span>
             </a>
@@ -81,12 +102,10 @@
   </nav>
 </header>
 
-
 <div class="max-w-6xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold mt-1" data-i18n="cibil_title">CIBIL Report Verification</h1>
   <p class="text-gray-600 mt-2 text-lg" data-i18n="cibil_description">Submit your credit information to determine loan eligibility.</p>
 </div>
-
 
 <main class="max-w-6xl mx-auto p-6">
 
@@ -110,7 +129,6 @@
     </article>
   </section>
 
-
   <section class="grid md:grid-cols-3 gap-8">
 
     <article class="md:col-span-2 bg-white shadow rounded-xl p-8">
@@ -121,16 +139,24 @@
 
       <form class="space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
+
+          <!-- DOB: auto-filled from account (read-only display) -->
           <div>
             <label class="text-lg font-semibold" data-i18n="cibil_dob">Date of Birth</label>
-            <input id="dob" type="date" class="w-full border rounded-md p-3 mt-2 text-lg">
+            <input type="hidden" id="dob">
+            <div id="dob-display" class="flex items-center gap-2">
+              <i class="fa fa-calendar-alt text-blue-400"></i>
+              <span id="dob-display-text">Loading from account…</span>
+            </div>
           </div>
+
           <div>
             <label class="text-lg font-semibold" data-i18n="cibil_score">Your Score</label>
             <input id="score" type="number" min="300" max="900" placeholder="750"
-              oninput="updateMeter(this.value)"
-              class="w-full border rounded-md p-3 mt-2 text-lg">
+                   oninput="updateMeter(this.value)"
+                   class="w-full border rounded-md p-3 mt-2 text-lg">
           </div>
+
           <div>
             <label class="text-lg font-semibold" data-i18n="cibil_employment">Employment Status</label>
             <select id="employment" class="w-full border rounded-md p-3 mt-2 text-lg">
@@ -140,10 +166,11 @@
               <option data-i18n="cibil_employment_business">Business</option>
             </select>
           </div>
+
           <div>
             <label class="text-lg font-semibold" data-i18n="cibil_income">Monthly Income</label>
             <input id="income" type="number" placeholder="75000"
-              class="w-full border rounded-md p-3 mt-2 text-lg">
+                   class="w-full border rounded-md p-3 mt-2 text-lg">
           </div>
         </div>
 
@@ -151,9 +178,9 @@
           <label class="text-lg font-semibold" data-i18n="cibil_loan_type">Loan Type</label>
           <select id="loanType" class="w-full border rounded-md p-3 mt-2 text-lg">
             <option value="" data-i18n="cibil_loan_select">Select Loan</option>
-            <option value="home" data-i18n="cibil_home_loan">Home Loan</option>
-            <option value="vehicle" data-i18n="cibil_vehicle_loan">Vehicle Loan</option>
-            <option value="personal" data-i18n="cibil_personal_loan">Personal Loan</option>
+            <option value="home"      data-i18n="cibil_home_loan">Home Loan</option>
+            <option value="vehicle"   data-i18n="cibil_vehicle_loan">Vehicle Loan</option>
+            <option value="personal"  data-i18n="cibil_personal_loan">Personal Loan</option>
             <option value="education" data-i18n="cibil_education_loan">Education Loan</option>
           </select>
         </div>
@@ -161,28 +188,31 @@
         <div>
           <label class="text-lg font-semibold" data-i18n="cibil_loan_amount">Loan Amount</label>
           <input id="loanAmount" type="number" placeholder="2500000"
-            class="w-full border rounded-md p-3 mt-2 text-lg">
+                 class="w-full border rounded-md p-3 mt-2 text-lg">
         </div>
 
         <div>
           <label class="text-lg font-semibold" data-i18n="cibil_upload_report">Upload CIBIL Report</label>
-          <input id="cibilFile" type="file" class="w-full border p-3 rounded-md mt-2 text-lg">
+          <input id="cibilFile" type="file" accept="image/*,application/pdf" class="w-full border p-3 rounded-md mt-2 text-lg">
         </div>
 
+        <!-- Tenure display (auto-calculated from DOB) -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-5">
           <h3 class="font-semibold text-blue-700 text-lg" data-i18n="cibil_tenure_title">Maximum Loan Tenure</h3>
-          <p class="text-gray-600 mt-1" data-i18n="cibil_tenure_desc">Loan tenure will be calculated as:</p>
-          <p class="text-xl font-bold mt-2" data-i18n="cibil_tenure_formula">60 − Your Current Age</p>
+          <p class="text-gray-600 mt-1" data-i18n="cibil_tenure_desc">Calculated as: 60 − Your Current Age</p>
+          <div id="tenure-display" class="flex items-center gap-2 mt-2">
+            <i class="fa fa-clock text-green-500"></i>
+            <span id="tenure-display-text">Calculating…</span>
+          </div>
         </div>
 
         <button type="button" onclick="validateCibil()"
-          class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold">
+                class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
           <i class="fa fa-search mr-2"></i>
           <span data-i18n="cibil_verify_btn">Verify CIBIL Score</span>
         </button>
       </form>
     </article>
-
 
     <aside class="bg-white shadow rounded-xl p-6">
       <h2 class="font-bold text-lg mb-4">
@@ -192,8 +222,8 @@
       <div class="relative mb-1">
         <div class="h-4 rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500"></div>
         <div id="meter-needle"
-          class="absolute -top-1 w-3 h-6 bg-gray-800 rounded-full shadow"
-          style="left:50%; transform:translateX(-50%); transition: left 0.5s ease;"></div>
+             class="absolute -top-1 w-3 h-6 bg-gray-800 rounded-full shadow"
+             style="left:50%; transform:translateX(-50%); transition: left 0.5s ease;"></div>
       </div>
       <div class="flex justify-between text-xs text-gray-400 font-semibold mb-4">
         <span>300</span><span>600</span><span>900</span>
@@ -223,122 +253,200 @@
   </section>
 </main>
 
-
 <footer class="text-center text-gray-500 text-sm py-6">
   <span data-i18n="cibil_footer">© 2026 ABC Bank. All rights reserved.</span>
 </footer>
 
-
 <script>
-// Load user
-var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
-document.getElementById("username").innerText       = user.name;
-document.getElementById("userid").innerText         = "ID: " + user.id;
-document.getElementById("profileName").innerText    = user.name;
-document.getElementById("profileAccount").innerText = "Account: " + user.account;
-
-function logoutUser() {
-  localStorage.removeItem("bankUser");
-  alert("Logged out successfully");
-  window.location.href = "index.html";
+// ── Page protection ────────────────────────────────────────────────
+if (!abcBank?.isLoggedIn?.()) {
+    window.location.replace("login.html");
 }
 
-var navSel = document.getElementById("nav-lang-select");
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
+// ── Load real current user (same as home.html / bank-account.html) ──
+const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
+const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
-navSel.addEventListener('change', function() {
-  applyLang(this.value);
-  var sharedSel = document.getElementById('lang-select');
-  if (sharedSel) sharedSel.value = this.value;
-});
+document.getElementById("username").textContent     = fullName;
+document.getElementById("profileName").textContent  = fullName;
 
-applyLang(savedLang);
+// Account & ID display
+if (currentUser.account?.accountNumber) {
+    const accNum = currentUser.account.accountNumber;
+    document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
+    document.getElementById("userid").textContent = `ID: ${accNum.slice(-6) || "—"}`;
+} else {
+    document.getElementById("profileAccount").textContent = "Account: Not Opened";
+    document.getElementById("userid").textContent = "ID: —";
+}
 
+// ── Language setup ─────────────────────────────────────────────────
+const navSel = document.getElementById("nav-lang-select");
+const savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (navSel) {
+    navSel.value = savedLang;
+    navSel.addEventListener('change', function() {
+        applyLang(this.value);
+    });
+    applyLang(savedLang);
+}
+
+// ── DOB & Tenure from account (read-only) ──────────────────────────
+let accountDob = null;
+let accountTenure = null;
+
+(function loadAccountInfo() {
+    // Primary: from current session
+    if (currentUser.dob) {
+        accountDob = currentUser.dob;
+    }
+    // Fallback: from full user record
+    else if (currentUser.email) {
+        try {
+            const users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
+            const found = users.find(u => u.email === currentUser.email);
+            if (found?.dob) accountDob = found.dob;
+        } catch(e) {}
+    }
+
+    if (accountDob) {
+        const birth = new Date(accountDob);
+        const today = new Date();
+        const age = today.getFullYear() - birth.getFullYear() -
+                    (today.getMonth() < birth.getMonth() || 
+                     (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate()) ? 1 : 0);
+        
+        accountTenure = Math.max(0, 60 - age);
+
+        // Display DOB
+        const dobParts = accountDob.split("-");
+        const formattedDob = dobParts.length === 3 ? `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}` : accountDob;
+        document.getElementById("dob-display-text").textContent = `${formattedDob} (Age: ${age} yrs)`;
+
+        // Display tenure
+        document.getElementById("tenure-display-text").textContent = `${accountTenure} Years (60 − ${age})`;
+
+        // Store for later pages
+        localStorage.setItem("loanTenure", accountTenure);
+    } else {
+        document.getElementById("dob-display-text").textContent = "Not found — update your profile";
+        document.getElementById("tenure-display-text").textContent = "Unable to calculate";
+    }
+})();
+
+// ── Score Meter ─────────────────────────────────────────────────────
 function updateMeter(val) {
-  val = parseInt(val);
-  var needle  = document.getElementById('meter-needle');
-  var display = document.getElementById('meterScore');
-  var label   = document.getElementById('meterLabel');
-  var lang    = localStorage.getItem('abcbank_lang') || 'en';
-  var d       = (typeof I18N !== 'undefined' && I18N[lang]) ? I18N[lang] : (I18N ? I18N['en'] : {});
+    val = parseInt(val);
+    const needle  = document.getElementById('meter-needle');
+    const display = document.getElementById('meterScore');
+    const label   = document.getElementById('meterLabel');
 
-  if (isNaN(val) || val < 300 || val > 900) {
-    display.textContent   = '—';
-    display.className     = 'text-4xl font-bold text-gray-400';
-    needle.style.left     = '50%';
-    label.textContent     = d.cibil_meter_placeholder || 'Enter your score';
-    return;
-  }
+    if (isNaN(val) || val < 300 || val > 900) {
+        display.textContent = '—';
+        display.className   = 'text-4xl font-bold text-gray-400';
+        needle.style.left   = '50%';
+        label.textContent   = 'Enter your score';
+        return;
+    }
 
-  var pct = ((val - 300) / 600) * 100;
-  needle.style.left = pct + '%';
-  display.textContent = val;
+    needle.style.left   = ((val - 300) / 600 * 100) + '%';
+    display.textContent = val;
 
-  if (val >= 750) {
-    display.className = 'text-4xl font-bold text-green-600';
-    label.textContent = d.cibil_score_status_good || 'Approved';
-  } else if (val >= 650) {
-    display.className = 'text-4xl font-bold text-yellow-600';
-    label.textContent = d.cibil_score_status_avg  || 'Under Review';
-  } else {
-    display.className = 'text-4xl font-bold text-red-600';
-    label.textContent = d.cibil_score_status_low  || 'Rejected';
-  }
+    if (val >= 750) {
+        display.className = 'text-4xl font-bold text-green-600';
+        label.textContent = 'Approved';
+    } else if (val >= 650) {
+        display.className = 'text-4xl font-bold text-yellow-600';
+        label.textContent = 'Under Review';
+    } else {
+        display.className = 'text-4xl font-bold text-red-600';
+        label.textContent = 'Rejected';
+    }
 }
 
+// ── Form validation & save ──────────────────────────────────────────
 function validateCibil() {
-  var lang = localStorage.getItem('abcbank_lang') || 'en';
-  var d    = (typeof I18N !== 'undefined' && I18N[lang]) ? I18N[lang] : (I18N ? I18N['en'] : {});
+    const score      = parseInt(document.getElementById("score").value);
+    const employment = document.getElementById("employment").value;
+    const income     = document.getElementById("income").value.trim();
+    const loanType   = document.getElementById("loanType").value;
+    const loanAmount = document.getElementById("loanAmount").value.trim();
+    const hasFile    = document.getElementById("cibilFile").files.length > 0;
 
-  var dob        = document.getElementById("dob").value;
-  var score      = parseInt(document.getElementById("score").value);
-  var employment = document.getElementById("employment").value;
-  var income     = document.getElementById("income").value.trim();
-  var loanType   = document.getElementById("loanType").value;
-  var loanAmount = document.getElementById("loanAmount").value.trim();
-  var cibilFile  = document.getElementById("cibilFile").files.length;
+    if (!accountDob) {
+        swal("Error", "Date of Birth not found in your account. Please update your profile first.", "error");
+        return;
+    }
+    if (isNaN(score) || score < 300 || score > 900) {
+        swal("Error", "Enter a valid CIBIL score (300–900).", "error");
+        return;
+    }
+    if (!employment) {
+        swal("Error", "Select employment status.", "error");
+        return;
+    }
+    if (!income) {
+        swal("Error", "Enter monthly income.", "error");
+        return;
+    }
+    if (!loanType) {
+        swal("Error", "Select loan type.", "error");
+        return;
+    }
+    if (!loanAmount) {
+        swal("Error", "Enter loan amount.", "error");
+        return;
+    }
+    if (!hasFile) {
+        swal("Error", "Upload your CIBIL report.", "warning");
+        return;
+    }
 
-  if (!dob) { swal("Error", "Please enter date of birth.", "error"); return; }
-  if (!score || score < 300 || score > 900) { swal("Error", "Enter a valid score (300–900).", "error"); return; }
-  if (!employment) { swal("Error", "Select employment status.", "error"); return; }
-  if (!income) { swal("Error", "Enter monthly income.", "error"); return; }
-  if (!loanType) { swal("Error", "Select loan type.", "error"); return; }
-  if (!loanAmount) { swal("Error", "Enter loan amount.", "error"); return; }
-  if (cibilFile === 0) { swal("Error", "Upload your CIBIL report.", "warning"); return; }
+    // Save data
+    const cibilData = {
+        dob: accountDob,
+        score,
+        employment,
+        monthlyIncome: parseInt(income),
+        annualIncome: parseInt(income) * 12,
+        loanType,
+        loanAmount: parseInt(loanAmount),
+        tenure: accountTenure || 20,
+        submittedAt: new Date().toISOString()
+    };
 
-  if (score >= 750) {
-    // Save info for application page
+    localStorage.setItem("cibil_data", JSON.stringify(cibilData));
     localStorage.setItem("loan_score", score);
     localStorage.setItem("loan_type_selected", loanType);
     localStorage.setItem("loan_amount_requested", loanAmount);
+    localStorage.setItem("loanTenure", accountTenure || 20);
+
+    // Show result
+    let title, text, icon;
+    if (score >= 750) {
+        title = "Approved";
+        text  = "Excellent score! You are eligible to apply for a loan.";
+        icon  = "success";
+    } else if (score >= 650) {
+        title = "Under Review";
+        text  = "Your score is average. A bank representative will contact you soon.";
+        icon  = "warning";
+    } else {
+        title = "Rejected";
+        text  = "Poor score. We cannot process your loan application at this time.";
+        icon  = "error";
+    }
 
     swal({
-      title: d.cibil_score_status_good || "Approved",
-      text: d.cibil_score_desc_good || "Excellent score! You are eligible to apply for a loan.",
-      icon: "success",
-      buttons: {
-        cancel: "Close",
-        confirm: "Apply for Loan"
-      }
-    }).then((value) => {
-      if (value) {
-        window.location.href = "loan-application.html";
-      }
+        title,
+        text,
+        icon,
+        button: score >= 750 ? "Apply for Loan" : "Close"
+    }).then(value => {
+        if (value && score >= 750) {
+            window.location.href = "loan-application.html";
+        }
     });
-  } else if (score >= 650) {
-    swal({
-      title: d.cibil_score_status_avg || "Under Review",
-      text: d.cibil_score_desc_avg || "Your score is average. A bank representative will contact you soon.",
-      icon: "warning"
-    });
-  } else {
-    swal({
-      title: d.cibil_score_status_low || "Rejected",
-      text: d.cibil_score_desc_low || "Poor score. We cannot process your loan application at this time.",
-      icon: "error"
-    });
-  }
 }
 </script>
 

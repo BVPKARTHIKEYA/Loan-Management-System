@@ -1,8 +1,10 @@
 // logic.js — handles user registration, login, and account details (localStorage demo)
-
+// Guard: prevent re-declaration errors if this script is loaded more than once
+if (!window.abcBank) {
+ 
 const STORAGE_KEY_USERS = "abcBank_users";
-const CURRENT_USER_KEY = "abcBank_currentUser";
-
+const CURRENT_USER_KEY  = "abcBank_currentUser";
+ 
 // ─── Helpers ──────────────────────────────────────────────────────────
 function getAllUsers() {
   const data = localStorage.getItem(STORAGE_KEY_USERS);
@@ -12,52 +14,83 @@ function saveAllUsers(users) {
   localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
 }
 function findUserByEmail(email) {
-  const users = getAllUsers();
-  return users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  return getAllUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
 }
-
+ 
+// ─── Age & Loan Tenure ────────────────────────────────────────────────
+function getCeilAge(dob) {
+  if (!dob) return null;
+  const birth = new Date(dob);
+  if (isNaN(birth)) return null;
+  const exactAge = (new Date() - birth) / (1000 * 60 * 60 * 24 * 365.25);
+  return Math.ceil(exactAge);
+}
+ 
+function getLoanTenure(dob) {
+  const age = getCeilAge(dob);
+  if (age === null) return null;
+  return Math.max(0, 60 - age);
+}
+ 
+// ─── FIX: Central helper — keeps bankUser in sync with the latest user data.
+//     Called after every login and every account update so all pages
+//     that read localStorage.getItem("bankUser") always get a correct value.
+function syncBankUser(u, accountObj) {
+  const acct = accountObj || (u.account && u.account.accountNumber ? u.account : null);
+  localStorage.setItem("bankUser", JSON.stringify({
+    name    : (u.firstName + " " + u.lastName).trim(),
+    id      : u.email,
+    account : (acct && acct.accountNumber) || "NIL"
+  }));
+}
+ 
 // ─── Register ─────────────────────────────────────────────────────────
 function registerUser(userData) {
   const users = getAllUsers();
   if (findUserByEmail(userData.email)) {
     return { success: false, message: "Email already registered." };
   }
-
   const newUser = {
-    firstName: userData.fname.trim(),
-    lastName: userData.lname.trim(),
-    email: userData.email.trim(),
-    mobile: userData.mobile.trim(),
-    dob: userData.dob,
-    password: userData.password,
-    createdAt: new Date().toISOString(),
-    account: null,
+    firstName : userData.fname.trim(),
+    lastName  : userData.lname.trim(),
+    email     : userData.email.trim(),
+    mobile    : userData.mobile.trim(),
+    dob       : userData.dob,
+    password  : userData.password,
+    createdAt : new Date().toISOString(),
+    account   : null,
   };
-
   users.push(newUser);
   saveAllUsers(users);
   return { success: true, user: newUser };
 }
-
+ 
 // ─── Login / Session ─────────────────────────────────────────────────
 function loginUser(email, password) {
-  const user = findUserByEmail(email);
-  if (!user) return { success: false, message: "No account with this email" };
-  if (user.password !== password)
-    return { success: false, message: "Incorrect password" };
-
-  localStorage.setItem(
-    CURRENT_USER_KEY,
-    JSON.stringify({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      account: user.account || null,
-      loggedInAt: new Date().toISOString(),
-    })
-  );
-  return { success: true, user };
+  const u = findUserByEmail(email);
+  if (!u)                      return { success: false, message: "No account with this email" };
+  if (u.password !== password) return { success: false, message: "Incorrect password" };
+ 
+  const sessionData = {
+    email      : u.email,
+    firstName  : u.firstName,
+    lastName   : u.lastName,
+    mobile     : u.mobile,
+    dob        : u.dob,
+    account    : u.account || null,
+    loggedInAt : new Date().toISOString(),
+  };
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionData));
+ 
+  // FIX: write bankUser so every page navbar displays the correct name/account
+  syncBankUser(u, u.account);
+ 
+  const tenure = getLoanTenure(u.dob);
+  localStorage.setItem("loanTenure", tenure !== null ? tenure : 20);
+ 
+  return { success: true, user: u };
 }
+ 
 function getCurrentUser() {
   const d = localStorage.getItem(CURRENT_USER_KEY);
   return d ? JSON.parse(d) : null;
@@ -67,53 +100,74 @@ function isLoggedIn() {
 }
 function logout() {
   localStorage.removeItem(CURRENT_USER_KEY);
+  localStorage.removeItem("bankUser");
   window.location.href = "login.html";
 }
-
+ 
 // ─── Account Handling ────────────────────────────────────────────────
 function generateDummyAccountNumber() {
   return "ACC" + Math.floor(1000000000 + Math.random() * 9000000000);
 }
-
+ 
 function updateUserAccountDetails(details) {
-  const users = getAllUsers();
+  const users       = getAllUsers();
   const currentUser = getCurrentUser();
-
-  if (!currentUser)
-    return { success: false, message: "Not logged in or session expired" };
-
-  const i = users.findIndex((u) => u.email === currentUser.email);
-  if (i === -1) return { success: false, message: "User not found" };
-
+  if (!currentUser) return { success: false, message: "Not logged in or session expired" };
+ 
+  const i = users.findIndex(u => u.email === currentUser.email);
+  if (i === -1)     return { success: false, message: "User not found" };
+ 
   const updatedAccount = {
     ...users[i].account,
     ...details,
-    accountNumber:
-      details.accountNumber ||
-      users[i].account?.accountNumber ||
-      generateDummyAccountNumber(),
-    openedAt: new Date().toISOString(),
-    status: details.status || "Active",
+    accountNumber : details.accountNumber
+                    || users[i].account?.accountNumber
+                    || generateDummyAccountNumber(),
+    openedAt : new Date().toISOString(),
+    status   : details.status || "Active",
   };
-
+ 
   users[i].account = updatedAccount;
   saveAllUsers(users);
-
-  // Update session data
-  localStorage.setItem(
-    CURRENT_USER_KEY,
-    JSON.stringify({ ...users[i], account: updatedAccount })
-  );
-
+ 
+  // Always write a FRESH complete session so home.html reads latest data
+  const updatedSession = {
+    email      : users[i].email,
+    firstName  : users[i].firstName,
+    lastName   : users[i].lastName,
+    mobile     : users[i].mobile,
+    dob        : users[i].dob,
+    account    : updatedAccount,
+    loggedInAt : currentUser.loggedInAt,
+  };
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedSession));
+ 
+  // FIX: keep bankUser in sync so navbar shows the new account number
+  syncBankUser(users[i], updatedAccount);
+ 
   return { success: true, message: "Account updated", account: updatedAccount };
 }
-
+ 
+/**
+ * Always reads from the USERS store (source of truth), not just the session.
+ * This ensures home.html always gets the latest account data even if
+ * the session was written by a different tab or page.
+ */
 function getUserAccount() {
-  const user = getCurrentUser();
-  return user?.account || null;
+  const cu = getCurrentUser();
+  if (!cu) return null;
+ 
+  // Primary: read from persistent users store (always up-to-date)
+  const storedUser = findUserByEmail(cu.email);
+  if (storedUser && storedUser.account && storedUser.account.accountNumber) {
+    return storedUser.account;
+  }
+ 
+  // Fallback: read from session
+  return cu.account || null;
 }
-
-// Export
+ 
+// ─── Public API ───────────────────────────────────────────────────────
 window.abcBank = {
   registerUser,
   loginUser,
@@ -122,4 +176,8 @@ window.abcBank = {
   logout,
   updateUserAccountDetails,
   getUserAccount,
+  getCeilAge,
+  getLoanTenure,
 };
+ 
+} // end guard: if (!window.abcBank)

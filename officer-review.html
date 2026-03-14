@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Officer Review</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Officer Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="logic.js"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
-
-<style>
-  #lang-switcher { display: none !important; }
-</style>
-
+    <style>
+        #lang-switcher { display: none !important; }
+    </style>
 </head>
 <body class="bg-gray-100">
 
@@ -24,24 +23,23 @@
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
       <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
         <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
       </a>
 
       <a href="home.html"
-        class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
         <i class="fa fa-arrow-left"></i>
         <span data-i18n="account_back_dashboard">Back to Dashboard</span>
       </a>
 
       <div class="flex items-center gap-4 flex-shrink-0">
-
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
           <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
             <i class="fa fa-globe"></i> Lang:
           </label>
           <select id="nav-lang-select"
-            style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
             <option value="en" style="background:#1e3a5f">English</option>
             <option value="te" style="background:#1e3a5f">తెలుగు</option>
             <option value="ta" style="background:#1e3a5f">தமிழ்</option>
@@ -55,32 +53,30 @@
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
             <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">User</span>
-              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+              <span id="username" class="text-base font-bold">Loading...</span>
+              <span id="userid" class="text-xs opacity-70">ID: —</span>
             </div>
             <i class="fa fa-chevron-down text-sm ml-1"></i>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">User</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+              <p class="font-semibold text-lg" id="profileName">Loading...</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
             </div>
             <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
               <i class="fa fa-home mr-2"></i>
               <span data-i18n="account_back_dashboard">Back to Dashboard</span>
             </a>
-            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
               <i class="fa fa-sign-out-alt mr-2"></i>
               <span data-i18n="nav_logout">Logout</span>
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </nav>
 </header>
-
 
 <!-- PAGE HEADER -->
 <div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
@@ -88,14 +84,13 @@
   <p class="text-gray-600 text-lg mt-1" data-i18n="officer_page_desc">Review applicant details and finalize loan approval.</p>
 </div>
 
-
 <!-- MAIN CONTENT -->
 <main class="max-w-7xl mx-auto p-6">
 
   <!-- ASSIGNED OFFICER -->
   <section class="bg-yellow-50 border border-yellow-300 rounded-xl p-6 mb-6 flex items-center gap-6">
     <figure class="flex items-center gap-6">
-      <img src="vimg.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-yellow-400">
+      <img src="vimg.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-yellow-400" alt="Officer">
       <figcaption>
         <h2 class="text-xl font-bold text-yellow-800" data-i18n="officer_assigned_title">Assigned Loan Officer</h2>
         <p class="text-2xl font-semibold mt-2">
@@ -106,22 +101,20 @@
     </figure>
   </section>
 
-
   <!-- PERSONAL DETAILS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="personal_info_title">Personal Information</h2>
     </header>
     <div class="grid md:grid-cols-3 gap-4 text-lg">
-      <article><p><b data-i18n="personal_name">Name:</b> John Doe</p></article>
-      <article><p><b data-i18n="personal_dob">Date of Birth:</b> 12-05-1995</p></article>
-      <article><p><b data-i18n="personal_email">Email:</b> john@example.com</p></article>
-      <article><p><b data-i18n="personal_mobile">Mobile:</b> 9876543210</p></article>
-      <article><p><b data-i18n="personal_aadhaar">Aadhaar:</b> 1234 5678 9123</p></article>
-      <article><p><b data-i18n="personal_pan">PAN:</b> ABCPD1234X</p></article>
+      <article><p><b data-i18n="personal_name">Name:</b> <span id="disp-name">—</span></p></article>
+      <article><p><b data-i18n="personal_dob">Date of Birth:</b> <span id="disp-dob">—</span></p></article>
+      <article><p><b data-i18n="personal_email">Email:</b> <span id="disp-email">—</span></p></article>
+      <article><p><b data-i18n="personal_mobile">Mobile:</b> <span id="disp-mobile">—</span></p></article>
+      <article><p><b data-i18n="personal_aadhaar">Aadhaar:</b> <span id="disp-aadhaar">—</span></p></article>
+      <article><p><b data-i18n="personal_pan">PAN:</b> <span id="disp-pan">—</span></p></article>
     </div>
   </section>
-
 
   <!-- PARENT DETAILS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
@@ -129,13 +122,10 @@
       <h2 class="text-2xl font-bold mb-4" data-i18n="parent_details_title">Parent Details</h2>
     </header>
     <div class="grid md:grid-cols-2 gap-4 text-lg">
-      <article><p><b data-i18n="father_name">Father Name:</b> Rajesh Kumar</p></article>
-      <article><p><b data-i18n="father_occupation">Father Occupation:</b> Business</p></article>
-      <article><p><b data-i18n="mother_name">Mother Name:</b> Sunita Kumar</p></article>
-      <article><p><b data-i18n="mother_occupation">Mother Occupation:</b> Homemaker</p></article>
+      <article><p><b data-i18n="father_name">Father Name:</b> <span id="disp-father-name">—</span></p></article>
+      <article><p><b data-i18n="mother_name">Mother Name:</b> <span id="disp-mother-name">—</span></p></article>
     </div>
   </section>
-
 
   <!-- INCOME DETAILS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
@@ -143,14 +133,13 @@
       <h2 class="text-2xl font-bold mb-4" data-i18n="income_info_title">Income Information</h2>
     </header>
     <div class="grid md:grid-cols-3 gap-4 text-lg">
-      <article><p><b data-i18n="income_employment">Employment:</b> Salaried</p></article>
-      <article><p><b data-i18n="income_monthly">Monthly Income:</b> ₹75,000</p></article>
-      <article><p><b data-i18n="income_annual">Gross Annual Income:</b> ₹900,000</p></article>
-      <article><p><b data-i18n="income_other">Other Income:</b> ₹10,000</p></article>
-      <article><p><b data-i18n="income_scheme">Income Scheme:</b> Salary Based Scheme</p></article>
+      <article><p><b data-i18n="income_employment">Employment:</b> <span id="disp-employment">—</span></p></article>
+      <article><p><b data-i18n="income_monthly">Monthly Income:</b> <span id="disp-monthly-income">—</span></p></article>
+      <article><p><b data-i18n="income_annual">Gross Annual Income:</b> <span id="disp-annual-income">—</span></p></article>
+      <article><p><b data-i18n="income_other">Other Income:</b> <span id="disp-other-income">—</span></p></article>
+      <article><p><b data-i18n="income_scheme">Income Scheme:</b> <span id="disp-income-scheme">—</span></p></article>
     </div>
   </section>
-
 
   <!-- ADDRESS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
@@ -158,14 +147,13 @@
       <h2 class="text-2xl font-bold mb-4" data-i18n="address_info_title">Address Information</h2>
     </header>
     <div class="grid md:grid-cols-2 gap-4 text-lg">
-      <article><p><b data-i18n="address">Address:</b> 45 MG Road</p></article>
-      <article><p><b data-i18n="city">City:</b> Hyderabad</p></article>
-      <article><p><b data-i18n="state">State:</b> Telangana</p></article>
-      <article><p><b data-i18n="pincode">PIN Code:</b> 500001</p></article>
-      <article><p><b data-i18n="country">Country:</b> India</p></article>
+      <article><p><b data-i18n="address">Address:</b> <span id="disp-address">—</span></p></article>
+      <article><p><b data-i18n="city">City:</b> <span id="disp-city">—</span></p></article>
+      <article><p><b data-i18n="state">State:</b> <span id="disp-state">—</span></p></article>
+      <article><p><b data-i18n="pincode">PIN Code:</b> <span id="disp-pincode">—</span></p></article>
+      <article><p><b data-i18n="country">Country:</b> <span id="disp-country">—</span></p></article>
     </div>
   </section>
-
 
   <!-- CIBIL REPORT -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
@@ -173,17 +161,14 @@
       <h2 class="text-2xl font-bold mb-4" data-i18n="cibil_report_title">CIBIL Report</h2>
     </header>
     <div class="grid md:grid-cols-3 gap-4 text-lg">
-      <article><p><b data-i18n="cibil_score">CIBIL Score:</b> 780</p></article>
+      <article><p><b data-i18n="cibil_score">CIBIL Score:</b> <span id="disp-cibil-score">—</span></p></article>
       <article>
-        <p>
-          <b data-i18n="cibil_tenure">Available Loan Tenure:</b>
-          <span class="text-green-600 font-bold text-xl"> 25 Years</span>
-        </p>
+        <p><b data-i18n="cibil_tenure">Available Loan Tenure:</b>
+          <span id="disp-tenure" class="text-green-600 font-bold text-xl"> —</span></p>
       </article>
-      <article><p><b data-i18n="cibil_employment_status">Employment Status:</b> Salaried</p></article>
+      <article><p><b data-i18n="cibil_employment_status">Employment Status:</b> <span id="disp-cibil-employment">—</span></p></article>
     </div>
   </section>
-
 
   <!-- LOAN DETAILS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
@@ -191,26 +176,35 @@
       <h2 class="text-2xl font-bold mb-4" data-i18n="loan_application_details_title">Loan Application Details</h2>
     </header>
     <div class="grid md:grid-cols-3 gap-4 text-lg">
-      <article><p><b data-i18n="loan_type">Loan Type:</b> Home Loan</p></article>
-      <article><p><b data-i18n="loan_amount">Loan Amount:</b> ₹25,00,000</p></article>
-      <article><p><b data-i18n="loan_duration_requested">Loan Duration Requested:</b> 20 Years</p></article>
-      <article><p><b data-i18n="loan_annual_income">Annual Income:</b> ₹900,000</p></article>
-      <article><p><b data-i18n="loan_collateral_val">Collateral:</b> Property</p></article>
+      <article><p><b data-i18n="loan_type">Loan Type:</b> <span id="disp-loan-type">—</span></p></article>
+      <article><p><b data-i18n="loan_amount">Loan Amount:</b> <span id="disp-loan-amount">—</span></p></article>
+      <article><p><b data-i18n="loan_duration_requested">Loan Duration Requested:</b> <span id="disp-loan-duration">—</span></p></article>
+      <article><p><b data-i18n="loan_annual_income">Annual Income:</b> <span id="disp-loan-annual">—</span></p></article>
+      <article><p><b data-i18n="loan_collateral_val">Collateral:</b> <span id="disp-collateral">—</span></p></article>
     </div>
   </section>
 
-
   <!-- OFFICER DECISION -->
   <section class="bg-white shadow rounded-xl p-6">
-    <header>
-      <h2 class="text-2xl font-bold mb-4" data-i18n="officer_decision_title">Officer Decision</h2>
+    <header class="mb-4">
+      <h2 class="text-2xl font-bold" data-i18n="officer_decision_title">Officer Decision</h2>
+      <p class="text-gray-500 text-base mt-1">You can change your decision at any time before legal verification.</p>
     </header>
-    <div class="flex gap-4">
-      <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+
+    <!-- FIX: banner shows current status but never hides/disables the buttons -->
+    <div id="decision-banner" class="hidden mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold"></div>
+
+    <!-- FIX: buttons are NEVER disabled — always clickable -->
+    <div id="decision-buttons" class="flex gap-4">
+      <button onclick="officerDecision('approve')"
+              id="btn-approve"
+              class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all">
         <i class="fa fa-check mr-2"></i>
         <span data-i18n="approve_loan_btn">Approve Loan</span>
       </button>
-      <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold">
+      <button onclick="officerDecision('reject')"
+              id="btn-reject"
+              class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all">
         <i class="fa fa-times mr-2"></i>
         <span data-i18n="reject_loan_btn">Reject Loan</span>
       </button>
@@ -219,42 +213,256 @@
 
 </main>
 
-
 <!-- FOOTER -->
 <footer class="bg-blue-900 text-white text-center py-6 mt-10">
   <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
 
-
 <script>
-
-// ── Load user ──
-var user = JSON.parse(localStorage.getItem("bankUser")) || { name:"User", id:"0000", account:"NIL" };
-document.getElementById("username").innerText       = user.name;
-document.getElementById("userid").innerText         = "ID: " + user.id;
-document.getElementById("profileName").innerText    = user.name;
-document.getElementById("profileAccount").innerText = "Account: " + user.account;
-
-// ── Logout ──
-function logoutUser() {
-  localStorage.removeItem("bankUser");
-  alert("Logged out successfully");
-  window.location.href = "index.html";
+// ── Page protection ──────────────────────────────────────────────────
+if (!abcBank?.isLoggedIn?.()) {
+  window.location.replace("login.html");
 }
 
-// ── Wire navbar lang select to shared.js applyLang ──
-var navSel = document.getElementById("nav-lang-select");
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-navSel.value = savedLang;
+// ── Navbar user ──────────────────────────────────────────────────────
+const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
+const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
-navSel.addEventListener('change', function() {
-  applyLang(this.value);
-  var sharedSel = document.getElementById('lang-select');
-  if (sharedSel) sharedSel.value = this.value;
-});
+document.getElementById("username").textContent    = fullName;
+document.getElementById("profileName").textContent = fullName;
 
-applyLang(savedLang);
+if (currentUser.account?.accountNumber) {
+  const accNum = currentUser.account.accountNumber;
+  document.getElementById("profileAccount").textContent = "Account: " + accNum;
+  document.getElementById("userid").textContent         = "ID: " + (accNum.slice(-6) || "—");
+} else {
+  document.getElementById("profileAccount").textContent = "Account: Not Opened";
+  document.getElementById("userid").textContent         = "ID: —";
+}
 
+// ── Language setup ───────────────────────────────────────────────────
+const navSel    = document.getElementById("nav-lang-select");
+const savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (navSel) {
+  navSel.value = savedLang;
+  navSel.addEventListener('change', function() {
+    localStorage.setItem('abcbank_lang', this.value);
+    applyLang(this.value);
+  });
+  applyLang(savedLang);
+}
+
+// ── Data loading ─────────────────────────────────────────────────────
+function loadAllSources() {
+  var out = {};
+  function jp(key) { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e) { return null; } }
+
+  var session  = jp("abcBank_currentUser");
+  var bankUser = jp("bankUser");
+  var kyc      = jp("kyc_data");
+  var loanApp  = jp("loan_application_data");
+  var cibil    = jp("cibil_data");
+
+  var userRecord = null;
+  if (session && session.email) {
+    try {
+      var users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
+      userRecord = users.find(u => u.email === session.email) || null;
+    } catch(e) {}
+  }
+
+  var name = "";
+  if (session) {
+    if (session.fullName) name = session.fullName;
+    else if (session.firstName || session.lastName) name = ((session.firstName||"")+" "+(session.lastName||"")).trim();
+    else if (session.name) name = session.name;
+  }
+  if (!name && userRecord) {
+    if (userRecord.fullName) name = userRecord.fullName;
+    else if (userRecord.firstName || userRecord.lastName) name = ((userRecord.firstName||"")+" "+(userRecord.lastName||"")).trim();
+    else if (userRecord.name) name = userRecord.name;
+  }
+  if (!name && bankUser) name = bankUser.name || "";
+  out.name = name;
+
+  out.dob    = (session?.dob)    || (userRecord?.dob)    || (kyc?.dob)    || (cibil?.dob)    || "";
+  out.email  = (session?.email)  || (userRecord?.email)  || "";
+  out.mobile = (session?.mobile || session?.phone || session?.mobileNumber)
+            || (userRecord?.mobile || userRecord?.phone || userRecord?.mobileNumber)
+            || (kyc?.mobile) || "";
+
+  out.aadhaar = (kyc?.aadhaar || kyc?.aadhaarNumber)
+             || (loanApp?.aadhaar || loanApp?.aadhaarNumber)
+             || (session?.aadhaar || session?.aadhaarNumber)
+             || (userRecord?.aadhaar || userRecord?.aadhaarNumber) || "";
+
+  out.pan = (kyc?.pan || kyc?.panNumber)
+         || (loanApp?.pan || loanApp?.panNumber)
+         || (session?.pan || session?.panNumber)
+         || (userRecord?.pan || userRecord?.panNumber) || "";
+
+  out.fatherName = (kyc?.fatherName) || (loanApp?.fatherName) || (session?.fatherName) || (userRecord?.fatherName) || "";
+  out.motherName = (kyc?.motherName) || (loanApp?.motherName) || (session?.motherName) || (userRecord?.motherName) || "";
+
+  var addrObj = (session?.address && typeof session.address === "object") ? session.address
+              : (userRecord?.address && typeof userRecord.address === "object") ? userRecord.address
+              : null;
+
+  out.address = (loanApp?.address) || (kyc?.address) || (addrObj?.line)    || (typeof session?.address === "string" && session.address) || "";
+  out.city    = (loanApp?.city)    || (kyc?.city)    || (addrObj?.city)    || (session?.city)    || "";
+  out.state   = (loanApp?.state)   || (kyc?.state)   || (addrObj?.state)   || (session?.state)   || "";
+  out.pincode = (loanApp?.pincode || loanApp?.pin) || (kyc?.pincode || kyc?.pin) || (addrObj?.pincode) || (session?.pincode) || "";
+  out.country = (loanApp?.country) || (kyc?.country) || "India";
+
+  var loanApproval = jp("loanApplication");
+
+  out.employment    = (cibil?.employment)    || (loanApproval?.employment) || "";
+  out.monthlyIncome = (cibil?.monthlyIncome) || "";
+  out.annualIncome  = (cibil?.annualIncome)  || (loanApproval?.annualIncome) || "";
+  out.otherIncome   = (loanApp?.otherIncome) || "";
+
+  out.loanType   = (cibil?.loanTypeLabel || cibil?.loanType) || (loanApproval?.loanType) || localStorage.getItem("loan_type_selected") || "";
+  out.loanAmount = (cibil?.loanAmount)   || (loanApproval?.loanAmount)   || localStorage.getItem("loan_amount_requested") || "";
+  out.cibilScore = (cibil?.score)        || localStorage.getItem("loan_score") || "";
+
+  var tenure = null;
+  if (out.dob) {
+    var birth = new Date(out.dob);
+    tenure = Math.max(0, 60 - Math.ceil((new Date() - birth) / (1000 * 60 * 60 * 24 * 365.25)));
+  }
+  if (!tenure) tenure = parseInt(localStorage.getItem("loanTenure")) || null;
+  out.tenure = tenure;
+
+  out.loanDuration = (loanApp?.loanDuration) || tenure || "";
+  out.collateral   = (loanApproval?.collateral) || (loanApp?.collateral) || "";
+
+  return out;
+}
+
+function fmtCurr(n) {
+  var num = parseInt(n);
+  return isNaN(num) || n === "" || n === null ? "—" : "₹" + num.toLocaleString("en-IN");
+}
+function fmtDate(dobStr) {
+  if (!dobStr) return "—";
+  var p = dobStr.split("-");
+  return p.length === 3 ? p[2] + "-" + p[1] + "-" + p[0] : dobStr;
+}
+function incomeScheme(emp) {
+  var map = { "Salaried":"Salary Based Scheme", "Self Employed":"Self-Employment Scheme", "Business":"Business Income Scheme" };
+  return map[emp] || (emp ? emp + " Scheme" : "—");
+}
+function collateralFor(loanType) {
+  var map = { home:"Property", vehicle:"Vehicle", personal:"None", education:"Academic Records", gold:"Gold" };
+  return map[(loanType||"").toLowerCase()] || (loanType || "—");
+}
+function set(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = (value !== undefined && value !== null && value !== "") ? value : "—";
+}
+
+function populatePage() {
+  var d = loadAllSources();
+  set("disp-name",    d.name);
+  set("disp-dob",     fmtDate(d.dob));
+  set("disp-email",   d.email);
+  set("disp-mobile",  d.mobile);
+  set("disp-aadhaar", d.aadhaar);
+  set("disp-pan",     d.pan);
+
+  set("disp-father-name", d.fatherName);
+  set("disp-mother-name", d.motherName);
+
+  set("disp-employment",     d.employment);
+  set("disp-monthly-income", fmtCurr(d.monthlyIncome));
+  set("disp-annual-income",  fmtCurr(d.annualIncome));
+  set("disp-other-income",   d.otherIncome ? fmtCurr(d.otherIncome) : "—");
+  set("disp-income-scheme",  incomeScheme(d.employment));
+
+  set("disp-address", d.address);
+  set("disp-city",    d.city);
+  set("disp-state",   d.state);
+  set("disp-pincode", d.pincode);
+  set("disp-country", d.country);
+
+  set("disp-cibil-score",      d.cibilScore);
+  set("disp-cibil-employment", d.employment);
+  set("disp-tenure",           d.tenure !== null ? d.tenure + " Years" : "—");
+
+  set("disp-loan-type",     d.loanType);
+  set("disp-loan-amount",   fmtCurr(d.loanAmount));
+  set("disp-loan-annual",   fmtCurr(d.annualIncome));
+  set("disp-collateral",    d.collateral || collateralFor(d.loanType));
+  set("disp-loan-duration", d.loanDuration ? d.loanDuration + " Years" : "—");
+}
+
+populatePage();
+
+// ══════════════════════════════════════════════════════════════
+//  DECISION BANNER — shows current status, never locks buttons
+// ══════════════════════════════════════════════════════════════
+
+// FIX: updateDecisionBanner() only updates visuals — buttons stay enabled always.
+// Called on page load and after every new decision.
+function updateDecisionBanner(type) {
+  var banner = document.getElementById("decision-banner");
+
+  if (!type) {
+    banner.classList.add("hidden");
+    document.getElementById("btn-approve").classList.remove("ring-4", "ring-green-400");
+    document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
+    return;
+  }
+
+  banner.classList.remove("hidden");
+
+  if (type === "approved") {
+    banner.className = "mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold bg-green-50 border border-green-300 text-green-800";
+    banner.innerHTML = '<i class="fa fa-check-circle text-green-600 text-2xl"></i>'
+      + '<span>Current decision: <strong>Approved</strong>. '
+      + '<a href="lawyer-verification.html" class="underline font-semibold hover:text-green-700 ml-1">Proceed to Legal Verification →</a>'
+      + ' &nbsp;|&nbsp; You can still change this decision below.</span>';
+    document.getElementById("btn-approve").classList.add("ring-4", "ring-green-400");
+    document.getElementById("btn-reject").classList.remove("ring-4", "ring-red-400");
+  } else {
+    banner.className = "mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold bg-red-50 border border-red-300 text-red-800";
+    banner.innerHTML = '<i class="fa fa-times-circle text-red-600 text-2xl"></i>'
+      + '<span>Current decision: <strong>Rejected</strong>. You can still change this decision below.</span>';
+    document.getElementById("btn-reject").classList.add("ring-4", "ring-red-400");
+    document.getElementById("btn-approve").classList.remove("ring-4", "ring-green-400");
+  }
+}
+
+// On page load: reflect any previously stored decision without locking
+updateDecisionBanner(localStorage.getItem("loan_officer_decision"));
+
+// ══════════════════════════════════════════════════════════════
+//  OFFICER DECISION — fully re-callable, no locking
+// ══════════════════════════════════════════════════════════════
+function officerDecision(action) {
+  if (action === 'approve') {
+    // Save immediately so it persists even if user closes swal
+    localStorage.setItem("loan_officer_decision", "approved");
+    updateDecisionBanner("approved");
+    swal({
+      title: "Loan Approved",
+      text:  "The loan application has been approved. You can proceed to Legal Verification.",
+      icon:  "success",
+      button: "Continue to Legal Verification"
+    }).then(function() {
+      window.location.href = "lawyer-verification.html";
+    });
+  } else {
+    localStorage.setItem("loan_officer_decision", "rejected");
+    updateDecisionBanner("rejected");
+    swal({
+      title: "Loan Rejected",
+      text:  "The loan application has been rejected. You can approve it again if needed.",
+      icon:  "error",
+      button: "OK"
+    });
+  }
+}
 </script>
 
 </body>

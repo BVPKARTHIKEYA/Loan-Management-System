@@ -6,11 +6,8 @@
 <title>ABC Bank Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<!-- shared.js MUST be in head -->
 <script src="shared.js"></script>
-<!-- logic.js must be included so we can read current user & logout -->
 <script src="logic.js"></script>
-
 <style>
 html, body { height:100%; width:100%; margin:0; padding:0; }
 #lang-switcher { display: none !important; }
@@ -32,11 +29,8 @@ html, body { height:100%; width:100%; margin:0; padding:0; }
 
       <!-- NAV LINKS -->
       <ul class="hidden md:flex gap-8 font-semibold text-lg flex-wrap">
-        <!-- <li><a href="home.html"><i class="fa fa-home mr-2"></i><span data-i18n="nav_dashboard">Dashboard</span></a></li> -->
-        <li><a href="bank-account.html"><i class="fa fa-building-columns mr-2"></i><span data-i18n="nav_bankaccount">Accounts</span></a></li>
-        <li><a href="cibil.html"><i class="fa fa-chart-line mr-2"></i><span data-i18n="nav_cibil">CIBIL</span></a></li>
-        <li><a href="loan-application.html"><i class="fa fa-money-bill mr-2"></i><span data-i18n="nav_applyloan">Apply Loan</span></a></li>
-        <li><a href="loan-approval.html"><i class="fa fa-circle-check mr-2"></i><span data-i18n="nav_approval">Approval Status</span></a></li>
+        <li><a href="officer-review.html"><i class="fa fa-user-check mr-2"></i><span data-i18n="workflow_officer_review">Officer Review</span></a></li>
+        <li><a href="lawyer-verification.html"><i class="fa fa-user-check mr-2"></i><span data-i18n="workflow_lawyer_verification">Lawyer Verification</span></a></li>
         <li><a href="loan-receipt.html"><i class="fa fa-file-invoice mr-2"></i><span data-i18n="nav_receipt">Loan Receipt</span></a></li>
         <li><a href="support.html"><i class="fa fa-headset mr-2"></i><span data-i18n="nav_support">Support</span></a></li>
       </ul>
@@ -69,13 +63,15 @@ html, body { height:100%; width:100%; margin:0; padding:0; }
             </div>
             <i class="fa fa-chevron-down text-sm ml-1"></i>
           </div>
-          <div class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="p-4 border-b">
               <p class="font-semibold text-lg" id="profileName">User</p>
               <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
             </div>
-            <a href="bank-account.html" class="block px-4 py-3 hover:bg-gray-100">
-              <i class="fa fa-building-columns mr-2"></i><span data-i18n="nav_bankaccount">Accounts</span>
+            <!-- Smart link: my-account.html if account exists, bank-account.html if not -->
+            <a id="profileAccountLink" href="bank-account.html" class="block px-4 py-3 hover:bg-gray-100">
+              <i class="fa fa-building-columns mr-2"></i>
+              <span id="profileAccountLinkText" data-i18n="nav_bankaccount">Accounts</span>
             </a>
             <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
               <i class="fa fa-sign-out-alt mr-2"></i><span data-i18n="nav_logout">Logout</span>
@@ -98,14 +94,16 @@ html, body { height:100%; width:100%; margin:0; padding:0; }
       <h1 class="text-5xl font-bold mt-3" id="welcomeUser">User</h1>
       <p class="text-xl mt-6" data-i18n="hero_description">Manage your loans, track applications and check CIBIL scores easily using the ABC Bank Loan Management System.</p>
       <div class="flex gap-4 mt-8">
-        <a href="bank-account.html" class="border border-white px-8 py-3 rounded-md text-xl" data-i18n="my_account_btn">My Account</a>
+        <!-- Smart button: my-account if has account, bank-account if not -->
+        <a id="myAccountBtn" href="bank-account.html" class="border border-white px-8 py-3 rounded-md text-xl" data-i18n="my_account_btn">My Account</a>
       </div>
     </article>
     <aside class="bg-white/10 border border-white/20 rounded-xl p-10 w-full md:w-80">
       <p class="text-xl opacity-80" data-i18n="primary_account">Primary Account</p>
       <p class="font-mono text-xl opacity-80" id="accountNumber">ACC •••• NIL</p>
       <p class="text-xl mt-5 opacity-80" data-i18n="available_balance">Available Balance</p>
-      <p class="text-4xl font-bold">₹ NIL</p>
+      <p id="balanceDisplay" class="text-4xl font-bold">₹ NIL</p>
+      <p id="accountTypeLabel" class="text-lg opacity-70 mt-2 font-medium" style="display:none;"></p>
     </aside>
   </section>
 
@@ -255,26 +253,68 @@ html, body { height:100%; width:100%; margin:0; padding:0; }
 </main>
 
 <script>
-// Redirect to login if user is not logged in
-if (!abcBank.isLoggedIn()) {
-  window.location.href = "login.html";
-}
+(function () {
+  // ── Auth guard ─────────────────────────────────────────────────────
+  if (!abcBank.isLoggedIn()) {
+    window.location.href = "login.html";
+    return;
+  }
 
-const user = abcBank.getCurrentUser() || { firstName: "User", lastName: "", email: "" };
+  // ── Read session ───────────────────────────────────────────────────
+  var cu       = abcBank.getCurrentUser() || {};
+  var acct     = abcBank.getUserAccount();
+  var fullName = ((cu.firstName || "") + " " + (cu.lastName || "")).trim() || "User";
+  var hasAcct  = !!(acct && acct.accountNumber);
 
-const fullName = (user.firstName + " " + user.lastName).trim() || "User";
+  // ── Smart routing: "My Account" button + profile dropdown link ─────
+  //    Has account  → my-account.html (view account details)
+  //    No account   → bank-account.html (open an account form)
+  var accountHref = hasAcct ? "my-account.html" : "bank-account.html";
+  document.getElementById("myAccountBtn").href        = accountHref;
+  document.getElementById("profileAccountLink").href  = accountHref;
 
-document.getElementById("username").innerText       = fullName;
-document.getElementById("userid").innerText         = "ID: —";  // you can change later if you want to show something
-document.getElementById("profileName").innerText    = fullName;
-document.getElementById("profileAccount").innerText = "Account: NIL";  // placeholder - can be updated later
-document.getElementById("welcomeUser").innerText    = fullName;
-document.getElementById("accountNumber").innerText  = "ACC •••• NIL";  // placeholder
+  // ── Navbar + hero welcome ──────────────────────────────────────────
+  document.getElementById("username").innerText    = fullName;
+  document.getElementById("welcomeUser").innerText = fullName;
+  document.getElementById("profileName").innerText = fullName;
 
-// Language initialization (unchanged)
-const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-document.getElementById('lang-select').value = savedLang;
-applyLang(savedLang);
+  // ── Hero aside: account number, balance, account type ─────────────
+  if (hasAcct) {
+    var raw    = acct.accountNumber;
+    var masked = raw.slice(0, 3) + " •••• " + raw.slice(-4);
+
+    document.getElementById("userid").innerText         = "ID: " + raw.slice(-6);
+    document.getElementById("profileAccount").innerText = "Account: " + raw;
+    document.getElementById("accountNumber").innerText  = masked;
+
+    var bal = (acct.balance !== undefined && acct.balance !== null) ? acct.balance : null;
+    document.getElementById("balanceDisplay").innerText =
+      bal !== null ? "₹ " + Number(bal).toLocaleString("en-IN") : "₹ NIL";
+
+    if (acct.accountType) {
+      var typeEl = document.getElementById("accountTypeLabel");
+      typeEl.innerText     = acct.accountType.charAt(0).toUpperCase()
+                             + acct.accountType.slice(1) + " Account";
+      typeEl.style.display = "block";
+    }
+  } else {
+    document.getElementById("userid").innerText         = "ID: —";
+    document.getElementById("profileAccount").innerText = "Account: Not opened yet";
+    document.getElementById("accountNumber").innerText  = "ACC •••• ----";
+  }
+
+  // ── Cache loan tenure for loan-application.html ────────────────────
+  var tenure = abcBank.getLoanTenure(cu.dob);
+  if (tenure !== null) {
+    localStorage.setItem("loanTenure", tenure);
+  }
+
+  // ── Language ───────────────────────────────────────────────────────
+  var savedLang = localStorage.getItem("abcbank_lang") || "en";
+  document.getElementById("lang-select").value = savedLang;
+  applyLang(savedLang);
+
+})();
 </script>
 
 </body>

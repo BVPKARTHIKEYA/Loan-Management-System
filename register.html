@@ -17,8 +17,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <style>
-body{
-font-family:'Source Sans 3',sans-serif;
+body {
+  font-family: 'Source Sans 3', sans-serif;
 }
 </style>
 
@@ -26,184 +26,149 @@ font-family:'Source Sans 3',sans-serif;
 
 <body class="min-h-screen flex bg-gray-100">
 
-<!-- MAIN CONTENT -->
 <main class="flex w-full min-h-screen">
 
-<!-- LEFT VIDEO SECTION -->
-<section class="hidden md:block md:w-2/3 relative h-screen overflow-hidden">
+  <!-- LEFT VIDEO SECTION -->
+  <section class="hidden md:block md:w-2/3 relative h-screen overflow-hidden">
+    <video autoplay muted loop playsinline
+      class="absolute top-0 left-0 w-full h-full object-cover">
+      <source src="bank-bg.mp4" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-black/30"></div>
+  </section>
 
-<video autoplay muted loop playsinline
-class="absolute top-0 left-0 w-full h-full object-cover">
+  <!-- REGISTER FORM SECTION -->
+  <section class="w-full md:w-1/3 flex items-center justify-center p-10 bg-white shadow-2xl">
 
-<source src="bank-bg.mp4" type="video/mp4">
+    <article class="w-full max-w-md">
 
-</video>
+      <header class="text-center mb-8">
+        <img src="abc-bank-logo.jpeg" class="h-36 w-auto mx-auto mb-6 object-contain">
+        <h2 class="text-3xl font-bold font-[Playfair_Display]" data-i18n="reg_title">Create Account</h2>
+        <p class="text-gray-500 text-sm" data-i18n="reg_subheading">Register to start your banking journey</p>
+      </header>
 
-<div class="absolute inset-0 bg-black/30"></div>
+      <form id="registerForm" class="space-y-4">
 
-</section>
+        <div class="grid grid-cols-2 gap-4">
+          <input id="fname" type="text" required
+            data-i18n-placeholder="reg_fname" placeholder="First Name"
+            class="border rounded-lg p-3 w-full">
+          <input id="lname" type="text" required
+            data-i18n-placeholder="reg_lname" placeholder="Last Name"
+            class="border rounded-lg p-3 w-full">
+        </div>
 
+        <input id="email" type="email" required
+          data-i18n-placeholder="reg_email_placeholder" placeholder="Email"
+          class="border rounded-lg p-3 w-full">
 
+        <input id="mobile" type="tel" required
+          data-i18n-placeholder="reg_phone_placeholder" placeholder="Mobile Number"
+          class="border rounded-lg p-3 w-full">
 
-<!-- REGISTER FORM SECTION -->
-<section class="w-full md:w-1/3 flex items-center justify-center p-10 bg-white shadow-2xl">
+        <input id="dob" type="date" required
+          class="border rounded-lg p-3 w-full">
 
-<article class="w-full max-w-md">
+        <div class="grid grid-cols-2 gap-4">
+          <input id="password" type="password" required minlength="6"
+            data-i18n-placeholder="reg_password_placeholder" placeholder="Password"
+            class="border rounded-lg p-3 w-full">
+          <input id="confirmPassword" type="password" required
+            data-i18n-placeholder="reg_confirm_placeholder" placeholder="Confirm Password"
+            class="border rounded-lg p-3 w-full">
+        </div>
 
-<header class="text-center mb-8">
+        <label class="flex items-start gap-2 text-sm">
+          <input type="checkbox" id="termsCheck" required class="mt-1">
+          <span data-i18n="reg_terms">I agree to the Terms and Privacy Policy</span>
+        </label>
 
-<img src="abc-bank-logo.jpeg"
-class="h-36 w-auto mx-auto mb-6 object-contain">
+        <button type="submit"
+          class="w-full bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-lg font-semibold">
+          <i class="fa fa-user-plus mr-2"></i>
+          <span data-i18n="reg_btn">Create Account</span>
+        </button>
 
-<h2 class="text-3xl font-bold font-[Playfair_Display]" data-i18n="reg_title">
-Create Account
-</h2>
+      </form>
 
-<p class="text-gray-500 text-sm" data-i18n="reg_subheading">
-Register to start your banking journey
-</p>
+      <footer class="text-center text-sm text-gray-500 mt-6">
+        <p>
+          <span data-i18n="reg_have_account">Already have an account?</span>
+          <a href="login.html" class="text-blue-700 font-semibold hover:underline ml-1"
+            data-i18n="reg_signin_link">Sign In →</a>
+        </p>
+      </footer>
 
-</header>
-
-
-
-<form id="registerForm" class="space-y-4">
-
-<div class="grid grid-cols-2 gap-4">
-
-<input id="fname" type="text" required
-data-i18n-placeholder="reg_fname"
-placeholder="First Name"
-class="border rounded-lg p-3 w-full">
-
-<input id="lname" type="text" required
-data-i18n-placeholder="reg_lname"
-placeholder="Last Name"
-class="border rounded-lg p-3 w-full">
-
-</div>
-
-
-<input id="email" type="email" required
-data-i18n-placeholder="reg_email_placeholder"
-placeholder="Email"
-class="border rounded-lg p-3 w-full">
-
-<input id="mobile" type="tel" required
-data-i18n-placeholder="reg_phone_placeholder"
-placeholder="Mobile Number"
-class="border rounded-lg p-3 w-full">
-
-<input id="dob" type="date" required
-class="border rounded-lg p-3 w-full">
-
-
-
-<div class="grid grid-cols-2 gap-4">
-
-<input id="password" type="password" required minlength="6"
-data-i18n-placeholder="reg_password_placeholder"
-placeholder="Password"
-class="border rounded-lg p-3 w-full">
-
-<input id="confirmPassword" type="password" required
-data-i18n-placeholder="reg_confirm_placeholder"
-placeholder="Confirm Password"
-class="border rounded-lg p-3 w-full">
-
-</div>
-
-
-<label class="flex items-start gap-2 text-sm">
-
-<input type="checkbox" required class="mt-1">
-
-<span data-i18n="reg_terms">I agree to the Terms and Privacy Policy</span>
-
-</label>
-
-
-<button
-type="submit"
-class="w-full bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-lg font-semibold">
-
-<i class="fa fa-user-plus mr-2"></i>
-<span data-i18n="reg_btn">Create Account</span>
-
-</button>
-
-</form>
-
-
-
-<footer class="text-center text-sm text-gray-500 mt-6">
-
-<p>
-<span data-i18n="reg_have_account">Already have an account?</span>
-
-<a href="login.html"
-class="text-blue-700 font-semibold hover:underline ml-1"
-data-i18n="reg_signin_link">
-
-Sign In →
-
-</a>
-</p>
-
-</footer>
-
-</article>
-
-</section>
+    </article>
+  </section>
 
 </main>
-
-
 
 <script src="shared.js"></script>
 <script src="logic.js"></script>
 <script>
 
-document.getElementById("registerForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+// ── Apply saved language on load ──────────────────────────────
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (typeof applyLang === 'function') applyLang(savedLang);
 
-    const lang = localStorage.getItem('abcbank_lang') || 'en';
-    const d = I18N[lang] || I18N['en'];
+// ── Registration form ─────────────────────────────────────────
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-    const formData = {
-        fname:    document.getElementById("fname").value.trim(),
-        lname:    document.getElementById("lname").value.trim(),
-        email:    document.getElementById("email").value.trim(),
-        mobile:   document.getElementById("mobile").value.trim(),
-        dob:      document.getElementById("dob").value,
-        password: document.getElementById("password").value,
-    };
+  var lang = localStorage.getItem('abcbank_lang') || 'en';
+  var d    = (typeof I18N !== 'undefined' && I18N[lang]) ? I18N[lang] : (I18N && I18N['en']) || {};
 
-    const confirmPassword = document.getElementById("confirmPassword").value;
+  var fname           = document.getElementById('fname').value.trim();
+  var lname           = document.getElementById('lname').value.trim();
+  var email           = document.getElementById('email').value.trim();
+  var mobile          = document.getElementById('mobile').value.trim();
+  var dob             = document.getElementById('dob').value;
+  var password        = document.getElementById('password').value;
+  var confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Basic client-side validation
-    if (formData.password.length < 6) {
-        swal(d.reg_alert_weak_pwd_title, d.reg_alert_weak_pwd_text, "error");
-        return;
-    }
+  // ── Client-side validation ──────────────────────────────────
+  if (password.length < 6) {
+    swal(
+      d.reg_alert_weak_pwd_title   || 'Weak Password',
+      d.reg_alert_weak_pwd_text    || 'Password must be at least 6 characters.',
+      'error'
+    );
+    return;
+  }
 
-    if (formData.password !== confirmPassword) {
-        swal(d.reg_alert_mismatch_title, d.reg_alert_mismatch_text, "error");
-        return;
-    }
+  if (password !== confirmPassword) {
+    swal(
+      d.reg_alert_mismatch_title   || 'Password Mismatch',
+      d.reg_alert_mismatch_text    || 'Passwords do not match.',
+      'error'
+    );
+    return;
+  }
 
-    const result = abcBank.registerUser(formData);
+  // ── Call logic.js registerUser ──────────────────────────────
+  var result = abcBank.registerUser({ fname, lname, email, mobile, dob, password });
 
-    if (result.success) {
-        swal(d.reg_alert_success_title, result.message, "success")
-            .then(() => {
-                // Auto-login after register (optional)
-                abcBank.loginUser(formData.email, formData.password);
-                window.location.href = "home.html";
-            });
-    } else {
-        swal("Error", result.message, "error");
-    }
+  if (result.success) {
+    // Registration successful — auto-login and redirect
+    swal(
+      d.reg_alert_success_title || 'Registered Successfully!',
+      d.reg_alert_success_text  || 'Welcome to ABC Bank. Redirecting to dashboard...',
+      'success'
+    ).then(function() {
+      abcBank.loginUser(email, password);
+      window.location.href = 'home.html';
+    });
+
+  } else {
+    // Email already registered or other error
+    swal(
+      d.reg_alert_exists_title || 'Registration Failed',
+      result.message           || (d.reg_alert_exists_text || 'This email is already registered. Please sign in.'),
+      'error'
+    );
+  }
 });
 
 </script>
