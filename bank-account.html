@@ -202,6 +202,24 @@ if (currentUser.account?.accountNumber) {
     document.getElementById("userid").textContent = "ID: —";
 }
 
+// ════════════════════════════════════════════════════════════
+//  USER-SCOPED STORAGE — all localStorage keys are prefixed
+//  with the logged-in user's unique ID so that different users
+//  never see each other's data.
+// ════════════════════════════════════════════════════════════
+const _userId = currentUser?.account?.accountNumber
+             || currentUser?.email
+             || currentUser?.username
+             || "guest";
+
+function sk(key) {
+    // Returns a user-scoped key, e.g. "user123__kyc_data"
+    return `${_userId}__${key}`;
+}
+function lsGet(key)        { return localStorage.getItem(sk(key)); }
+function lsSet(key, val)   { localStorage.setItem(sk(key), val); }
+function lsRemove(key)     { localStorage.removeItem(sk(key)); }
+
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (navSel) { navSel.value = savedLang; navSel.addEventListener('change', function() { applyLang(this.value); }); applyLang(savedLang); }
@@ -226,14 +244,14 @@ function showStoredPreview(cfg, dataUrl, fileName) {
     }
 }
 
-// Restore saved file previews on load
+// Restore saved file previews on load — using scoped keys
 Object.keys(FILE_CONFIG).forEach(id => {
     const cfg = FILE_CONFIG[id];
-    const d = localStorage.getItem(cfg.storage), n = localStorage.getItem(cfg.nameKey)||"";
+    const d = lsGet(cfg.storage), n = lsGet(cfg.nameKey) || "";
     if (d) showStoredPreview(cfg, d, n);
 });
 
-// Save on new file select
+// Save on new file select — using scoped keys
 Object.keys(FILE_CONFIG).forEach(id => {
     const input = document.getElementById(id); if (!input) return;
     input.addEventListener("change", function() {
@@ -241,7 +259,7 @@ Object.keys(FILE_CONFIG).forEach(id => {
         const cfg = FILE_CONFIG[id], reader = new FileReader();
         reader.onload = e => {
             const dataUrl = e.target.result;
-            try { localStorage.setItem(cfg.storage, dataUrl); localStorage.setItem(cfg.nameKey, file.name); }
+            try { lsSet(cfg.storage, dataUrl); lsSet(cfg.nameKey, file.name); }
             catch(err) { swal("Warning", `File "${file.name}" is too large to store locally.`, "warning"); return; }
             showStoredPreview(cfg, dataUrl, file.name);
         };
@@ -249,24 +267,75 @@ Object.keys(FILE_CONFIG).forEach(id => {
     });
 });
 
-// ════════════════════════════════════════════════════════
-//  RESTORE TEXT FIELDS — including all 3 income fields
-// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+//  STEP 1 — Pre-fill fields directly from the registered user
+//  object (currentUser). These values were entered on register.html
+//  and are the most authoritative source.
+//  Priority: currentUser → kyc_data (localStorage) → blank
+// ════════════════════════════════════════════════════════════
+(function prefillFromRegistration() {
+    const setField = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null && String(val).trim() !== "") {
+            el.value = val;
+        }
+    };
+
+    // Full name from registration (firstName + lastName)
+    const regName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ");
+    if (regName) setField("name", regName);
+
+    // DOB — key field: directly from registration
+    // currentUser.dob may be stored as "dob" or "dateOfBirth"
+    const regDob = currentUser.dob || currentUser.dateOfBirth || currentUser.date_of_birth || "";
+    if (regDob) setField("dob", regDob);
+
+    // Email & mobile — also entered during registration
+    if (currentUser.email)  setField("email",  currentUser.email);
+    if (currentUser.mobile || currentUser.phone) setField("mobile", currentUser.mobile || currentUser.phone);
+})();
+
+// ════════════════════════════════════════════════════════════
+//  STEP 2 — Restore any additional fields saved from a previous
+//  visit to this page (kyc_data in scoped localStorage).
+//  Only fills fields that are still empty after Step 1.
+// ════════════════════════════════════════════════════════════
 (function restoreTextFields() {
     try {
-        const kyc = JSON.parse(localStorage.getItem("kyc_data") || "null");
+        const raw = lsGet("kyc_data");
+        const kyc = JSON.parse(raw || "null");
         if (!kyc) return;
-        const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
-        set("name", kyc.name); set("dob", kyc.dob); set("email", kyc.email);
-        set("mobile", kyc.mobile); set("aadhaar", kyc.aadhaar); set("pan", kyc.pan);
-        set("father", kyc.fatherName); set("mother", kyc.motherName);
+
+        // Only set a field if it isn't already populated by Step 1
+        const set = (id, val) => {
+            const el = document.getElementById(id);
+            if (el && val !== undefined && val !== null && String(val).trim() !== "" && !el.value) {
+                el.value = val;
+            }
+        };
+
+        set("name",   kyc.name);
+        set("dob",    kyc.dob);   // fallback if not in currentUser
+        set("email",  kyc.email);
+        set("mobile", kyc.mobile);
+        set("aadhaar", kyc.aadhaar);
+        set("pan",     kyc.pan);
+        set("father",  kyc.fatherName);
+        set("mother",  kyc.motherName);
+
         if (kyc.address) {
-            set("address", kyc.address.line); set("city", kyc.address.city); set("pincode", kyc.address.pincode);
+            set("address", kyc.address.line);
+            set("city",    kyc.address.city);
+            set("pincode", kyc.address.pincode);
             const stEl = document.getElementById("state");
-            if (stEl && kyc.address.state)
-                Array.from(stEl.options).forEach(o => { if (o.value===kyc.address.state||o.textContent.trim()===kyc.address.state) stEl.value=o.value; });
+            if (stEl && kyc.address.state && !stEl.value)
+                Array.from(stEl.options).forEach(o => {
+                    if (o.value === kyc.address.state || o.textContent.trim() === kyc.address.state)
+                        stEl.value = o.value;
+                });
         }
-        // ── Income fields ────────────────────────────────────────
+
+        // Income fields (only in kyc_data, not in registration)
         if (kyc.grossAnnualIncome) set("grossIncome", kyc.grossAnnualIncome);
         if (kyc.monthlyNetIncome)  set("netIncome",   kyc.monthlyNetIncome);
         if (kyc.otherIncome)       set("otherIncome", kyc.otherIncome);
@@ -302,9 +371,10 @@ function validateForm() {
     const netIncome   = document.getElementById("netIncome").value.trim();
     const otherIncome = document.getElementById("otherIncome").value.trim();
 
-    const hasAadhaar  =document.getElementById("aadhaarFile").files.length>0||!!localStorage.getItem("kyc_doc_aadhaar");
-    const hasPan      =document.getElementById("panFile").files.length>0||!!localStorage.getItem("kyc_doc_pan");
-    const hasSignature=document.getElementById("signatureFile").files.length>0||!!localStorage.getItem("kyc_doc_signature");
+    // Check documents — look in scoped storage
+    const hasAadhaar  = document.getElementById("aadhaarFile").files.length > 0 || !!lsGet("kyc_doc_aadhaar");
+    const hasPan      = document.getElementById("panFile").files.length > 0     || !!lsGet("kyc_doc_pan");
+    const hasSignature= document.getElementById("signatureFile").files.length > 0 || !!lsGet("kyc_doc_signature");
 
     if (!name)                               return swal("Error",d.alert_name_missing,"error");
     if (!/^[6-9]\d{9}$/.test(mobile))       return swal(d.alert_invalid_mobile_title,d.alert_invalid_mobile_text,"error");
@@ -326,20 +396,17 @@ function validateForm() {
     }
 
     // ════════════════════════════════════════════════════════════
-    //  SAVE kyc_data — all 3 income fields stored here so that
-    //  officer-review.html can read them via loadAllSources()
-    //    kyc.grossAnnualIncome → disp-annual-income
-    //    kyc.monthlyNetIncome  → disp-monthly-income
-    //    kyc.otherIncome       → disp-other-income
+    //  SAVE kyc_data — stored under user-scoped key
     // ════════════════════════════════════════════════════════════
-    localStorage.setItem("kyc_data", JSON.stringify({
+    const kycPayload = JSON.stringify({
         name, dob, ageInYears:age, email, mobile, aadhaar, pan,
         fatherName:father, motherName:mother,
         address:{line:address, city, state, pincode},
         grossAnnualIncome: Number(grossIncome)||0,
         monthlyNetIncome:  Number(netIncome)  ||0,
         otherIncome:       Number(otherIncome)||0
-    }));
+    });
+    lsSet("kyc_data", kycPayload);
 
     const accountDetails = {
         fullName:name, dob, ageInYears:age, mobile, email, aadhaar, pan,
