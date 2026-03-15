@@ -356,7 +356,7 @@ function validateForm() {
     const result = abcBank.updateUserAccountDetails(accountDetails);
     if (result?.success) {
         swal({title:d.alert_application_success_title,text:d.alert_application_success_text+(age?` (Age: ${age} years)`:""),icon:"success"})
-        .then(()=>{window.location.href="home.html";});
+        .then(()=>{window.location.href="cibil.html";});
     } else {
         swal("Error",result?.message||"Failed to save account","error");
     }
