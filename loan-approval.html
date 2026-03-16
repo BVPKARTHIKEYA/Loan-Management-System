@@ -259,7 +259,10 @@
 <script>
 // ══════════════════════════════════════════════════════════════
 //  i18n PATCH — inject missing gate + step keys into I18N
-//  Runs after shared.js so I18N already exists
+//  Runs after shared.js so I18N already exists.
+//  NOTE: step_bank_account keys are kept in the patch object for
+//  completeness but the step itself is no longer added to the
+//  gate check array, so they will never be displayed.
 // ══════════════════════════════════════════════════════════════
 (function() {
   var patch = {
@@ -273,7 +276,7 @@
       gate_pending_title:    "Review In Progress",
       gate_pending_desc:     "Your loan application is still under review. The approval letter will be available once both stages are completed.",
       gate_pending_btn:      "Back to Dashboard",
-      step_bank_account:     "Bank Account",
+      // step_bank_account intentionally omitted — step removed from gate
       step_kyc:              "KYC Documents",
       step_cibil:            "CIBIL Score",
       step_loan_app:         "Loan Application",
@@ -293,7 +296,6 @@
       gate_pending_title:    "సమీక్ష జరుగుతోంది",
       gate_pending_desc:     "మీ రుణ దరఖాస్తు ఇంకా సమీక్షలో ఉంది. రెండు దశలూ పూర్తయిన తర్వాత ఆమోద లేఖ అందుబాటులో ఉంటుంది.",
       gate_pending_btn:      "డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
-      step_bank_account:     "బ్యాంక్ ఖాతా",
       step_kyc:              "KYC పత్రాలు",
       step_cibil:            "సిబిల్ స్కోర్",
       step_loan_app:         "రుణ దరఖాస్తు",
@@ -313,7 +315,6 @@
       gate_pending_title:    "மதிப்பாய்வு நடைபெறுகிறது",
       gate_pending_desc:     "உங்கள் கடன் விண்ணப்பம் இன்னும் மதிப்பாய்வில் உள்ளது. இரண்டு நிலைகளும் முடிந்த பிறகு அனுமதிக் கடிதம் கிடைக்கும்.",
       gate_pending_btn:      "டாஷ்போர்டுக்கு திரும்பு",
-      step_bank_account:     "வங்கி கணக்கு",
       step_kyc:              "KYC ஆவணங்கள்",
       step_cibil:            "சிபில் மதிப்பெண்",
       step_loan_app:         "கடன் விண்ணப்பம்",
@@ -333,7 +334,6 @@
       gate_pending_title:    "അവലോകനം നടക്കുന്നു",
       gate_pending_desc:     "നിങ്ങളുടെ ലോൺ അപേക്ഷ ഇപ്പോഴും അവലോകനത്തിലാണ്. രണ്ട് ഘട്ടങ്ങളും പൂർത്തിയായ ശേഷം അംഗീകാര കത്ത് ലഭ്യമാകും.",
       gate_pending_btn:      "ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
-      step_bank_account:     "ബാങ്ക് അക്കൗണ്ട്",
       step_kyc:              "KYC രേഖകൾ",
       step_cibil:            "സിബിൽ സ്കോർ",
       step_loan_app:         "ലോൺ അപേക്ഷ",
@@ -353,7 +353,6 @@
       gate_pending_title:    "ಪರಿಶೀಲನೆ ನಡೆಯುತ್ತಿದೆ",
       gate_pending_desc:     "ನಿಮ್ಮ ಸಾಲ ಅರ್ಜಿ ಇನ್ನೂ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ. ಎರಡೂ ಹಂತಗಳು ಪೂರ್ಣಗೊಂಡ ನಂತರ ಅನುಮೋದನಾ ಪತ್ರ ಲಭ್ಯವಾಗುತ್ತದೆ.",
       gate_pending_btn:      "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
-      step_bank_account:     "ಬ್ಯಾಂಕ್ ಖಾತೆ",
       step_kyc:              "KYC ದಾಖಲೆಗಳು",
       step_cibil:            "ಸಿಬಿಲ್ ಸ್ಕೋರ್",
       step_loan_app:         "ಸಾಲ ಅರ್ಜಿ",
@@ -373,7 +372,6 @@
       gate_pending_title:    "समीक्षा जारी है",
       gate_pending_desc:     "आपका ऋण आवेदन अभी भी समीक्षाधीन है। दोनों चरण पूरे होने के बाद अनुमोदन पत्र उपलब्ध होगा।",
       gate_pending_btn:      "डैशबोर्ड पर वापस जाएं",
-      step_bank_account:     "बैंक खाता",
       step_kyc:              "KYC दस्तावेज़",
       step_cibil:            "सिबिल स्कोर",
       step_loan_app:         "ऋण आवेदन",
@@ -451,28 +449,40 @@ function tr(key) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  GATE CHECK — ALL 6 STEPS, ALL USER-SCOPED
+//  GATE CHECK
+//  REMOVED: "Bank Account" step (step_bank_account).
+//  It was auto-true for any logged-in user and added no value
+//  as a gate condition — it just confused the checklist display.
+//  Remaining 5 steps: KYC, CIBIL, Loan App, Officer, Legal.
 // ══════════════════════════════════════════════════════════════
 function checkAllSteps() {
   var steps = [];
 
-  steps.push({
-    labelKey: 'step_bank_account', icon: 'fa-building-columns',
-    done: !!(currentUser && currentUser.account && currentUser.account.accountNumber)
-  });
+  // ── REMOVED ──────────────────────────────────────────────────
+  // Bank Account step deleted. It was:
+  //   steps.push({
+  //     labelKey: 'step_bank_account', icon: 'fa-building-columns',
+  //     done: !!(currentUser && currentUser.account && currentUser.account.accountNumber)
+  //   });
+  // ─────────────────────────────────────────────────────────────
 
+  // Step 1 — KYC Documents
   var kyc = lsGetJSON('kyc_data');
   steps.push({ labelKey: 'step_kyc', icon: 'fa-id-card', done: !!(kyc && kyc.name) });
 
+  // Step 2 — CIBIL Score
   var cibilCheck = lsGetJSON('cibil_data');
   steps.push({ labelKey: 'step_cibil', icon: 'fa-chart-line', done: !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore)) });
 
+  // Step 3 — Loan Application
   var loanCheck = lsGetJSON('loan_application_data');
   steps.push({ labelKey: 'step_loan_app', icon: 'fa-file-invoice-dollar', done: !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount)) });
 
+  // Step 4 — Officer Review
   var officerDecision = (lsGet('loan_officer_decision') || '').trim().toLowerCase();
   steps.push({ labelKey: 'step_officer', icon: 'fa-user-tie', done: officerDecision === 'approved', rejected: officerDecision === 'rejected' });
 
+  // Step 5 — Legal Verification
   var legalDecision = (lsGet('loan_legal_decision') || '').trim().toLowerCase();
   steps.push({ labelKey: 'step_legal', icon: 'fa-scale-balanced', done: legalDecision === 'approved', rejected: legalDecision === 'rejected' });
 
@@ -485,7 +495,7 @@ function checkAllSteps() {
   };
 }
 
-// ── buildStepRow — fully translated via tr() ──
+// ── Build one step row for the gate summary panels ──────────
 function buildStepRow(step) {
   var colour, icon, statusKey;
   if      (step.done)     { colour = 'text-green-600'; icon = 'fa-circle-check';   statusKey = 'step_completed'; }
@@ -502,7 +512,7 @@ function buildStepRow(step) {
        + '</span></div>';
 }
 
-// ── RUN THE GATE ──
+// ── RUN THE GATE ────────────────────────────────────────────
 var gateResult = checkAllSteps();
 var rowsHtml   = gateResult.steps.map(buildStepRow).join('');
 
@@ -646,11 +656,9 @@ document.getElementById('nav-lang-select').addEventListener('change', function()
   localStorage.setItem('abcbank_lang', this.value);
   applyLang(this.value);
 
-  // Re-translate loan type label
   var el = document.getElementById('detailLoanType');
   if (el && rawLoanType) el.innerText = getLoanTypeLabel(rawLoanType);
 
-  // Re-render step rows with new language
   var newRows = gateResult.steps.map(buildStepRow).join('');
   var summaryIds = ['gateStepsSummary', 'gateDecisionSummary', 'gatePendingSummary'];
   summaryIds.forEach(function(id) {
