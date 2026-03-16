@@ -106,10 +106,10 @@
   <p data-i18n="footer"></p>
 </footer>
 
-<!-- shared.js must load BEFORE applyLang is called -->
+
 <script src="shared.js"></script>
 <script>
-  // Restore saved language on page load
+
   const savedLang = localStorage.getItem('abcbank_lang') || 'en';
   document.getElementById('lang-select').value = savedLang;
   applyLang(savedLang);

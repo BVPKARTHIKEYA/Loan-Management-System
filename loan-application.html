@@ -297,8 +297,7 @@ loanCards.forEach(card => {
 
         const labelEl = this.querySelector('[data-i18n]');
         if (labelEl) {
-            const key = labelEl.getAttribute('data-i18n');
-            selectedLoanType = key.replace('loan_', '');
+            selectedLoanType  = this.dataset.loan;
             selectedLoanLabel = labelEl.textContent.trim();
         }
 
@@ -306,6 +305,41 @@ loanCards.forEach(card => {
         document.getElementById("selectedLoanLabel").classList.remove("hidden");
     });
 });
+
+// ── AUTO-SELECT loan type carried over from CIBIL page ──────────────
+// cibil.html saves: localStorage.setItem("loan_type_selected", loanType)
+// Values match data-loan attributes: "home","personal","vehicle","education"
+(function prefillLoanType() {
+    const saved = localStorage.getItem("loan_type_selected");
+    if (!saved) return;
+
+    const card = document.querySelector(`.loan-card[data-loan="${saved}"]`);
+    if (!card) return;
+
+    // Visually highlight the pre-selected card
+    loanCards.forEach(c => c.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600'));
+    card.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600');
+
+    // Set global variables so submit validation passes without manual click
+    const labelEl = card.querySelector('[data-i18n]');
+    if (labelEl) {
+        selectedLoanType  = saved;
+        selectedLoanLabel = labelEl.textContent.trim();
+        document.getElementById("selectedLoanText").textContent = `Selected: ${selectedLoanLabel}`;
+        document.getElementById("selectedLoanLabel").classList.remove("hidden");
+    }
+
+    // Scroll the card into view so the user can see what was pre-selected
+    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+})();
+
+// ── Also prefill loan amount from CIBIL page ────────────────────────
+(function prefillLoanAmount() {
+    const saved = localStorage.getItem("loan_amount_requested");
+    if (!saved) return;
+    const el = document.getElementById("loanAmountInput");
+    if (el && !el.value) el.value = saved;
+})();
 
 // ── Tenure from account (if available) ─────────────────────────────
 (function showTenure() {
@@ -328,7 +362,7 @@ loanCards.forEach(card => {
     }
 })();
 
-// ── Submit logic (your original code, slightly cleaned) ─────────────
+// ── Submit logic ────────────────────────────────────────────────────
 document.getElementById("submitBtn").onclick = function submitLoanApplication() {
     const amount     = document.getElementById("loanAmountInput").value.trim();
     const income     = document.getElementById("annualIncomeInput").value.trim();

@@ -11,10 +11,67 @@
     <script src="logic.js"></script>
     <style>
         #lang-switcher { display: none !important; }
-        .preview-container { max-height: 120px; overflow: hidden; }
-        .preview-img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px; }
-        .file-stored-badge { display:inline-flex;align-items:center;gap:5px;background:#dcfce7;color:#16a34a;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-top:6px; }
-        .file-stored-badge.pdf { background:#fee2e2;color:#dc2626; }
+
+        /* ── Preview container ── */
+        .preview-container {
+            max-height: 140px;
+            overflow: hidden;
+            margin-top: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+        }
+        .preview-img {
+            max-width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
+
+        /* ── Badge ── */
+        .file-stored-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #dcfce7;
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 999px;
+            margin-top: 6px;
+        }
+        .file-stored-badge.pdf {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* ── Spinner ── */
+        .upload-progress {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .upload-progress.active { display: flex; }
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #bfdbfe;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -72,6 +129,7 @@
 <main class="max-w-7xl mx-auto p-6">
 <form id="accountForm" class="bg-white shadow-xl rounded-xl p-10 space-y-12">
 
+  <!-- ── Personal Information ── -->
   <section>
     <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
@@ -84,6 +142,7 @@
     </div>
   </section>
 
+  <!-- ── Parent Details ── -->
   <section>
     <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
@@ -92,6 +151,7 @@
     </div>
   </section>
 
+  <!-- ── Address Information ── -->
   <section>
     <header class="mb-6"><h2 class="text-2xl font-bold" data-i18n="address_info_title">Address Information</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
@@ -110,6 +170,7 @@
     </div>
   </section>
 
+  <!-- ── Account Type ── -->
   <section>
     <header><h2 class="text-3xl font-bold text-blue-900 mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2></header>
     <p class="text-lg text-gray-600 mb-6" data-i18n="account_type_desc">Choose the account that best fits your banking needs.</p>
@@ -127,7 +188,7 @@
     </div>
   </section>
 
-  <!-- Income Details — all 3 fields -->
+  <!-- ── Income Details ── -->
   <section>
     <header><h2 class="text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2></header>
     <div class="grid md:grid-cols-2 gap-6">
@@ -137,45 +198,72 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
         <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="progress-incomeDoc" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-incomeDoc"></div>
-        <div id="preview-incomeDoc" class="preview-container mt-2 hidden"><img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview"></div>
+        <!-- FIX: preview-container starts hidden, shown only after image loads -->
+        <div id="preview-incomeDoc" class="preview-container mt-2" style="display:none;">
+          <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- ── KYC Upload ── -->
   <section>
     <header class="mb-6">
       <h2 class="text-2xl font-bold" data-i18n="kyc_upload_title">KYC Document Upload</h2>
       <p class="text-gray-600" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card, signature and property document (if applicable) for verification.</p>
     </header>
     <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- Aadhaar -->
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
         <input id="aadhaarFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="progress-aadhaarFile" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-aadhaarFile"></div>
-        <div id="preview-aadhaar" class="preview-container mt-2 hidden"><img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview"></div>
+        <div id="preview-aadhaar" class="preview-container mt-2" style="display:none;">
+          <img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview">
+        </div>
       </div>
+
+      <!-- PAN -->
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
         <input id="panFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="progress-panFile" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-panFile"></div>
-        <div id="preview-pan" class="preview-container mt-2 hidden"><img id="img-pan" class="preview-img" src="" alt="PAN Preview"></div>
+        <div id="preview-pan" class="preview-container mt-2" style="display:none;">
+          <img id="img-pan" class="preview-img" src="" alt="PAN Preview">
+        </div>
       </div>
+
+      <!-- Signature -->
       <div>
         <label class="font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
         <input id="signatureFile" type="file" accept="image/*" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="progress-signatureFile" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-signatureFile"></div>
-        <div id="preview-signature" class="preview-container mt-2 hidden"><img id="img-signature" class="preview-img" src="" alt="Signature Preview"></div>
+        <div id="preview-signature" class="preview-container mt-2" style="display:none;">
+          <img id="img-signature" class="preview-img" src="" alt="Signature Preview">
+        </div>
       </div>
+
+      <!-- Property -->
       <div>
         <label class="font-semibold text-lg" data-i18n="doc_property">Property Document (optional)</label>
         <input id="propertyFile" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
+        <div id="progress-propertyFile" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-propertyFile"></div>
-        <div id="preview-property" class="preview-container mt-2 hidden"><img id="img-property" class="preview-img" src="" alt="Property Preview"></div>
+        <div id="preview-property" class="preview-container mt-2" style="display:none;">
+          <img id="img-property" class="preview-img" src="" alt="Property Preview">
+        </div>
       </div>
+
     </div>
   </section>
 
+  <!-- ── Submit ── -->
   <section>
     <button type="button" onclick="validateForm()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
       <i class="fa fa-check-circle mr-2"></i><span data-i18n="submit_account_application">Submit Account Application</span>
@@ -184,15 +272,21 @@
 
 </form>
 </main>
+
 <footer class="text-center text-gray-500 text-sm py-6">© 2026 ABC Bank. All rights reserved.</footer>
 
 <script>
+// ════════════════════════════════════════════════════════════════════
+//  GUARD — redirect to login if not logged in
+// ════════════════════════════════════════════════════════════════════
 if (!abcBank?.isLoggedIn?.()) window.location.replace("login.html");
 
+// ── Current user info ────────────────────────────────────────────────
 const currentUser = abcBank.getCurrentUser() || {};
 const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 document.getElementById("username").textContent    = fullName;
 document.getElementById("profileName").textContent = fullName;
+
 if (currentUser.account?.accountNumber) {
     const a = currentUser.account.accountNumber;
     document.getElementById("profileAccount").textContent = "Account: " + a;
@@ -202,77 +296,308 @@ if (currentUser.account?.accountNumber) {
     document.getElementById("userid").textContent = "ID: —";
 }
 
-// ════════════════════════════════════════════════════════════
-//  USER-SCOPED STORAGE — all localStorage keys are prefixed
-//  with the logged-in user's unique ID so that different users
-//  never see each other's data.
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════
+//  USER-SCOPED STORAGE HELPERS
+//  Each user gets their own localStorage keys using their ID as prefix
+// ════════════════════════════════════════════════════════════════════
 const _userId = currentUser?.account?.accountNumber
              || currentUser?.email
              || currentUser?.username
              || "guest";
 
-function sk(key) {
-    // Returns a user-scoped key, e.g. "user123__kyc_data"
-    return `${_userId}__${key}`;
-}
-function lsGet(key)        { return localStorage.getItem(sk(key)); }
-function lsSet(key, val)   { localStorage.setItem(sk(key), val); }
-function lsRemove(key)     { localStorage.removeItem(sk(key)); }
+// Creates a unique key per user: "alice@gmail.com__kyc_data"
+function sk(key)         { return `${_userId}__${key}`; }
+function lsGet(key)      { return localStorage.getItem(sk(key)); }
+function lsSet(key, val) { localStorage.setItem(sk(key), val); }
 
-const navSel = document.getElementById("nav-lang-select");
+// ════════════════════════════════════════════════════════════════════
+//  LANGUAGE SETUP
+// ════════════════════════════════════════════════════════════════════
+const navSel    = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-if (navSel) { navSel.value = savedLang; navSel.addEventListener('change', function() { applyLang(this.value); }); applyLang(savedLang); }
+if (navSel) {
+    navSel.value = savedLang;
+    navSel.addEventListener('change', function () { applyLang(this.value); });
+    applyLang(savedLang);
+}
 
+// ════════════════════════════════════════════════════════════════════
+//  IMAGE COMPRESSION via <canvas>
+//
+//  FIX 1: Added white background fill before drawing image
+//         → prevents black background when PNG (transparent) is
+//           converted to JPEG
+//
+//  FIX 2: Validates canvas output is not empty before resolving
+//
+//  Settings:
+//    MAX_PX   = 1200px  — longest side after downscale
+//    IMG_QUAL = 0.82    — JPEG quality (~70-80% smaller than original)
+// ════════════════════════════════════════════════════════════════════
+const MAX_PX   = 1200;
+const IMG_QUAL = 0.82;
+
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+
+        // STEP 1: Read file as base64 data URL
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error("FileReader failed"));
+
+        reader.onload = (evt) => {
+            // STEP 2: Create image object and load the base64 data
+            const img = new Image();
+            img.onerror = () => reject(new Error("Image decode failed"));
+
+            img.onload = () => {
+                // STEP 3: Calculate new dimensions keeping aspect ratio
+                let { width, height } = img;
+                if (width > MAX_PX || height > MAX_PX) {
+                    if (width >= height) {
+                        height = Math.round(height * MAX_PX / width);
+                        width  = MAX_PX;
+                    } else {
+                        width  = Math.round(width  * MAX_PX / height);
+                        height = MAX_PX;
+                    }
+                }
+
+                // STEP 4: Draw onto canvas
+                const canvas = document.createElement("canvas");
+                canvas.width  = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+
+                // FIX 1: Fill white background first
+                // Without this, PNG transparent areas become BLACK in JPEG
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, width, height);
+
+                // STEP 5: Draw the image on top of white background
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // STEP 6: Export as JPEG base64 string
+                const result = canvas.toDataURL("image/jpeg", IMG_QUAL);
+
+                // FIX 2: Validate canvas output is not empty
+                if (!result || result === "data:,") {
+                    reject(new Error("Canvas produced empty output"));
+                    return;
+                }
+
+                resolve(result); // Returns "data:image/jpeg;base64,..."
+            };
+
+            // STEP 7: Trigger image decode
+            img.src = evt.target.result;
+        };
+
+        // STEP 8: Start reading the file
+        reader.readAsDataURL(file);
+    });
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  FILE CONFIG
+//  Maps each input ID to its preview, badge, storage, and progress IDs
+// ════════════════════════════════════════════════════════════════════
 const FILE_CONFIG = {
-    aadhaarFile:   {preview:"preview-aadhaar",  img:"img-aadhaar",  storage:"kyc_doc_aadhaar",  nameKey:"kyc_doc_aadhaar_name",  badge:"badge-aadhaarFile"},
-    panFile:       {preview:"preview-pan",      img:"img-pan",      storage:"kyc_doc_pan",      nameKey:"kyc_doc_pan_name",      badge:"badge-panFile"},
-    signatureFile: {preview:"preview-signature",img:"img-signature",storage:"kyc_doc_signature",nameKey:"kyc_doc_signature_name",badge:"badge-signatureFile"},
-    propertyFile:  {preview:"preview-property", img:"img-property", storage:"kyc_doc_property", nameKey:"kyc_doc_property_name", badge:"badge-propertyFile"},
-    incomeDoc:     {preview:"preview-incomeDoc",img:"img-incomeDoc",storage:"kyc_doc_income",   nameKey:"kyc_doc_income_name",   badge:"badge-incomeDoc"}
+    aadhaarFile:   { preview:"preview-aadhaar",   img:"img-aadhaar",   storage:"kyc_doc_aadhaar",   nameKey:"kyc_doc_aadhaar_name",   badge:"badge-aadhaarFile",   progress:"progress-aadhaarFile"   },
+    panFile:       { preview:"preview-pan",        img:"img-pan",        storage:"kyc_doc_pan",        nameKey:"kyc_doc_pan_name",        badge:"badge-panFile",        progress:"progress-panFile"        },
+    signatureFile: { preview:"preview-signature",  img:"img-signature",  storage:"kyc_doc_signature",  nameKey:"kyc_doc_signature_name",  badge:"badge-signatureFile",  progress:"progress-signatureFile"  },
+    propertyFile:  { preview:"preview-property",   img:"img-property",   storage:"kyc_doc_property",   nameKey:"kyc_doc_property_name",   badge:"badge-propertyFile",   progress:"progress-propertyFile"   },
+    incomeDoc:     { preview:"preview-incomeDoc",  img:"img-incomeDoc",  storage:"kyc_doc_income",     nameKey:"kyc_doc_income_name",     badge:"badge-incomeDoc",      progress:"progress-incomeDoc"      }
 };
 
-function showStoredPreview(cfg, dataUrl, fileName) {
-    if (dataUrl && dataUrl.startsWith("data:image")) {
-        const p = document.getElementById(cfg.preview), i = document.getElementById(cfg.img);
-        if (p && i) { i.src = dataUrl; p.classList.remove("hidden"); }
-    }
+// ════════════════════════════════════════════════════════════════════
+//  showBadge() — shows green ✓ badge (or red PDF badge) under input
+// ════════════════════════════════════════════════════════════════════
+function showBadge(cfg, fileName, isPdf) {
     const b = document.getElementById(cfg.badge);
-    if (b && dataUrl) {
-        const pdf = !dataUrl.startsWith("data:image");
-        b.innerHTML = `<span class="file-stored-badge${pdf?" pdf":""}"><i class="fa ${pdf?"fa-file-pdf":"fa-check"}"></i> ${fileName||"File already uploaded"}</span>`;
-    }
+    if (!b || !fileName) return;
+    b.innerHTML = `<span class="file-stored-badge${isPdf ? " pdf" : ""}">
+        <i class="fa ${isPdf ? "fa-file-pdf" : "fa-check"}"></i> ${fileName}
+    </span>`;
 }
 
-// Restore saved file previews on load — using scoped keys
-Object.keys(FILE_CONFIG).forEach(id => {
-    const cfg = FILE_CONFIG[id];
-    const d = lsGet(cfg.storage), n = lsGet(cfg.nameKey) || "";
-    if (d) showStoredPreview(cfg, d, n);
-});
+// ════════════════════════════════════════════════════════════════════
+//  showImagePreview() — THE MAIN FIX
+//
+//  ORIGINAL BUG: Used classList.remove("hidden") which relies on
+//  Tailwind's "hidden" class. But the img.src was set without waiting
+//  for the image to actually load, so sometimes the container showed
+//  but the image was blank or broken.
+//
+//  FIX: Use style.display instead of classList for reliable toggling.
+//       Wait for img.onload before showing the container.
+//       Handle img.onerror to hide container on failure.
+// ════════════════════════════════════════════════════════════════════
+function showImagePreview(cfg, dataUrl) {
 
-// Save on new file select — using scoped keys
-Object.keys(FILE_CONFIG).forEach(id => {
-    const input = document.getElementById(id); if (!input) return;
-    input.addEventListener("change", function() {
-        const file = this.files[0]; if (!file) return;
-        const cfg = FILE_CONFIG[id], reader = new FileReader();
-        reader.onload = e => {
-            const dataUrl = e.target.result;
-            try { lsSet(cfg.storage, dataUrl); lsSet(cfg.nameKey, file.name); }
-            catch(err) { swal("Warning", `File "${file.name}" is too large to store locally.`, "warning"); return; }
-            showStoredPreview(cfg, dataUrl, file.name);
-        };
-        reader.readAsDataURL(file);
+    // STEP 1: Validate the data URL exists and is an image
+    if (!dataUrl) return;
+    if (dataUrl.startsWith("pdf::")) return;           // skip PDF markers
+    if (!dataUrl.startsWith("data:")) return;          // skip invalid data
+
+    // STEP 2: Get the preview container and img element
+    const previewContainer = document.getElementById(cfg.preview);
+    const imgElement       = document.getElementById(cfg.img);
+
+    // STEP 3: Safety check — both elements must exist in DOM
+    if (!previewContainer || !imgElement) {
+        console.warn("Preview elements not found:", cfg.preview, cfg.img);
+        return;
+    }
+
+    // STEP 4: Hide container first while image loads
+    previewContainer.style.display = "none";
+
+    // STEP 5: Set image source — this triggers browser to decode the image
+    imgElement.src = dataUrl;
+
+    // STEP 6: FIX — wait for image to fully load, THEN show container
+    // Without this, container shows but image may still be blank
+    imgElement.onload = function () {
+        previewContainer.style.display = "flex"; // show container ✅
+    };
+
+    // STEP 7: FIX — if image fails to load, keep container hidden
+    imgElement.onerror = function () {
+        console.warn("Image failed to display for:", cfg.img);
+        previewContainer.style.display = "none"; // hide safely ✅
+        imgElement.src = ""; // clear broken src
+    };
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  RESTORE SAVED PREVIEWS ON PAGE LOAD
+//
+//  FIX: Wrapped in DOMContentLoaded to ensure all img elements
+//  exist in the DOM before trying to set their src.
+//
+//  ORIGINAL BUG: The restore code ran immediately when the script
+//  executed — at that point, some elements may not be in the DOM yet,
+//  causing getElementById() to return null and preview to silently fail.
+// ════════════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", function () {
+    Object.keys(FILE_CONFIG).forEach(function (id) {
+        const cfg  = FILE_CONFIG[id];
+        const data = lsGet(cfg.storage);
+        const name = lsGet(cfg.nameKey) || "";
+
+        // Skip if nothing was ever saved for this input
+        if (!data && !name) return;
+
+        const isPdf = (data && data.startsWith("pdf::"))
+                   || name.toLowerCase().endsWith(".pdf");
+
+        // Always restore the badge (file name label)
+        showBadge(cfg, name, isPdf);
+
+        // Only restore image preview for non-PDF files
+        if (!isPdf && data) {
+            showImagePreview(cfg, data); // ✅ DOM is ready now
+        }
     });
 });
 
-// ════════════════════════════════════════════════════════════
-//  STEP 1 — Pre-fill fields directly from the registered user
-//  object (currentUser). These values were entered on register.html
-//  and are the most authoritative source.
-//  Priority: currentUser → kyc_data (localStorage) → blank
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════
+//  IN-MEMORY FILE STORE
+//  Keeps actual File objects during current session.
+//  PDFs are too large for localStorage so we only store a marker
+//  "pdf::filename" and keep the real File object here in memory.
+// ════════════════════════════════════════════════════════════════════
+const fileStore = {};
+
+// ════════════════════════════════════════════════════════════════════
+//  FILE INPUT EVENT LISTENERS
+//  Attached to each file input — runs when user selects a file
+// ════════════════════════════════════════════════════════════════════
+Object.keys(FILE_CONFIG).forEach(function (id) {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    input.addEventListener("change", async function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const cfg    = FILE_CONFIG[id];
+        const progEl = document.getElementById(cfg.progress);
+        const isPdf  = file.type === "application/pdf"
+                    || file.name.toLowerCase().endsWith(".pdf");
+
+        // STEP 1: Clear previous preview before showing new one
+        const previewContainer = document.getElementById(cfg.preview);
+        const imgElement       = document.getElementById(cfg.img);
+        if (previewContainer) previewContainer.style.display = "none";
+        if (imgElement)       imgElement.src = "";
+
+        // STEP 2: Show loading spinner
+        if (progEl) progEl.classList.add("active");
+
+        try {
+            if (isPdf) {
+                // ── PDF path ─────────────────────────────────────────
+                // Store only a text marker to avoid localStorage size limit
+                // Keep actual File in memory for validation
+                lsSet(cfg.storage, `pdf::${file.name}`);
+                lsSet(cfg.nameKey, file.name);
+                fileStore[id] = file;
+                showBadge(cfg, file.name, true);
+                // No image preview for PDFs
+
+            } else {
+                // ── Image path ───────────────────────────────────────
+                // Compress image to fit within localStorage limits
+                const compressed = await compressImage(file);
+
+                // Save to localStorage (wrapped in try-catch for quota errors)
+                try {
+                    lsSet(cfg.storage, compressed);
+                } catch (quotaErr) {
+                    // localStorage is full — keep only in memory this session
+                    console.warn("localStorage quota exceeded, keeping in memory:", quotaErr);
+                }
+
+                lsSet(cfg.nameKey, file.name);
+                fileStore[id] = file;
+
+                // Show badge and preview
+                showBadge(cfg, file.name, false);
+                showImagePreview(cfg, compressed); // ✅ Fixed function
+            }
+
+        } catch (err) {
+            // Compression failed — still accept the file in memory
+            console.warn("Compression failed, accepting file in-memory only:", err);
+            fileStore[id] = file;
+            showBadge(cfg, file.name, isPdf);
+            lsSet(cfg.nameKey, file.name);
+
+        } finally {
+            // STEP 3: Always hide spinner whether success or error
+            if (progEl) progEl.classList.remove("active");
+        }
+    });
+});
+
+// ════════════════════════════════════════════════════════════════════
+//  hasFile() — checks if a file exists via 3 sources:
+//  1. fileStore (in-memory, current session)
+//  2. input.files (directly selected this session)
+//  3. localStorage (previously saved, persists across visits)
+// ════════════════════════════════════════════════════════════════════
+function hasFile(inputId, storageKey) {
+    if (fileStore[inputId])                                    return true;
+    if (document.getElementById(inputId)?.files?.length > 0)  return true;
+    const stored = lsGet(storageKey);
+    return !!stored; // "pdf::name" markers also count as truthy
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  PRE-FILL FROM REGISTRATION
+//  Auto-populates form with data from the registration session
+// ════════════════════════════════════════════════════════════════════
 (function prefillFromRegistration() {
     const setField = (id, val) => {
         const el = document.getElementById(id);
@@ -281,43 +606,45 @@ Object.keys(FILE_CONFIG).forEach(id => {
         }
     };
 
-    // Full name from registration (firstName + lastName)
-    const regName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ");
+    // Full name from first + last
+    const regName = [currentUser.firstName, currentUser.lastName]
+                    .filter(Boolean).join(" ");
     if (regName) setField("name", regName);
 
-    // DOB — key field: directly from registration
-    // currentUser.dob may be stored as "dob" or "dateOfBirth"
-    const regDob = currentUser.dob || currentUser.dateOfBirth || currentUser.date_of_birth || "";
-    if (regDob) setField("dob", regDob);
+    // DOB (try multiple possible field names)
+    const regDob = currentUser.dob
+                || currentUser.dateOfBirth
+                || currentUser.date_of_birth
+                || "";
+    if (regDob)   setField("dob",    regDob);
 
-    // Email & mobile — also entered during registration
-    if (currentUser.email)  setField("email",  currentUser.email);
+    // Email and mobile
+    if (currentUser.email)                       setField("email",  currentUser.email);
     if (currentUser.mobile || currentUser.phone) setField("mobile", currentUser.mobile || currentUser.phone);
 })();
 
-// ════════════════════════════════════════════════════════════
-//  STEP 2 — Restore any additional fields saved from a previous
-//  visit to this page (kyc_data in scoped localStorage).
-//  Only fills fields that are still empty after Step 1.
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════
+//  RESTORE TEXT FIELDS FROM PREVIOUS VISIT
+//  If user filled the form before, restore their data
+// ════════════════════════════════════════════════════════════════════
 (function restoreTextFields() {
     try {
-        const raw = lsGet("kyc_data");
-        const kyc = JSON.parse(raw || "null");
+        const kyc = JSON.parse(lsGet("kyc_data") || "null");
         if (!kyc) return;
 
-        // Only set a field if it isn't already populated by Step 1
         const set = (id, val) => {
             const el = document.getElementById(id);
-            if (el && val !== undefined && val !== null && String(val).trim() !== "" && !el.value) {
+            // Only restore if element exists, value present, and not already filled
+            if (el && val !== undefined && val !== null
+                   && String(val).trim() !== "" && !el.value) {
                 el.value = val;
             }
         };
 
-        set("name",   kyc.name);
-        set("dob",    kyc.dob);   // fallback if not in currentUser
-        set("email",  kyc.email);
-        set("mobile", kyc.mobile);
+        set("name",    kyc.name);
+        set("dob",     kyc.dob);
+        set("email",   kyc.email);
+        set("mobile",  kyc.mobile);
         set("aadhaar", kyc.aadhaar);
         set("pan",     kyc.pan);
         set("father",  kyc.fatherName);
@@ -327,105 +654,139 @@ Object.keys(FILE_CONFIG).forEach(id => {
             set("address", kyc.address.line);
             set("city",    kyc.address.city);
             set("pincode", kyc.address.pincode);
+
+            // Restore state dropdown
             const stEl = document.getElementById("state");
-            if (stEl && kyc.address.state && !stEl.value)
+            if (stEl && kyc.address.state && !stEl.value) {
                 Array.from(stEl.options).forEach(o => {
-                    if (o.value === kyc.address.state || o.textContent.trim() === kyc.address.state)
+                    if (o.value === kyc.address.state
+                     || o.textContent.trim() === kyc.address.state) {
                         stEl.value = o.value;
+                    }
                 });
+            }
         }
 
-        // Income fields (only in kyc_data, not in registration)
         if (kyc.grossAnnualIncome) set("grossIncome", kyc.grossAnnualIncome);
         if (kyc.monthlyNetIncome)  set("netIncome",   kyc.monthlyNetIncome);
         if (kyc.otherIncome)       set("otherIncome", kyc.otherIncome);
-    } catch(e) {}
+
+    } catch (e) {
+        // Silent fail — form just won't be pre-filled
+    }
 })();
 
+// ════════════════════════════════════════════════════════════════════
+//  FORM VALIDATION & SUBMIT
+// ════════════════════════════════════════════════════════════════════
 function validateForm() {
     const lang = localStorage.getItem('abcbank_lang') || 'en';
     const d = I18N?.[lang] || {
-        alert_name_missing:"Please enter your full name.",
-        alert_invalid_mobile_title:"Invalid Mobile",alert_invalid_mobile_text:"Please enter a valid 10-digit mobile number.",
-        alert_invalid_aadhaar_title:"Invalid Aadhaar",alert_invalid_aadhaar_text:"Aadhaar must be exactly 12 digits.",
-        alert_invalid_pan_title:"Invalid PAN",alert_invalid_pan_text:"Please enter a valid PAN format (e.g. ABCDE1234F).",
-        alert_income_missing_title:"Income Missing",alert_income_missing_text:"Please provide your gross annual income.",
+        alert_name_missing:          "Please enter your full name.",
+        alert_invalid_mobile_title:  "Invalid Mobile",
+        alert_invalid_mobile_text:   "Please enter a valid 10-digit mobile number.",
+        alert_invalid_aadhaar_title: "Invalid Aadhaar",
+        alert_invalid_aadhaar_text:  "Aadhaar must be exactly 12 digits.",
+        alert_invalid_pan_title:     "Invalid PAN",
+        alert_invalid_pan_text:      "Please enter a valid PAN format (e.g. ABCDE1234F).",
+        alert_income_missing_title:  "Income Missing",
+        alert_income_missing_text:   "Please provide your gross annual income.",
         alert_missing_document_title:"Missing Document",
-        alert_missing_aadhaar:"Please upload your Aadhaar card.",
-        alert_missing_pan:"Please upload your PAN card.",
-        alert_missing_signature:"Please upload your signature.",
-        alert_application_success_title:"Application Submitted!",
-        alert_application_success_text:"Your account has been opened successfully."
+        alert_missing_aadhaar:       "Please upload your Aadhaar card.",
+        alert_missing_pan:           "Please upload your PAN card.",
+        alert_missing_signature:     "Please upload your signature.",
+        alert_application_success_title: "Application Submitted!",
+        alert_application_success_text:  "Your account has been opened successfully."
     };
 
-    const name=document.getElementById("name").value.trim(), dob=document.getElementById("dob").value,
-          email=document.getElementById("email").value.trim(), mobile=document.getElementById("mobile").value.trim(),
-          aadhaar=document.getElementById("aadhaar").value.trim(), pan=document.getElementById("pan").value.trim(),
-          father=document.getElementById("father").value.trim(), mother=document.getElementById("mother").value.trim(),
-          address=document.getElementById("address").value.trim(), city=document.getElementById("city").value.trim(),
-          state=document.getElementById("state").value, pincode=document.getElementById("pincode").value.trim(),
-          accountType=document.querySelector('input[name="account"]:checked')?.value;
-
-    // ── Read all 3 income fields ─────────────────────────────────
+    // ── Read all form values ──
+    const name        = document.getElementById("name").value.trim();
+    const dob         = document.getElementById("dob").value;
+    const email       = document.getElementById("email").value.trim();
+    const mobile      = document.getElementById("mobile").value.trim();
+    const aadhaar     = document.getElementById("aadhaar").value.trim();
+    const pan         = document.getElementById("pan").value.trim();
+    const father      = document.getElementById("father").value.trim();
+    const mother      = document.getElementById("mother").value.trim();
+    const address     = document.getElementById("address").value.trim();
+    const city        = document.getElementById("city").value.trim();
+    const state       = document.getElementById("state").value;
+    const pincode     = document.getElementById("pincode").value.trim();
+    const accountType = document.querySelector('input[name="account"]:checked')?.value;
     const grossIncome = document.getElementById("grossIncome").value.trim();
     const netIncome   = document.getElementById("netIncome").value.trim();
     const otherIncome = document.getElementById("otherIncome").value.trim();
 
-    // Check documents — look in scoped storage
-    const hasAadhaar  = document.getElementById("aadhaarFile").files.length > 0 || !!lsGet("kyc_doc_aadhaar");
-    const hasPan      = document.getElementById("panFile").files.length > 0     || !!lsGet("kyc_doc_pan");
-    const hasSignature= document.getElementById("signatureFile").files.length > 0 || !!lsGet("kyc_doc_signature");
+    // ── Check file uploads ──
+    const hasAadhaar   = hasFile("aadhaarFile",  "kyc_doc_aadhaar");
+    const hasPan       = hasFile("panFile",       "kyc_doc_pan");
+    const hasSignature = hasFile("signatureFile", "kyc_doc_signature");
 
-    if (!name)                               return swal("Error",d.alert_name_missing,"error");
-    if (!/^[6-9]\d{9}$/.test(mobile))       return swal(d.alert_invalid_mobile_title,d.alert_invalid_mobile_text,"error");
-    if (!/^\d{12}$/.test(aadhaar))           return swal(d.alert_invalid_aadhaar_title,d.alert_invalid_aadhaar_text,"error");
-    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan)) return swal(d.alert_invalid_pan_title,d.alert_invalid_pan_text,"error");
-    if (!grossIncome)                        return swal(d.alert_income_missing_title,d.alert_income_missing_text,"warning");
-    if (!hasAadhaar)                         return swal(d.alert_missing_document_title,d.alert_missing_aadhaar,"warning");
-    if (!hasPan)                             return swal(d.alert_missing_document_title,d.alert_missing_pan,"warning");
-    if (!hasSignature)                       return swal(d.alert_missing_document_title,d.alert_missing_signature,"warning");
-    if (!accountType)                        return swal("Error","Please select account type","error");
+    // ── Validations ──
+    if (!name)                                return swal("Error", d.alert_name_missing, "error");
+    if (!/^[6-9]\d{9}$/.test(mobile))        return swal(d.alert_invalid_mobile_title,  d.alert_invalid_mobile_text,  "error");
+    if (!/^\d{12}$/.test(aadhaar))            return swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error");
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan))  return swal(d.alert_invalid_pan_title,     d.alert_invalid_pan_text,     "error");
+    if (!grossIncome)                         return swal(d.alert_income_missing_title,  d.alert_income_missing_text,  "warning");
+    if (!hasAadhaar)                          return swal(d.alert_missing_document_title, d.alert_missing_aadhaar,    "warning");
+    if (!hasPan)                              return swal(d.alert_missing_document_title, d.alert_missing_pan,        "warning");
+    if (!hasSignature)                        return swal(d.alert_missing_document_title, d.alert_missing_signature,  "warning");
+    if (!accountType)                         return swal("Error", "Please select account type", "error");
 
-    let age=null;
+    // ── Calculate age from DOB ──
+    let age = null;
     if (dob) {
-        const birth=new Date(dob),today=new Date();
-        age=today.getFullYear()-birth.getFullYear();
-        const m=today.getMonth()-birth.getMonth();
-        if (m<0||(m===0&&today.getDate()<birth.getDate())) age--;
-        if (age<0||age>120) age=null;
+        const birth = new Date(dob);
+        const today = new Date();
+        age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        if (age < 0 || age > 120) age = null; // sanity check
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  SAVE kyc_data — stored under user-scoped key
-    // ════════════════════════════════════════════════════════════
+    // ── Build KYC payload ──
     const kycPayload = JSON.stringify({
-        name, dob, ageInYears:age, email, mobile, aadhaar, pan,
-        fatherName:father, motherName:mother,
-        address:{line:address, city, state, pincode},
-        grossAnnualIncome: Number(grossIncome)||0,
-        monthlyNetIncome:  Number(netIncome)  ||0,
-        otherIncome:       Number(otherIncome)||0
+        name, dob, ageInYears: age, email, mobile, aadhaar, pan,
+        fatherName: father,
+        motherName: mother,
+        address: { line: address, city, state, pincode },
+        grossAnnualIncome: Number(grossIncome) || 0,
+        monthlyNetIncome:  Number(netIncome)   || 0,
+        otherIncome:       Number(otherIncome) || 0
     });
-    lsSet("kyc_data", kycPayload);
 
+    // Save for self-restore (scoped to user)
+    lsSet("kyc_data", kycPayload);
+    // Save globally for other pages (officer-review, lawyer-verification etc.)
+    localStorage.setItem("kyc_data", kycPayload);
+
+    // ── Build account details object ──
     const accountDetails = {
-        fullName:name, dob, ageInYears:age, mobile, email, aadhaar, pan,
-        fatherName:father, motherName:mother,
-        address:{line:address,city,state,pincode},
+        fullName:  name, dob, ageInYears: age,
+        mobile, email, aadhaar, pan,
+        fatherName: father, motherName: mother,
+        address: { line: address, city, state, pincode },
         accountType,
-        grossAnnualIncome: Number(grossIncome)||0,
-        monthlyNetIncome:  Number(netIncome)  ||0,
-        otherIncome:       Number(otherIncome)||0,
-        status:"Active",
-        documentsUploaded:{aadhaar:hasAadhaar,pan:hasPan,signature:hasSignature}
+        grossAnnualIncome: Number(grossIncome) || 0,
+        monthlyNetIncome:  Number(netIncome)   || 0,
+        otherIncome:       Number(otherIncome) || 0,
+        status: "Active",
+        documentsUploaded: { aadhaar: hasAadhaar, pan: hasPan, signature: hasSignature }
     };
 
+    // ── Save to logic.js user store ──
     const result = abcBank.updateUserAccountDetails(accountDetails);
+
     if (result?.success) {
-        swal({title:d.alert_application_success_title,text:d.alert_application_success_text+(age?` (Age: ${age} years)`:""),icon:"success"})
-        .then(()=>{window.location.href="cibil.html";});
+        swal({
+            title: d.alert_application_success_title,
+            text:  d.alert_application_success_text + (age ? ` (Age: ${age} years)` : ""),
+            icon:  "success"
+        }).then(() => {
+            window.location.href = "cibil.html";
+        });
     } else {
-        swal("Error",result?.message||"Failed to save account","error");
+        swal("Error", result?.message || "Failed to save account", "error");
     }
 }
 </script>

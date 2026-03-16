@@ -48,7 +48,7 @@
 
         <div>
           <label class="block text-sm font-medium mb-1" data-i18n="login_password">Password</label>
-          <input id="password" type="password" required minlength="6" maxlength="20"
+          <input id="password" type="password" required minlength="8" maxlength="20"
             class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
             data-i18n-placeholder="login_password_placeholder">
         </div>
@@ -96,7 +96,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     alert_missing_title: "Missing Fields",
     alert_missing_text: "Please fill in both email and password.",
     alert_invalid_pwd_title: "Invalid Password",
-    alert_invalid_pwd_text: "Password must be at least 6 characters.",
+    alert_invalid_pwd_text: "Password must be at least 8 characters.",
     alert_login_success_title: "Success!",
     alert_login_success_text: "Welcome back!",
     alert_login_failed_title: "Login Failed",
@@ -111,7 +111,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     return;
   }
 
-  if (password.length < 6) {
+  if (password.length < 8) {
     swal(d.alert_invalid_pwd_title, d.alert_invalid_pwd_text, "error");
     return;
   }

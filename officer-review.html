@@ -239,23 +239,18 @@ if (navSel) {
 // ══════════════════════════════════════════════════════════════
 //  loadAllSources()
 //
-//  Income field resolution order — each field tries all sources:
+//  KEY FIX — parent names:
+//  bank-account.html saves kyc_data as:
+//    { fatherName: "...", motherName: "..." }
+//  The old code also checked loanApp?.fatherName, but
+//  loan_application_data never stores parent names, so that
+//  was a red herring. The ONLY reliable source is kyc_data.
 //
-//  otherIncome:
-//    1. kyc_data.otherIncome       ← FIX: bank-account.html now saves here
-//    2. loan_application_data.otherIncome
-//    3. currentUser.otherIncome    (if abcBank stored it)
-//
-//  monthlyIncome:
-//    1. cibil_data.monthlyIncome   (entered on cibil form)
-//    2. kyc_data.monthlyNetIncome  ← FIX: bank-account.html now saves here
-//    3. currentUser.monthlyNetIncome
-//
-//  annualIncome / grossAnnualIncome:
-//    1. cibil_data.annualIncome
-//    2. kyc_data.grossAnnualIncome ← FIX: bank-account.html now saves here
-//    3. currentUser.grossAnnualIncome
-//    4. loanApplication.annualIncome
+//  KEY FIX — address fields:
+//  bank-account.html saves kyc_data.address as a nested object:
+//    { line, city, state, pincode }
+//  The old code tried kyc?.city / kyc?.state (top-level) which
+//  are always undefined. Now we correctly read kyc?.address?.city etc.
 // ══════════════════════════════════════════════════════════════
 function loadAllSources() {
   var out = {};
@@ -263,16 +258,19 @@ function loadAllSources() {
 
   var session      = jp("abcBank_currentUser");
   var bankUser     = jp("bankUser");
-  var kyc          = jp("kyc_data");          // bank-account.html saves income here now
-  var loanApp      = jp("loan_application_data");
-  var cibil        = jp("cibil_data");
+  var kyc          = jp("kyc_data");           // written by bank-account.html
+  var loanApp      = jp("loan_application_data"); // written by loan-application.html
+  var cibil        = jp("cibil_data");         // written by cibil.html
   var loanApproval = jp("loanApplication");
+
+  // kyc.address is a nested object { line, city, state, pincode }
+  var kycAddr = (kyc?.address && typeof kyc.address === "object") ? kyc.address : {};
 
   var userRecord = null;
   if (session && session.email) {
     try {
       var users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
-      userRecord = users.find(u => u.email === session.email) || null;
+      userRecord = users.find(function(u) { return u.email === session.email; }) || null;
     } catch(e) {}
   }
 
@@ -289,6 +287,8 @@ function loadAllSources() {
     else if (userRecord.name) name = userRecord.name;
   }
   if (!name && bankUser) name = bankUser.name || "";
+  // Also accept the name saved directly in kyc_data
+  if (!name && kyc?.name) name = kyc.name;
   out.name = name;
 
   // ── Personal fields ───────────────────────────────────────────────
@@ -298,34 +298,37 @@ function loadAllSources() {
             || userRecord?.mobile || userRecord?.phone
             || kyc?.mobile || "";
 
-  out.aadhaar = kyc?.aadhaar || kyc?.aadhaarNumber
-             || loanApp?.aadhaar || loanApp?.aadhaarNumber
+  out.aadhaar = kyc?.aadhaar    || kyc?.aadhaarNumber
              || session?.aadhaar || session?.aadhaarNumber
              || userRecord?.aadhaar || userRecord?.aadhaarNumber || "";
 
-  out.pan = kyc?.pan || kyc?.panNumber
-         || loanApp?.pan || loanApp?.panNumber
+  out.pan = kyc?.pan    || kyc?.panNumber
          || session?.pan || session?.panNumber
          || userRecord?.pan || userRecord?.panNumber || "";
 
-  out.fatherName = kyc?.fatherName || loanApp?.fatherName || session?.fatherName || userRecord?.fatherName || "";
-  out.motherName = kyc?.motherName || loanApp?.motherName || session?.motherName || userRecord?.motherName || "";
+  // ── Parent names ─────────────────────────────────────────────────
+  // SOURCE: bank-account.html saves these into kyc_data as
+  //         fatherName / motherName — that is the definitive source.
+  // Fallback to session/userRecord in case user object carries them.
+  out.fatherName = kyc?.fatherName
+               || session?.fatherName || userRecord?.fatherName || "";
 
-  var addrObj = (session?.address && typeof session.address === "object") ? session.address
-              : (userRecord?.address && typeof userRecord.address === "object") ? userRecord.address
-              : null;
+  out.motherName = kyc?.motherName
+               || session?.motherName || userRecord?.motherName || "";
 
-  out.address = loanApp?.address || kyc?.address || addrObj?.line || (typeof session?.address === "string" && session.address) || "";
-  out.city    = loanApp?.city    || kyc?.city    || addrObj?.city    || session?.city    || "";
-  out.state   = loanApp?.state   || kyc?.state   || addrObj?.state   || session?.state   || "";
-  out.pincode = loanApp?.pincode || loanApp?.pin || kyc?.pincode || kyc?.pin || addrObj?.pincode || session?.pincode || "";
-  out.country = loanApp?.country || kyc?.country || "India";
+  // ── Address — kyc.address is a nested object ──────────────────────
+  var addrObj = (session?.address && typeof session.address === "object") ? session.address : {};
+
+  out.address = kycAddr.line  || addrObj.line  || (typeof session?.address === "string" ? session.address : "") || "";
+  out.city    = kycAddr.city  || addrObj.city  || session?.city    || "";
+  out.state   = kycAddr.state || addrObj.state || session?.state   || "";
+  out.pincode = kycAddr.pincode || kycAddr.pin || addrObj.pincode  || session?.pincode || "";
+  out.country = "India";
 
   // ── Employment ────────────────────────────────────────────────────
-  out.employment = cibil?.employment || loanApproval?.employment || "";
+  out.employment = cibil?.employment || loanApp?.employment || loanApproval?.employment || "";
 
   // ── Monthly income ────────────────────────────────────────────────
-  // Priority: cibil form → bank-account form (kyc_data) → user record
   out.monthlyIncome = cibil?.monthlyIncome
                    || kyc?.monthlyNetIncome
                    || userRecord?.monthlyNetIncome
@@ -333,7 +336,6 @@ function loadAllSources() {
                    || "";
 
   // ── Gross annual income ───────────────────────────────────────────
-  // Priority: cibil form → bank-account form (kyc_data) → user record → legacy
   out.annualIncome  = cibil?.annualIncome
                    || kyc?.grossAnnualIncome
                    || userRecord?.grossAnnualIncome
@@ -342,8 +344,6 @@ function loadAllSources() {
                    || "";
 
   // ── Other income ──────────────────────────────────────────────────
-  // FIX: bank-account.html now saves otherIncome to kyc_data
-  // Priority: kyc_data → loan_application_data → user record
   out.otherIncome   = kyc?.otherIncome
                    || loanApp?.otherIncome
                    || userRecord?.otherIncome
@@ -353,7 +353,7 @@ function loadAllSources() {
   // ── CIBIL ─────────────────────────────────────────────────────────
   out.cibilScore = cibil?.score || localStorage.getItem("loan_score") || "";
 
-  // ── Tenure: floor-based age (consistent with my-account.html fix) ─
+  // ── Tenure ────────────────────────────────────────────────────────
   var tenure = null;
   if (out.dob) {
     var birth = new Date(out.dob);
@@ -368,7 +368,7 @@ function loadAllSources() {
 
   // ── Loan fields ───────────────────────────────────────────────────
   out.loanType     = cibil?.loanTypeLabel || cibil?.loanType || loanApproval?.loanType || localStorage.getItem("loan_type_selected") || "";
-  out.loanAmount   = cibil?.loanAmount   || loanApproval?.loanAmount || localStorage.getItem("loan_amount_requested") || "";
+  out.loanAmount   = cibil?.loanAmount    || loanApproval?.loanAmount || localStorage.getItem("loan_amount_requested") || "";
   out.loanDuration = loanApp?.loanDuration || loanApp?.duration || tenure || "";
   out.collateral   = loanApproval?.collateral || loanApp?.collateral || "";
 
