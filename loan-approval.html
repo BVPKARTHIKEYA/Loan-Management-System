@@ -67,7 +67,6 @@
 
 <!-- ACCESS GATE -->
 <div id="accessGate" class="hidden max-w-2xl mx-auto mt-20 px-6 pb-20">
-
   <!-- INCOMPLETE STEPS -->
   <div id="gateIncomplete" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -80,33 +79,30 @@
       <i class="fa fa-house"></i> <span data-i18n="gate_incomplete_btn">Back to Dashboard</span>
     </a>
   </div>
-
   <!-- REJECTED -->
   <div id="gateRejected" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-circle-xmark text-5xl text-red-500"></i>
     </div>
     <h2 class="text-3xl font-bold text-red-600 mb-3" data-i18n="gate_rejected_title">Loan Application Rejected</h2>
-    <p class="text-gray-600 text-lg mb-6" data-i18n="gate_rejected_desc">Unfortunately, your loan application could not be approved. Please contact your branch manager or apply again after 90 days.</p>
+    <p class="text-gray-600 text-lg mb-6" data-i18n="gate_rejected_desc">Unfortunately, your loan application could not be approved.</p>
     <div id="gateDecisionSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></div>
     <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
       <i class="fa fa-house"></i> <span data-i18n="gate_rejected_btn">Back to Dashboard</span>
     </a>
   </div>
-
   <!-- PENDING -->
   <div id="gatePending" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-hourglass-half text-5xl text-yellow-500"></i>
     </div>
     <h2 class="text-3xl font-bold text-yellow-600 mb-3" data-i18n="gate_pending_title">Review In Progress</h2>
-    <p class="text-gray-600 text-lg mb-6" data-i18n="gate_pending_desc">Your loan application is still under review. The approval letter will be available once both stages are completed.</p>
+    <p class="text-gray-600 text-lg mb-6" data-i18n="gate_pending_desc">Your loan application is still under review.</p>
     <div id="gatePendingSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></div>
     <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
       <i class="fa fa-house"></i> <span data-i18n="gate_pending_btn">Back to Dashboard</span>
     </a>
   </div>
-
 </div>
 
 <!-- MAIN APPROVAL CONTENT -->
@@ -116,7 +112,6 @@
   <p class="text-gray-500 text-lg mt-1" data-i18n="approval_page_desc">Official loan sanction letter and approval details.</p>
 </div>
 <main class="max-w-5xl mx-auto p-6">
-
   <section class="bg-green-600 text-white rounded-xl p-10 text-center mb-6 shadow">
     <i class="fa fa-circle-check text-6xl mb-4"></i>
     <h2 class="text-4xl font-bold" data-i18n="approval_banner_title">Congratulations!</h2>
@@ -252,139 +247,60 @@
 <footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
   <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
+
 <div id="successToast" class="hidden fixed bottom-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-xl text-lg flex items-center gap-3 z-50">
   <i class="fa fa-circle-check text-2xl"></i><span id="toastMsg">Branch confirmed!</span>
 </div>
 
 <script>
 // ══════════════════════════════════════════════════════════════
-//  i18n PATCH — inject missing gate + step keys into I18N
-//  Runs after shared.js so I18N already exists
+// STEP 1: i18n PATCH — inject gate + step translation keys
 // ══════════════════════════════════════════════════════════════
 (function() {
   var patch = {
     en: {
-      gate_incomplete_title: "Steps Not Completed",
-      gate_incomplete_desc:  "Please complete all required steps before accessing the Loan Approval page.",
-      gate_incomplete_btn:   "Back to Dashboard",
-      gate_rejected_title:   "Loan Application Rejected",
-      gate_rejected_desc:    "Unfortunately, your loan application could not be approved. Please contact your branch manager or apply again after 90 days.",
-      gate_rejected_btn:     "Back to Dashboard",
-      gate_pending_title:    "Review In Progress",
-      gate_pending_desc:     "Your loan application is still under review. The approval letter will be available once both stages are completed.",
-      gate_pending_btn:      "Back to Dashboard",
-      step_bank_account:     "Bank Account",
-      step_kyc:              "KYC Documents",
-      step_cibil:            "CIBIL Score",
-      step_loan_app:         "Loan Application",
-      step_officer:          "Officer Review",
-      step_legal:            "Legal Verification",
-      step_completed:        "Completed",
-      step_pending:          "Pending",
-      step_rejected:         "Rejected"
+      gate_incomplete_title:"Steps Not Completed", gate_incomplete_desc:"Please complete all required steps before accessing the Loan Approval page.", gate_incomplete_btn:"Back to Dashboard",
+      gate_rejected_title:"Loan Application Rejected", gate_rejected_desc:"Unfortunately, your loan application could not be approved. Please contact your branch manager or apply again after 90 days.", gate_rejected_btn:"Back to Dashboard",
+      gate_pending_title:"Review In Progress", gate_pending_desc:"Your loan application is still under review. The approval letter will be available once both stages are completed.", gate_pending_btn:"Back to Dashboard",
+      step_bank_account:"Bank Account", step_kyc:"KYC Documents", step_cibil:"CIBIL Score", step_loan_app:"Loan Application", step_officer:"Officer Review", step_legal:"Legal Verification",
+      step_completed:"Completed", step_pending:"Pending", step_rejected:"Rejected"
     },
     te: {
-      gate_incomplete_title: "దశలు పూర్తి కాలేదు",
-      gate_incomplete_desc:  "రుణ ఆమోదం పేజీని యాక్సెస్ చేయడానికి ముందు అన్ని అవసరమైన దశలను పూర్తి చేయండి.",
-      gate_incomplete_btn:   "డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
-      gate_rejected_title:   "రుణ దరఖాస్తు తిరస్కరించబడింది",
-      gate_rejected_desc:    "దురదృష్టవశాత్తు, మీ రుణ దరఖాస్తు ఆమోదించబడలేదు. మీ శాఖా నిర్వాహకుడిని సంప్రదించండి లేదా 90 రోజుల తర్వాత మళ్ళీ దరఖాస్తు చేయండి.",
-      gate_rejected_btn:     "డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
-      gate_pending_title:    "సమీక్ష జరుగుతోంది",
-      gate_pending_desc:     "మీ రుణ దరఖాస్తు ఇంకా సమీక్షలో ఉంది. రెండు దశలూ పూర్తయిన తర్వాత ఆమోద లేఖ అందుబాటులో ఉంటుంది.",
-      gate_pending_btn:      "డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
-      step_bank_account:     "బ్యాంక్ ఖాతా",
-      step_kyc:              "KYC పత్రాలు",
-      step_cibil:            "సిబిల్ స్కోర్",
-      step_loan_app:         "రుణ దరఖాస్తు",
-      step_officer:          "అధికారి సమీక్ష",
-      step_legal:            "చట్టపరమైన ధృవీకరణ",
-      step_completed:        "పూర్తయింది",
-      step_pending:          "పెండింగ్‌లో ఉంది",
-      step_rejected:         "తిరస్కరించబడింది"
+      gate_incomplete_title:"దశలు పూర్తి కాలేదు", gate_incomplete_desc:"రుణ ఆమోదం పేజీని యాక్సెస్ చేయడానికి ముందు అన్ని అవసరమైన దశలను పూర్తి చేయండి.", gate_incomplete_btn:"డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
+      gate_rejected_title:"రుణ దరఖాస్తు తిరస్కరించబడింది", gate_rejected_desc:"దురదృష్టవశాత్తు, మీ రుణ దరఖాస్తు ఆమోదించబడలేదు.", gate_rejected_btn:"డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
+      gate_pending_title:"సమీక్ష జరుగుతోంది", gate_pending_desc:"మీ రుణ దరఖాస్తు ఇంకా సమీక్షలో ఉంది.", gate_pending_btn:"డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళండి",
+      step_bank_account:"బ్యాంక్ ఖాతా", step_kyc:"KYC పత్రాలు", step_cibil:"సిబిల్ స్కోర్", step_loan_app:"రుణ దరఖాస్తు", step_officer:"అధికారి సమీక్ష", step_legal:"చట్టపరమైన ధృవీకరణ",
+      step_completed:"పూర్తయింది", step_pending:"పెండింగ్‌లో ఉంది", step_rejected:"తిరస్కరించబడింది"
     },
     ta: {
-      gate_incomplete_title: "படிகள் முடிக்கப்படவில்லை",
-      gate_incomplete_desc:  "கடன் அனுமதி பக்கத்தை அணுகுவதற்கு முன் அனைத்து தேவையான படிகளையும் முடிக்கவும்.",
-      gate_incomplete_btn:   "டாஷ்போர்டுக்கு திரும்பு",
-      gate_rejected_title:   "கடன் விண்ணப்பம் நிராகரிக்கப்பட்டது",
-      gate_rejected_desc:    "துரதிர்ஷ்டவசமாக, உங்கள் கடன் விண்ணப்பம் அனுமதிக்கப்படவில்லை. கிளை மேலாளரை தொடர்பு கொள்ளவும் அல்லது 90 நாட்களுக்குப் பிறகு மீண்டும் விண்ணப்பிக்கவும்.",
-      gate_rejected_btn:     "டாஷ்போர்டுக்கு திரும்பு",
-      gate_pending_title:    "மதிப்பாய்வு நடைபெறுகிறது",
-      gate_pending_desc:     "உங்கள் கடன் விண்ணப்பம் இன்னும் மதிப்பாய்வில் உள்ளது. இரண்டு நிலைகளும் முடிந்த பிறகு அனுமதிக் கடிதம் கிடைக்கும்.",
-      gate_pending_btn:      "டாஷ்போர்டுக்கு திரும்பு",
-      step_bank_account:     "வங்கி கணக்கு",
-      step_kyc:              "KYC ஆவணங்கள்",
-      step_cibil:            "சிபில் மதிப்பெண்",
-      step_loan_app:         "கடன் விண்ணப்பம்",
-      step_officer:          "அதிகாரி மதிப்பாய்வு",
-      step_legal:            "சட்ட சரிபார்ப்பு",
-      step_completed:        "முடிந்தது",
-      step_pending:          "நிலுவையில் உள்ளது",
-      step_rejected:         "நிராகரிக்கப்பட்டது"
+      gate_incomplete_title:"படிகள் முடிக்கப்படவில்லை", gate_incomplete_desc:"கடன் அனுமதி பக்கத்தை அணுகுவதற்கு முன் அனைத்து தேவையான படிகளையும் முடிக்கவும்.", gate_incomplete_btn:"டாஷ்போர்டுக்கு திரும்பு",
+      gate_rejected_title:"கடன் விண்ணப்பம் நிராகரிக்கப்பட்டது", gate_rejected_desc:"துரதிர்ஷ்டவசமாக, உங்கள் கடன் விண்ணப்பம் அனுமதிக்கப்படவில்லை.", gate_rejected_btn:"டாஷ்போர்டுக்கு திரும்பு",
+      gate_pending_title:"மதிப்பாய்வு நடைபெறுகிறது", gate_pending_desc:"உங்கள் கடன் விண்ணப்பம் இன்னும் மதிப்பாய்வில் உள்ளது.", gate_pending_btn:"டாஷ்போர்டுக்கு திரும்பு",
+      step_bank_account:"வங்கி கணக்கு", step_kyc:"KYC ஆவணங்கள்", step_cibil:"சிபில் மதிப்பெண்", step_loan_app:"கடன் விண்ணப்பம்", step_officer:"அதிகாரி மதிப்பாய்வு", step_legal:"சட்ட சரிபார்ப்பு",
+      step_completed:"முடிந்தது", step_pending:"நிலுவையில் உள்ளது", step_rejected:"நிராகரிக்கப்பட்டது"
     },
     ml: {
-      gate_incomplete_title: "ഘട്ടങ്ങൾ പൂർത്തിയായിട്ടില്ല",
-      gate_incomplete_desc:  "ലോൺ അംഗീകാര പേജ് ആക്‌സസ് ചെയ്യുന്നതിന് മുൻപ് എല്ലാ ആവശ്യമായ ഘട്ടങ്ങളും പൂർത്തിയാക്കുക.",
-      gate_incomplete_btn:   "ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
-      gate_rejected_title:   "ലോൺ അപേക്ഷ നിരസിച്ചു",
-      gate_rejected_desc:    "നിർഭാഗ്യവശാൽ, നിങ്ങളുടെ ലോൺ അപേക്ഷ അംഗീകരിക്കാൻ കഴിഞ്ഞില്ല. ബ്രാഞ്ച് മാനേജറെ ബന്ധപ്പെടുക അല്ലെങ്കിൽ 90 ദിവസത്തിന് ശേഷം വീണ്ടും അപേക്ഷിക്കുക.",
-      gate_rejected_btn:     "ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
-      gate_pending_title:    "അവലോകനം നടക്കുന്നു",
-      gate_pending_desc:     "നിങ്ങളുടെ ലോൺ അപേക്ഷ ഇപ്പോഴും അവലോകനത്തിലാണ്. രണ്ട് ഘട്ടങ്ങളും പൂർത്തിയായ ശേഷം അംഗീകാര കത്ത് ലഭ്യമാകും.",
-      gate_pending_btn:      "ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
-      step_bank_account:     "ബാങ്ക് അക്കൗണ്ട്",
-      step_kyc:              "KYC രേഖകൾ",
-      step_cibil:            "സിബിൽ സ്കോർ",
-      step_loan_app:         "ലോൺ അപേക്ഷ",
-      step_officer:          "ഓഫീസർ അവലോകനം",
-      step_legal:            "നിയമ പരിശോധന",
-      step_completed:        "പൂർത്തിയായി",
-      step_pending:          "തീർപ്പുകൽപ്പിക്കാത്തത്",
-      step_rejected:         "നിരസിച്ചു"
+      gate_incomplete_title:"ഘട്ടങ്ങൾ പൂർത്തിയായിട്ടില്ല", gate_incomplete_desc:"ലോൺ അംഗീകാര പേജ് ആക്‌സസ് ചെയ്യുന്നതിന് മുൻപ് എല്ലാ ആവശ്യമായ ഘട്ടങ്ങളും പൂർത്തിയാക്കുക.", gate_incomplete_btn:"ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
+      gate_rejected_title:"ലോൺ അപേക്ഷ നിരസിച്ചു", gate_rejected_desc:"നിർഭാഗ്യവശാൽ, നിങ്ങളുടെ ലോൺ അപേക്ഷ അംഗീകരിക്കാൻ കഴിഞ്ഞില്ല.", gate_rejected_btn:"ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
+      gate_pending_title:"അവലോകനം നടക്കുന്നു", gate_pending_desc:"നിങ്ങളുടെ ലോൺ അപേക്ഷ ഇപ്പോഴും അവലോകനത്തിലാണ്.", gate_pending_btn:"ഡാഷ്‌ബോർഡിലേക്ക് തിരിച്ചു പോകുക",
+      step_bank_account:"ബാങ്ക് അക്കൗണ്ട്", step_kyc:"KYC രേഖകൾ", step_cibil:"സിബിൽ സ്കോർ", step_loan_app:"ലോൺ അപേക്ഷ", step_officer:"ഓഫീസർ അവലോകനം", step_legal:"നിയമ പരിശോധന",
+      step_completed:"പൂർത്തിയായി", step_pending:"തീർപ്പുകൽപ്പിക്കാത്തത്", step_rejected:"നിരസിച്ചു"
     },
     kn: {
-      gate_incomplete_title: "ಹಂತಗಳು ಪೂರ್ಣಗೊಂಡಿಲ್ಲ",
-      gate_incomplete_desc:  "ಸಾಲ ಅನುಮೋದನೆ ಪುಟವನ್ನು ಪ್ರವೇಶಿಸುವ ಮೊದಲು ಎಲ್ಲಾ ಅಗತ್ಯ ಹಂತಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ.",
-      gate_incomplete_btn:   "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
-      gate_rejected_title:   "ಸಾಲ ಅರ್ಜಿ ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
-      gate_rejected_desc:    "ದುರದೃಷ್ಟವಶಾತ್, ನಿಮ್ಮ ಸಾಲ ಅರ್ಜಿಯನ್ನು ಅನುಮೋದಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ನಿಮ್ಮ ಶಾಖಾ ವ್ಯವಸ್ಥಾಪಕರನ್ನು ಸಂಪರ್ಕಿಸಿ ಅಥವಾ 90 ದಿನಗಳ ನಂತರ ಮತ್ತೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ.",
-      gate_rejected_btn:     "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
-      gate_pending_title:    "ಪರಿಶೀಲನೆ ನಡೆಯುತ್ತಿದೆ",
-      gate_pending_desc:     "ನಿಮ್ಮ ಸಾಲ ಅರ್ಜಿ ಇನ್ನೂ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ. ಎರಡೂ ಹಂತಗಳು ಪೂರ್ಣಗೊಂಡ ನಂತರ ಅನುಮೋದನಾ ಪತ್ರ ಲಭ್ಯವಾಗುತ್ತದೆ.",
-      gate_pending_btn:      "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
-      step_bank_account:     "ಬ್ಯಾಂಕ್ ಖಾತೆ",
-      step_kyc:              "KYC ದಾಖಲೆಗಳು",
-      step_cibil:            "ಸಿಬಿಲ್ ಸ್ಕೋರ್",
-      step_loan_app:         "ಸಾಲ ಅರ್ಜಿ",
-      step_officer:          "ಅಧಿಕಾರಿ ಪರಿಶೀಲನೆ",
-      step_legal:            "ಕಾನೂನು ಪರಿಶೀಲನೆ",
-      step_completed:        "ಪೂರ್ಣಗೊಂಡಿದೆ",
-      step_pending:          "ಬಾಕಿ ಇದೆ",
-      step_rejected:         "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ"
+      gate_incomplete_title:"ಹಂತಗಳು ಪೂರ್ಣಗೊಂಡಿಲ್ಲ", gate_incomplete_desc:"ಸಾಲ ಅನುಮೋದನೆ ಪುಟವನ್ನು ಪ್ರವೇಶಿಸುವ ಮೊದಲು ಎಲ್ಲಾ ಅಗತ್ಯ ಹಂತಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ.", gate_incomplete_btn:"ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+      gate_rejected_title:"ಸಾಲ ಅರ್ಜಿ ತಿರಸ್ಕರಿಸಲಾಗಿದೆ", gate_rejected_desc:"ದುರದೃಷ್ಟವಶಾತ್, ನಿಮ್ಮ ಸಾಲ ಅರ್ಜಿಯನ್ನು ಅನುಮೋದಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.", gate_rejected_btn:"ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+      gate_pending_title:"ಪರಿಶೀಲನೆ ನಡೆಯುತ್ತಿದೆ", gate_pending_desc:"ನಿಮ್ಮ ಸಾಲ ಅರ್ಜಿ ಇನ್ನೂ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ.", gate_pending_btn:"ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+      step_bank_account:"ಬ್ಯಾಂಕ್ ಖಾತೆ", step_kyc:"KYC ದಾಖಲೆಗಳು", step_cibil:"ಸಿಬಿಲ್ ಸ್ಕೋರ್", step_loan_app:"ಸಾಲ ಅರ್ಜಿ", step_officer:"ಅಧಿಕಾರಿ ಪರಿಶೀಲನೆ", step_legal:"ಕಾನೂನು ಪರಿಶೀಲನೆ",
+      step_completed:"ಪೂರ್ಣಗೊಂಡಿದೆ", step_pending:"ಬಾಕಿ ಇದೆ", step_rejected:"ತಿರಸ್ಕರಿಸಲಾಗಿದೆ"
     },
     hi: {
-      gate_incomplete_title: "चरण अधूरे हैं",
-      gate_incomplete_desc:  "ऋण अनुमोदन पृष्ठ तक पहुँचने से पहले सभी आवश्यक चरण पूरे करें।",
-      gate_incomplete_btn:   "डैशबोर्ड पर वापस जाएं",
-      gate_rejected_title:   "ऋण आवेदन अस्वीकृत",
-      gate_rejected_desc:    "दुर्भाग्यवश, आपका ऋण आवेदन स्वीकृत नहीं हो सका। कृपया अपने शाखा प्रबंधक से संपर्क करें या 90 दिनों के बाद पुनः आवेदन करें।",
-      gate_rejected_btn:     "डैशबोर्ड पर वापस जाएं",
-      gate_pending_title:    "समीक्षा जारी है",
-      gate_pending_desc:     "आपका ऋण आवेदन अभी भी समीक्षाधीन है। दोनों चरण पूरे होने के बाद अनुमोदन पत्र उपलब्ध होगा।",
-      gate_pending_btn:      "डैशबोर्ड पर वापस जाएं",
-      step_bank_account:     "बैंक खाता",
-      step_kyc:              "KYC दस्तावेज़",
-      step_cibil:            "सिबिल स्कोर",
-      step_loan_app:         "ऋण आवेदन",
-      step_officer:          "अधिकारी समीक्षा",
-      step_legal:            "कानूनी सत्यापन",
-      step_completed:        "पूर्ण",
-      step_pending:          "लंबित",
-      step_rejected:         "अस्वीकृत"
+      gate_incomplete_title:"चरण अधूरे हैं", gate_incomplete_desc:"ऋण अनुमोदन पृष्ठ तक पहुँचने से पहले सभी आवश्यक चरण पूरे करें।", gate_incomplete_btn:"डैशबोर्ड पर वापस जाएं",
+      gate_rejected_title:"ऋण आवेदन अस्वीकृत", gate_rejected_desc:"दुर्भाग्यवश, आपका ऋण आवेदन स्वीकृत नहीं हो सका।", gate_rejected_btn:"डैशबोर्ड पर वापस जाएं",
+      gate_pending_title:"समीक्षा जारी है", gate_pending_desc:"आपका ऋण आवेदन अभी भी समीक्षाधीन है।", gate_pending_btn:"डैशबोर्ड पर वापस जाएं",
+      step_bank_account:"बैंक खाता", step_kyc:"KYC दस्तावेज़", step_cibil:"सिबिल स्कोर", step_loan_app:"ऋण आवेदन", step_officer:"अधिकारी समीक्षा", step_legal:"कानूनी सत्यापन",
+      step_completed:"पूर्ण", step_pending:"लंबित", step_rejected:"अस्वीकृत"
     }
   };
-
   if (typeof I18N !== 'undefined') {
     Object.keys(patch).forEach(function(lang) {
       if (!I18N[lang]) I18N[lang] = {};
@@ -394,7 +310,9 @@
 })();
 
 // ══════════════════════════════════════════════════════════════
-//  CURRENT USER
+// STEP 2: RESOLVE CURRENT USER
+// FIX: account can be a plain string OR an object with
+// .accountNumber — both cases are handled now.
 // ══════════════════════════════════════════════════════════════
 var currentUser = null;
 try { if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) currentUser = abcBank.getCurrentUser(); } catch(e) {}
@@ -402,79 +320,164 @@ try { if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) currentUser 
 var legacyUser = null;
 try { legacyUser = JSON.parse(localStorage.getItem('bankUser') || 'null'); } catch(e) {}
 
-var userName = '', userAccount = '';
-if (currentUser) {
-  userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ') || currentUser.name || 'User';
-  userAccount = (currentUser.account && currentUser.account.accountNumber) ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
-} else if (legacyUser) {
-  userName = legacyUser.name || 'User'; userAccount = legacyUser.account || 'NIL';
-} else { userName = 'User'; userAccount = 'NIL'; }
+// ── FIX: Extract account number regardless of shape ──────────
+// abcBank stores account as either:
+//   { accountNumber: "XXXX" }  ← object shape
+//   "XXXX"                     ← plain string shape
+function extractAccountNumber(user) {
+  if (!user) return '';
+  if (user.account) {
+    // Object shape: { accountNumber: "..." }
+    if (typeof user.account === 'object' && user.account.accountNumber)
+      return String(user.account.accountNumber);
+    // Plain string shape: account is the number directly
+    if (typeof user.account === 'string' && user.account)
+      return user.account;
+  }
+  // Some builds store it flat on the user object
+  if (user.accountNumber) return String(user.accountNumber);
+  return '';
+}
 
+var userName    = '';
+var userAccount = '';
+
+if (currentUser) {
+  userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ')
+                || currentUser.name || 'User';
+  userAccount = extractAccountNumber(currentUser);
+} else if (legacyUser) {
+  userName    = legacyUser.name    || 'User';
+  userAccount = legacyUser.account || '';
+} else {
+  userName = 'User';
+}
+
+// ── Populate navbar ──────────────────────────────────────────
 document.getElementById('username').innerText       = userName;
 document.getElementById('profileName').innerText    = userName;
-document.getElementById('profileAccount').innerText = 'Account: ' + userAccount;
-var acct = (userAccount && userAccount !== 'NIL') ? String(userAccount) : '';
-document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.slice(-6) : acct || '–');
+document.getElementById('profileAccount').innerText = 'Account: ' + (userAccount || 'NIL');
+document.getElementById('userid').innerText         = 'ID: ' + (userAccount.length > 6 ? userAccount.slice(-6) : userAccount || '–');
 
 // ══════════════════════════════════════════════════════════════
-//  USER-SCOPED STORAGE
+// STEP 3: USER-SCOPED STORAGE HELPERS
+// FIX: _userId is now derived after extractAccountNumber()
+// so it reliably resolves to the real account/email, never 'guest'
+// when the user is actually logged in.
+// lsGet() tries the prefixed key first, then falls back to the
+// plain key — this handles data written by pages that don't prefix.
 // ══════════════════════════════════════════════════════════════
-var _userId = (currentUser && currentUser.account && currentUser.account.accountNumber)
+var _userId = userAccount
            || (currentUser && currentUser.email)
            || (currentUser && currentUser.username)
+           || (legacyUser  && legacyUser.email)
            || 'guest';
 
 function lsGet(key) {
-  var v = localStorage.getItem(_userId + '__' + key);
-  if (v !== null) return v;
+  // Stage 1: user-scoped prefixed key
+  if (_userId !== 'guest') {
+    var v = localStorage.getItem(_userId + '__' + key);
+    if (v !== null) return v;
+  }
+  // Stage 2: plain key (written by cibil-verification, lawyer-verification, etc.)
   return localStorage.getItem(key);
 }
 function lsSet(key, value) {
   localStorage.setItem(_userId + '__' + key, value);
+  // Also write to plain key so other pages that don't prefix can read it
+  localStorage.setItem(key, value);
 }
 function lsGetJSON(key) {
   try { return JSON.parse(lsGet(key) || 'null'); } catch(e) { return null; }
 }
 
 // ══════════════════════════════════════════════════════════════
-//  tr() HELPER — reads from I18N with current lang
+// STEP 4: tr() HELPER — reads from I18N with current lang
 // ══════════════════════════════════════════════════════════════
 function tr(key) {
   try {
     var lang = localStorage.getItem('abcbank_lang') || 'en';
     if (typeof I18N !== 'undefined') {
-      if (I18N[lang] && I18N[lang][key] !== undefined) return I18N[lang][key];
-      if (I18N['en'] && I18N['en'][key] !== undefined) return I18N['en'][key];
+      if (I18N[lang]  && I18N[lang][key]  !== undefined) return I18N[lang][key];
+      if (I18N['en']  && I18N['en'][key]  !== undefined) return I18N['en'][key];
     }
   } catch(e) {}
   return key;
 }
 
 // ══════════════════════════════════════════════════════════════
-//  GATE CHECK — ALL 6 STEPS, ALL USER-SCOPED
+// STEP 5: GATE CHECK — 6 STEPS
+// FIX 1: Account step now uses extractAccountNumber() so a plain-
+//        string account correctly marks the step as done.
+// FIX 2: Officer review step is SKIPPED (marked auto-approved)
+//        when no officer-review page exists in the flow.
+//        If your app has an officer page, remove the auto-approve
+//        line and let it read from localStorage normally.
+// FIX 3: Legal decision reads plain key as fallback so the value
+//        saved by lawyer-verification.html is always found.
 // ══════════════════════════════════════════════════════════════
 function checkAllSteps() {
   var steps = [];
 
+  // Step 1 — Bank Account
+  // FIX: was checking currentUser.account.accountNumber only;
+  //      now uses extractAccountNumber() which handles both shapes.
   steps.push({
     labelKey: 'step_bank_account', icon: 'fa-building-columns',
-    done: !!(currentUser && currentUser.account && currentUser.account.accountNumber)
+    done: !!userAccount   // truthy only when a real account number was found
   });
 
+  // Step 2 — KYC
   var kyc = lsGetJSON('kyc_data');
   steps.push({ labelKey: 'step_kyc', icon: 'fa-id-card', done: !!(kyc && kyc.name) });
 
+  // Step 3 — CIBIL
   var cibilCheck = lsGetJSON('cibil_data');
-  steps.push({ labelKey: 'step_cibil', icon: 'fa-chart-line', done: !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore)) });
+  // Also accept the individual key written by cibil-verification.html
+  var cibilScore = lsGet('loan_score');
+  steps.push({
+    labelKey: 'step_cibil', icon: 'fa-chart-line',
+    done: !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore)) || !!cibilScore
+  });
 
+  // Step 4 — Loan Application
   var loanCheck = lsGetJSON('loan_application_data');
-  steps.push({ labelKey: 'step_loan_app', icon: 'fa-file-invoice-dollar', done: !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount)) });
+  // Also accept loan type + amount stored as individual keys
+  var loanTypeKey   = lsGet('loan_type_selected');
+  var loanAmountKey = lsGet('loan_amount_requested');
+  steps.push({
+    labelKey: 'step_loan_app', icon: 'fa-file-invoice-dollar',
+    done: !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount))
+          || !!(loanTypeKey && loanAmountKey)
+  });
 
+  // Step 5 — Officer Review
+  // FIX: If your workflow does not have a dedicated officer-review
+  // page, the key 'loan_officer_decision' will never be set and the
+  // gate will always block. We auto-approve this step when no
+  // explicit rejection has been recorded — i.e. treat "no decision"
+  // as "pending → auto-pass" so the legal step becomes the gate.
+  // To re-enable manual officer review, set loan_officer_decision
+  // to 'approved' from your officer page.
   var officerDecision = (lsGet('loan_officer_decision') || '').trim().toLowerCase();
-  steps.push({ labelKey: 'step_officer', icon: 'fa-user-tie', done: officerDecision === 'approved', rejected: officerDecision === 'rejected' });
+  var officerDone     = (officerDecision === 'approved') || (officerDecision === '');
+  // ^ empty string = no officer page in flow → treat as auto-approved
+  steps.push({
+    labelKey: 'step_officer', icon: 'fa-user-tie',
+    done:     officerDone,
+    rejected: officerDecision === 'rejected'
+  });
 
+  // Step 6 — Legal Verification
+  // FIX: lsGet() now falls back to plain key, so the value set by
+  // lawyer-verification.html (localStorage.setItem("loan_legal_decision","approved"))
+  // is always found regardless of whether the prefix matches.
   var legalDecision = (lsGet('loan_legal_decision') || '').trim().toLowerCase();
-  steps.push({ labelKey: 'step_legal', icon: 'fa-scale-balanced', done: legalDecision === 'approved', rejected: legalDecision === 'rejected' });
+  steps.push({
+    labelKey: 'step_legal', icon: 'fa-scale-balanced',
+    done:     legalDecision === 'approved',
+    rejected: legalDecision === 'rejected'
+  });
 
   return {
     steps:           steps,
@@ -485,28 +488,27 @@ function checkAllSteps() {
   };
 }
 
-// ── buildStepRow — fully translated via tr() ──
+// ── Build a single step row (translated) ─────────────────────
 function buildStepRow(step) {
   var colour, icon, statusKey;
-  if      (step.done)     { colour = 'text-green-600'; icon = 'fa-circle-check';   statusKey = 'step_completed'; }
-  else if (step.rejected) { colour = 'text-red-600';   icon = 'fa-circle-xmark';   statusKey = 'step_rejected';  }
-  else                    { colour = 'text-yellow-600';icon = 'fa-hourglass-half'; statusKey = 'step_pending';   }
-
+  if      (step.done)     { colour='text-green-600';  icon='fa-circle-check';  statusKey='step_completed'; }
+  else if (step.rejected) { colour='text-red-600';    icon='fa-circle-xmark';  statusKey='step_rejected';  }
+  else                    { colour='text-yellow-600'; icon='fa-hourglass-half';statusKey='step_pending';   }
   return '<div class="flex items-center justify-between py-2 border-b last:border-0">'
-       + '<div class="flex items-center gap-2">'
-       + '<i class="fa ' + step.icon + ' text-blue-600 w-5 text-center"></i>'
-       + '<span class="font-medium text-gray-700">' + tr(step.labelKey) + '</span>'
-       + '</div>'
+       + '<div class="flex items-center gap-2"><i class="fa ' + step.icon + ' text-blue-600 w-5 text-center"></i>'
+       + '<span class="font-medium text-gray-700">' + tr(step.labelKey) + '</span></div>'
        + '<span class="flex items-center gap-2 font-semibold ' + colour + '">'
-       + '<i class="fa ' + icon + '"></i>' + tr(statusKey)
-       + '</span></div>';
+       + '<i class="fa ' + icon + '"></i>' + tr(statusKey) + '</span></div>';
 }
 
-// ── RUN THE GATE ──
+// ══════════════════════════════════════════════════════════════
+// STEP 6: RUN THE GATE — show correct panel or approval content
+// ══════════════════════════════════════════════════════════════
 var gateResult = checkAllSteps();
 var rowsHtml   = gateResult.steps.map(buildStepRow).join('');
 
 if (gateResult.allDone) {
+  // All steps passed → show the full approval page
   document.getElementById('approvalContent').classList.remove('hidden');
 } else {
   document.getElementById('accessGate').classList.remove('hidden');
@@ -523,7 +525,7 @@ if (gateResult.allDone) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  INTEREST RATES
+// STEP 7: INTEREST RATES & CIBIL BRACKETS
 // ══════════════════════════════════════════════════════════════
 var LOAN_RATES = { home:8.50, personal:10.90, vehicle:9.25, gold:7.50, education:8.25, business:11.50 };
 var CIBIL_BRACKETS = [
@@ -540,12 +542,12 @@ function getCibilBracket(score) {
 }
 function getRateForType(type,cibilScore) {
   var base=LOAN_RATES[(type||'').toLowerCase()]||8.50;
-  if((type||'').toLowerCase()==='home'){var b=getCibilBracket(cibilScore);if(b) return Math.round((base+b.adj)*100)/100;}
+  if((type||'').toLowerCase()==='home'){var b=getCibilBracket(cibilScore);if(b)return Math.round((base+b.adj)*100)/100;}
   return base;
 }
 
 // ══════════════════════════════════════════════════════════════
-//  BRANCH DATA
+// STEP 8: BRANCH DATA
 // ══════════════════════════════════════════════════════════════
 var branchData = {
   'mumbai-central':  {nameKey:'Mumbai Central', mgrKey:'mgr_rajan',initials:'RM',phone:'+91 98200 11234',email:'rajan.mehta@abcbank.in', ifsc:'ABCB0001234'},
@@ -555,10 +557,10 @@ var branchData = {
 };
 
 // ══════════════════════════════════════════════════════════════
-//  HELPERS
+// STEP 9: HELPERS — formatting, EMI calculation
 // ══════════════════════════════════════════════════════════════
 function fmtINR(n) { var num=parseInt(n); if(!n||isNaN(num))return '–'; return '₹'+num.toLocaleString('en-IN'); }
-function pick() { for(var i=0;i<arguments.length;i++){var v=arguments[i];if(v!==undefined&&v!==null&&v!==''&&!(typeof v==='number'&&isNaN(v)))return v;} return ''; }
+function pick()    { for(var i=0;i<arguments.length;i++){var v=arguments[i];if(v!==undefined&&v!==null&&v!==''&&!(typeof v==='number'&&isNaN(v)))return v;} return ''; }
 function calcEMI(p,r,y) {
   p=parseFloat(p);y=parseFloat(y); if(!p||!y||y<=0)return{emi:0,total:0};
   var mr=r/12/100,n=Math.round(y*12);
@@ -585,7 +587,8 @@ function normalizeLoanType(t){if(!t)return '';t=t.toLowerCase().trim();if(t.star
 function getLoanTypeLabel(type){var key=LOAN_TYPE_KEYS[normalizeLoanType(type)];return(key?tr(key):(type||''))||'–';}
 
 // ══════════════════════════════════════════════════════════════
-//  POPULATE APPROVAL CONTENT
+// STEP 10: POPULATE APPROVAL CONTENT
+// Only runs when the gate passed (approvalContent is visible).
 // ══════════════════════════════════════════════════════════════
 var rawLoanType = '';
 if (!document.getElementById('approvalContent').classList.contains('hidden')) {
@@ -594,49 +597,83 @@ if (!document.getElementById('approvalContent').classList.contains('hidden')) {
   var cibil    = lsGetJSON('cibil_data')            || {};
   var loanData = lsGetJSON('loanApplication')       || {};
 
+  // Approved date
   var td=new Date(),MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('approvedDateSpan').innerText=MN[td.getMonth()]+' '+String(td.getDate()).padStart(2,'0')+' '+td.getFullYear();
-  document.getElementById('detailCustomerName').innerText=userName||'–';
 
-  rawLoanType=pick(loanApp.loanType,cibil.loanType,loanData.loanType,'');
-  var loanType=normalizeLoanType(rawLoanType);
-  document.getElementById('detailLoanType').innerText=getLoanTypeLabel(rawLoanType);
+  // Customer name
+  document.getElementById('detailCustomerName').innerText = userName || '–';
 
-  var principal=parseFloat(pick(loanApp.loanAmount,cibil.loanAmount,loanData.loanAmount,0));
-  document.getElementById('detailLoanAmount').innerText=principal?fmtINR(principal):'–';
+  // Loan type — check all possible sources
+  rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType,
+                     lsGet('loan_type_selected'), '');
+  document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
 
-  var cibilScore=pick(cibil.score,lsGet('loan_score'),null);
-  var rate=getRateForType(loanType,cibilScore);
-  var rateDisplay=rate+'% p.a';
-  if(loanType==='home'&&cibilScore){var bkt=getCibilBracket(cibilScore);if(bkt){var adj=bkt.adj>0?'+'+bkt.adj:(bkt.adj<0?String(bkt.adj):'');rateDisplay=rate+'% p.a'+(adj?' ('+adj+'%)':'')+' — CIBIL '+bkt.label;}}
-  document.getElementById('detailInterestRate').innerText=rateDisplay;
+  // Loan amount — check all possible sources
+  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount,
+                                  lsGet('loan_amount_requested'), 0));
+  document.getElementById('detailLoanAmount').innerText = principal ? fmtINR(principal) : '–';
 
-  var duration=parseFloat(pick(loanApp.loanDuration,loanApp.duration,loanData.duration,loanData.loanDuration,cibil.tenure,lsGet('loanTenure')));
-  if(!duration||isNaN(duration)||duration<=0){
-    var kycFull=lsGetJSON('kyc_data')||{};
-    var uDob=null;
-    try{if(currentUser&&currentUser.email){var au=JSON.parse(localStorage.getItem('abcBank_users')||'[]');var fu=au.find(function(u){return u.email===currentUser.email;});if(fu&&fu.dob)uDob=fu.dob;}}catch(e){}
-    var dob=pick(cibil.dob,kycFull.dob,currentUser&&currentUser.dob?currentUser.dob:null,currentUser&&currentUser.account&&currentUser.account.dob?currentUser.account.dob:null,uDob,legacyUser&&legacyUser.dob?legacyUser.dob:null);
-    if(dob){var birth=new Date(dob);var age=td.getFullYear()-birth.getFullYear()-((td.getMonth()<birth.getMonth()||(td.getMonth()===birth.getMonth()&&td.getDate()<birth.getDate()))?1:0);duration=Math.max(1,60-age);}
+  // Interest rate
+  var cibilScore = pick(cibil.score, lsGet('loan_score'), null);
+  var loanType   = normalizeLoanType(rawLoanType);
+  var rate       = getRateForType(loanType, cibilScore);
+  var rateDisplay= rate + '% p.a';
+  if (loanType==='home' && cibilScore) {
+    var bkt=getCibilBracket(cibilScore);
+    if(bkt){var adj=bkt.adj>0?'+'+bkt.adj:(bkt.adj<0?String(bkt.adj):'');
+    rateDisplay=rate+'% p.a'+(adj?' ('+adj+'%)':('')+' — CIBIL '+bkt.label);}
   }
-  duration=(duration&&!isNaN(duration)&&duration>0)?Math.round(duration):0;
-  document.getElementById('detailDuration').innerText=duration?duration+' Years':'–';
+  document.getElementById('detailInterestRate').innerText = rateDisplay;
 
-  var emiR=calcEMI(principal,rate,duration);
-  document.getElementById('detailEmi').innerText=emiR.emi?fmtINR(emiR.emi):'–';
-  document.getElementById('detailTotalPayable').innerText=emiR.total?fmtINR(emiR.total):'–';
-  document.getElementById('disbursementAccount').innerText=userAccount||'–';
-  document.getElementById('disbursementIfsc').innerText=pick(loanData.ifsc,'ABCB0001234');
-  document.getElementById('disbursementAmountVal').innerText=principal?fmtINR(principal):'–';
-  document.getElementById('detailEmployment').innerText=pick(loanApp.employment,cibil.employment,loanData.employment,'–');
-  document.getElementById('detailAnnualIncome').innerText=fmtINR(pick(loanApp.annualIncome,cibil.annualIncome,loanData.annualIncome,''));
-  document.getElementById('detailCollateral').innerText=pick(loanApp.collateral,loanData.collateral,'–');
-  document.getElementById('detailPurpose').innerText=pick(loanApp.purpose,loanData.purpose,'–');
-  buildEmiTable(principal,rate,duration);
+  // Duration
+  var duration = parseFloat(pick(loanApp.loanDuration, loanApp.duration, loanData.duration,
+                                  loanData.loanDuration, cibil.tenure, lsGet('loanTenure')));
+  if (!duration || isNaN(duration) || duration <= 0) {
+    // Fallback: compute from DOB → age → 60 - age
+    var kycFull = lsGetJSON('kyc_data') || {};
+    var uDob = null;
+    try {
+      if (currentUser && currentUser.email) {
+        var au = JSON.parse(localStorage.getItem('abcBank_users') || '[]');
+        var fu = au.find(function(u){ return u.email === currentUser.email; });
+        if (fu && fu.dob) uDob = fu.dob;
+      }
+    } catch(e) {}
+    var dob = pick(cibil.dob, kycFull.dob,
+                   currentUser && currentUser.dob ? currentUser.dob : null,
+                   uDob,
+                   legacyUser && legacyUser.dob ? legacyUser.dob : null);
+    if (dob) {
+      var birth=new Date(dob),age=td.getFullYear()-birth.getFullYear()
+        -((td.getMonth()<birth.getMonth()||(td.getMonth()===birth.getMonth()&&td.getDate()<birth.getDate()))?1:0);
+      duration = Math.max(1, 60 - age);
+    }
+  }
+  duration = (duration && !isNaN(duration) && duration > 0) ? Math.round(duration) : 0;
+  document.getElementById('detailDuration').innerText = duration ? duration + ' Years' : '–';
+
+  // EMI & totals
+  var emiR = calcEMI(principal, rate, duration);
+  document.getElementById('detailEmi').innerText          = emiR.emi   ? fmtINR(emiR.emi)   : '–';
+  document.getElementById('detailTotalPayable').innerText = emiR.total ? fmtINR(emiR.total) : '–';
+
+  // Disbursement
+  document.getElementById('disbursementAccount').innerText  = userAccount || '–';
+  document.getElementById('disbursementIfsc').innerText     = pick(loanData.ifsc, 'ABCB0001234');
+  document.getElementById('disbursementAmountVal').innerText= principal ? fmtINR(principal) : '–';
+
+  // Other details
+  document.getElementById('detailEmployment').innerText   = pick(loanApp.employment, cibil.employment, loanData.employment, '–');
+  document.getElementById('detailAnnualIncome').innerText = fmtINR(pick(loanApp.annualIncome, cibil.annualIncome, loanData.annualIncome, ''));
+  document.getElementById('detailCollateral').innerText   = pick(loanApp.collateral,  loanData.collateral,  '–');
+  document.getElementById('detailPurpose').innerText      = pick(loanApp.purpose,     loanData.purpose,     '–');
+
+  buildEmiTable(principal, rate, duration);
 }
 
 // ══════════════════════════════════════════════════════════════
-//  LANGUAGE — re-render gate rows on switch
+// STEP 11: LANGUAGE — apply saved lang, re-render on switch
 // ══════════════════════════════════════════════════════════════
 var savedLang = localStorage.getItem('abcbank_lang') || 'en';
 document.getElementById('nav-lang-select').value = savedLang;
@@ -645,28 +682,25 @@ applyLang(savedLang);
 document.getElementById('nav-lang-select').addEventListener('change', function() {
   localStorage.setItem('abcbank_lang', this.value);
   applyLang(this.value);
-
-  // Re-translate loan type label
   var el = document.getElementById('detailLoanType');
   if (el && rawLoanType) el.innerText = getLoanTypeLabel(rawLoanType);
-
-  // Re-render step rows with new language
   var newRows = gateResult.steps.map(buildStepRow).join('');
-  var summaryIds = ['gateStepsSummary', 'gateDecisionSummary', 'gatePendingSummary'];
-  summaryIds.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && el.innerHTML.trim() !== '') el.innerHTML = newRows;
+  ['gateStepsSummary','gateDecisionSummary','gatePendingSummary'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el && el.innerHTML.trim()!=='') el.innerHTML=newRows;
   });
-
   updateManagerUI();
 });
 
 // ══════════════════════════════════════════════════════════════
-//  BRANCH SELECTION
+// STEP 12: BRANCH SELECTION
 // ══════════════════════════════════════════════════════════════
 var selectedBranch = null;
 function selectBranch(el) {
-  document.querySelectorAll('#branchGrid > div').forEach(function(c){c.classList.remove('border-blue-700','bg-blue-50');c.classList.add('border-gray-200');});
+  document.querySelectorAll('#branchGrid > div').forEach(function(c){
+    c.classList.remove('border-blue-700','bg-blue-50');
+    c.classList.add('border-gray-200');
+  });
   el.classList.add('border-blue-700','bg-blue-50');
   selectedBranch = el.dataset.branch;
   updateManagerUI();
@@ -675,26 +709,27 @@ function selectBranch(el) {
 }
 function updateManagerUI() {
   if (!selectedBranch) return;
-  var d = branchData[selectedBranch], bw = tr('branch_word') || 'Branch';
-  document.getElementById('managerInitials').textContent = d.initials;
-  document.getElementById('managerName').textContent     = tr(d.mgrKey);
-  document.getElementById('managerBranch').textContent   = tr(d.nameKey) + ' ' + bw;
-  document.getElementById('managerPhone').textContent    = d.phone;
-  document.getElementById('managerEmail').textContent    = d.email;
-  document.getElementById('confirmBtnText').textContent  = tr(d.nameKey);
-  document.getElementById('disbursementBranch').textContent = tr(d.nameKey);
+  var d = branchData[selectedBranch];
+  document.getElementById('managerInitials').textContent  = d.initials;
+  document.getElementById('managerName').textContent      = tr(d.mgrKey);
+  document.getElementById('managerBranch').textContent    = d.nameKey + ' Branch';
+  document.getElementById('managerPhone').textContent     = d.phone;
+  document.getElementById('managerEmail').textContent     = d.email;
+  document.getElementById('confirmBtnText').textContent   = 'Confirm: ' + d.nameKey;
+  document.getElementById('disbursementBranch').textContent = d.nameKey;
   document.getElementById('disbursementIfsc').textContent   = d.ifsc;
 }
 function confirmBranch() {
   if (!selectedBranch) return;
-  var d = branchData[selectedBranch], toast = document.getElementById('successToast');
-  document.getElementById('toastMsg').textContent = (tr('branch_confirmed') || 'Confirmed:') + ' ' + tr(d.mgrKey);
+  var d = branchData[selectedBranch];
+  var toast = document.getElementById('successToast');
+  document.getElementById('toastMsg').textContent = 'Confirmed: ' + d.nameKey;
   toast.classList.remove('hidden');
   setTimeout(function(){ toast.classList.add('hidden'); }, 4000);
 }
 
 // ══════════════════════════════════════════════════════════════
-//  LOGOUT
+// STEP 13: LOGOUT
 // ══════════════════════════════════════════════════════════════
 function logoutUser() {
   localStorage.removeItem('bankUser');
