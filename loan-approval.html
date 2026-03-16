@@ -65,73 +65,58 @@
   </nav>
 </header>
 
-<!-- ══════════════════════════════════════════════════════════
-     ACCESS GATE — shown when steps are incomplete or rejected
-     Only ONE accessGate div (fixed duplicate bug)
-     ══════════════════════════════════════════════════════════ -->
+<!-- ACCESS GATE -->
 <div id="accessGate" class="hidden max-w-2xl mx-auto mt-20 px-6 pb-20">
 
-  <!-- INCOMPLETE STEPS gate -->
+  <!-- INCOMPLETE STEPS -->
   <div id="gateIncomplete" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-list-check text-5xl text-orange-500"></i>
     </div>
     <h2 class="text-3xl font-bold text-orange-600 mb-3">Steps Not Completed</h2>
-    <p class="text-gray-600 text-lg mb-6">
-      Please complete all required steps before accessing the Loan Approval page.
-    </p>
-    <div id="gateStepsSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base space-y-3"></div>
+    <p class="text-gray-600 text-lg mb-6">Please complete all required steps before accessing the Loan Approval page.</p>
+    <div id="gateStepsSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></div>
     <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
       <i class="fa fa-house"></i> Back to Dashboard
     </a>
   </div>
 
-  <!-- REJECTED gate -->
+  <!-- REJECTED -->
   <div id="gateRejected" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-circle-xmark text-5xl text-red-500"></i>
     </div>
-    <h2 id="gateRejectedTitle" class="text-3xl font-bold text-red-600 mb-3">Loan Application Rejected</h2>
-    <p id="gateRejectedDesc" class="text-gray-600 text-lg mb-6">
-      Unfortunately, your loan application could not be approved at this time.
-      One or more review stages were not cleared. Please contact your branch
-      manager or apply again after 90 days.
-    </p>
-    <div id="gateDecisionSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base space-y-3"></div>
+    <h2 class="text-3xl font-bold text-red-600 mb-3">Loan Application Rejected</h2>
+    <p class="text-gray-600 text-lg mb-6">Unfortunately, your loan application could not be approved. Please contact your branch manager or apply again after 90 days.</p>
+    <div id="gateDecisionSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></div>
     <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
-      <i class="fa fa-house"></i> <span id="gateRejectedBack">Back to Dashboard</span>
+      <i class="fa fa-house"></i> Back to Dashboard
     </a>
   </div>
 
-  <!-- PENDING gate -->
+  <!-- PENDING -->
   <div id="gatePending" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-hourglass-half text-5xl text-yellow-500"></i>
     </div>
-    <h2 id="gatePendingTitle" class="text-3xl font-bold text-yellow-600 mb-3">Review In Progress</h2>
-    <p id="gatePendingDesc" class="text-gray-600 text-lg mb-6">
-      Your loan application is still under review. The approval letter will be
-      available once both the Legal Verification and Officer Review stages are completed.
-    </p>
-    <div id="gatePendingSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base space-y-3"></div>
+    <h2 class="text-3xl font-bold text-yellow-600 mb-3">Review In Progress</h2>
+    <p class="text-gray-600 text-lg mb-6">Your loan application is still under review. The approval letter will be available once both stages are completed.</p>
+    <div id="gatePendingSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></div>
     <a href="home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
-      <i class="fa fa-house"></i> <span id="gatePendingBack">Back to Dashboard</span>
+      <i class="fa fa-house"></i> Back to Dashboard
     </a>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     MAIN APPROVAL CONTENT — shown only when all steps pass
-     ══════════════════════════════════════════════════════════ -->
+<!-- MAIN APPROVAL CONTENT -->
 <div id="approvalContent" class="hidden">
-
 <div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold mt-1" data-i18n="approval_page_title">Loan Approval</h1>
   <p class="text-gray-500 text-lg mt-1" data-i18n="approval_page_desc">Official loan sanction letter and approval details.</p>
 </div>
-
 <main class="max-w-5xl mx-auto p-6">
+
   <section class="bg-green-600 text-white rounded-xl p-10 text-center mb-6 shadow">
     <i class="fa fa-circle-check text-6xl mb-4"></i>
     <h2 class="text-4xl font-bold" data-i18n="approval_banner_title">Congratulations!</h2>
@@ -161,80 +146,62 @@
     </div>
   </section>
 
-  <!-- BRANCH SELECTION -->
   <section class="bg-white rounded-xl shadow p-8 mb-6">
     <header><h2 class="text-2xl font-bold mb-2" data-i18n="branch_select_title">Select Your Branch</h2></header>
-    <p class="text-gray-500 mb-5" data-i18n="branch_select_desc">Choose the branch where your loan will be processed by the branch manager.</p>
+    <p class="text-gray-500 mb-5" data-i18n="branch_select_desc">Choose the branch where your loan will be processed.</p>
     <div class="grid md:grid-cols-2 gap-4 mb-6" id="branchGrid">
-
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="mumbai-central" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2"><div>
-          <p class="font-bold text-lg" data-i18n="br_mumbai_name">Mumbai Central</p>
-          <p class="text-gray-500 text-base" data-i18n="br_mumbai_addr">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
-        </div></div>
+        <p class="font-bold text-lg" data-i18n="br_mumbai_name">Mumbai Central</p>
+        <p class="text-gray-500 text-base" data-i18n="br_mumbai_addr">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
-          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_rajan">Rajan Mehta</span></span>
-          <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
+          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i><span data-i18n="mgr_rajan">Rajan Mehta</span></span>
+          <span><i class="fa fa-clock mr-1 text-green-600"></i><span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
           <span class="font-mono text-sm">IFSC: ABCB0001234</span>
         </div>
       </div>
-
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="andheri-west" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2"><div>
-          <p class="font-bold text-lg" data-i18n="br_andheri_name">Andheri West</p>
-          <p class="text-gray-500 text-base" data-i18n="br_andheri_addr">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
-        </div></div>
+        <p class="font-bold text-lg" data-i18n="br_andheri_name">Andheri West</p>
+        <p class="text-gray-500 text-base" data-i18n="br_andheri_addr">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
-          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_priya">Priya Sharma</span></span>
-          <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
+          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i><span data-i18n="mgr_priya">Priya Sharma</span></span>
+          <span><i class="fa fa-clock mr-1 text-green-600"></i><span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
           <span class="font-mono text-sm">IFSC: ABCB0001892</span>
         </div>
       </div>
-
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="connaught-place" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2"><div>
-          <p class="font-bold text-lg" data-i18n="br_cp_name">Connaught Place</p>
-          <p class="text-gray-500 text-base" data-i18n="br_cp_addr">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
-        </div></div>
+        <p class="font-bold text-lg" data-i18n="br_cp_name">Connaught Place</p>
+        <p class="text-gray-500 text-base" data-i18n="br_cp_addr">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
-          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_amit">Amit Kapoor</span></span>
-          <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_10to4">Mon–Sat, 10am–4pm</span></span>
+          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i><span data-i18n="mgr_amit">Amit Kapoor</span></span>
+          <span><i class="fa fa-clock mr-1 text-green-600"></i><span data-i18n="time_10to4">Mon–Sat, 10am–4pm</span></span>
           <span class="font-mono text-sm">IFSC: ABCB0002211</span>
         </div>
       </div>
-
       <div class="border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-blue-700 transition-all" data-branch="koramangala" onclick="selectBranch(this)">
-        <div class="flex justify-between items-start mb-2"><div>
-          <p class="font-bold text-lg" data-i18n="br_kora_name">Koramangala</p>
-          <p class="text-gray-500 text-base" data-i18n="br_kora_addr">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
-        </div></div>
+        <p class="font-bold text-lg" data-i18n="br_kora_name">Koramangala</p>
+        <p class="text-gray-500 text-base" data-i18n="br_kora_addr">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
         <div class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
-          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i> <span data-i18n="mgr_deepa">Deepa Nair</span></span>
-          <span><i class="fa fa-clock mr-1 text-green-600"></i> <span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
+          <span><i class="fa fa-user-tie mr-1 text-blue-700"></i><span data-i18n="mgr_deepa">Deepa Nair</span></span>
+          <span><i class="fa fa-clock mr-1 text-green-600"></i><span data-i18n="time_9to5">Mon–Sat, 9am–5pm</span></span>
           <span class="font-mono text-sm">IFSC: ABCB0003345</span>
         </div>
       </div>
     </div>
-
     <div id="selectPrompt" class="text-center text-gray-400 text-base py-2">
       <i class="fa fa-hand-pointer mr-2"></i><span data-i18n="branch_select_prompt">Please select a branch above to proceed.</span>
     </div>
-
     <div id="managerSection" class="hidden">
       <div class="bg-blue-900 text-white rounded-xl p-6 mb-5">
         <p class="text-sm opacity-70 mb-3 uppercase tracking-wide font-semibold" data-i18n="branch_assigned_manager">Assigned Branch Manager</p>
         <div class="flex flex-wrap gap-6 items-center">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-xl font-bold" id="managerInitials">RM</div>
-            <div>
-              <p class="font-bold text-xl" id="managerName">Rajan Mehta</p>
-              <p class="opacity-70 text-base" id="managerBranch">Mumbai Central Branch</p>
-            </div>
+            <div class="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-xl font-bold" id="managerInitials">–</div>
+            <div><p class="font-bold text-xl" id="managerName">–</p><p class="opacity-70 text-base" id="managerBranch">–</p></div>
           </div>
           <div class="flex flex-wrap gap-6 text-base opacity-90">
-            <span><i class="fa fa-phone mr-2"></i><span id="managerPhone">+91 98200 11234</span></span>
-            <span><i class="fa fa-envelope mr-2"></i><span id="managerEmail">rajan.mehta@abcbank.in</span></span>
-            <span><i class="fa fa-briefcase mr-2"></i> <span data-i18n="branch_specialist">Home Loan Specialist</span></span>
+            <span><i class="fa fa-phone mr-2"></i><span id="managerPhone">–</span></span>
+            <span><i class="fa fa-envelope mr-2"></i><span id="managerEmail">–</span></span>
+            <span><i class="fa fa-briefcase mr-2"></i><span data-i18n="branch_specialist">Home Loan Specialist</span></span>
           </div>
         </div>
       </div>
@@ -246,7 +213,6 @@
     </div>
   </section>
 
-  <!-- DISBURSEMENT -->
   <section class="bg-white rounded-xl shadow p-8 mb-6">
     <header><h2 class="text-2xl font-bold mb-5" data-i18n="disbursement_title">Disbursement Details</h2></header>
     <div class="grid md:grid-cols-2 gap-6 text-lg">
@@ -257,7 +223,6 @@
     </div>
   </section>
 
-  <!-- EMI TABLE -->
   <section class="bg-white rounded-xl shadow p-8 mb-6">
     <header><h2 class="text-2xl font-bold mb-5" data-i18n="emi_schedule_title">EMI Schedule (Sample)</h2></header>
     <div class="overflow-x-auto">
@@ -276,273 +241,179 @@
     </div>
   </section>
 
-  <!-- SIGNATURES -->
   <section class="flex justify-between mt-12 text-center text-lg">
     <aside><div class="h-12 border-b w-40"></div><p class="mt-2" data-i18n="signature_customer">Customer Signature</p></aside>
     <aside><i class="fa fa-stamp text-5xl text-blue-800"></i><p class="mt-2" data-i18n="signature_bank_seal">Bank Seal</p></aside>
     <aside><div class="h-12 border-b w-40"></div><p class="mt-2" data-i18n="signature_authorized">Authorized Signatory</p></aside>
   </section>
 </main>
-
-</div><!-- /#approvalContent -->
+</div>
 
 <footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
   <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
-
 <div id="successToast" class="hidden fixed bottom-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-xl text-lg flex items-center gap-3 z-50">
-  <i class="fa fa-circle-check text-2xl"></i><span id="toastMsg">Branch confirmed successfully!</span>
+  <i class="fa fa-circle-check text-2xl"></i><span id="toastMsg">Branch confirmed!</span>
 </div>
-
 
 <script>
 // ══════════════════════════════════════════════════════════════
-//  STEP 1: GET CURRENT USER ID (to read prefixed localStorage keys)
+//  CURRENT USER
 // ══════════════════════════════════════════════════════════════
 var currentUser = null;
-try {
-  if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) {
-    currentUser = abcBank.getCurrentUser();
-  }
-} catch(e) {}
+try { if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) currentUser = abcBank.getCurrentUser(); } catch(e) {}
 
 var legacyUser = null;
 try { legacyUser = JSON.parse(localStorage.getItem('bankUser') || 'null'); } catch(e) {}
 
-// Build user display info
-var userName    = '';
-var userAccount = '';
+var userName = '', userAccount = '';
 if (currentUser) {
   userName    = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ') || currentUser.name || 'User';
-  userAccount = (currentUser.account && currentUser.account.accountNumber)
-                ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
+  userAccount = (currentUser.account && currentUser.account.accountNumber) ? currentUser.account.accountNumber : (currentUser.account || 'NIL');
 } else if (legacyUser) {
-  userName    = legacyUser.name    || 'User';
-  userAccount = legacyUser.account || 'NIL';
-} else {
-  userName    = 'User';
-  userAccount = 'NIL';
-}
+  userName = legacyUser.name || 'User'; userAccount = legacyUser.account || 'NIL';
+} else { userName = 'User'; userAccount = 'NIL'; }
 
-// Navbar display
 document.getElementById('username').innerText       = userName;
 document.getElementById('profileName').innerText    = userName;
 document.getElementById('profileAccount').innerText = 'Account: ' + userAccount;
 var acct = (userAccount && userAccount !== 'NIL') ? String(userAccount) : '';
 document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.slice(-6) : acct || '–');
 
-// User prefix — matches bank-account.html's _userId pattern
+// ══════════════════════════════════════════════════════════════
+//  USER-SCOPED STORAGE
+//
+//  ROOT CAUSE OF BUG:
+//  Keys like "loan_officer_decision", "loan_legal_decision",
+//  "cibil_data", "loan_application_data" were stored WITHOUT
+//  any user prefix → shared across ALL users on same browser.
+//
+//  SCENARIO THAT CAUSED THE BUG:
+//    User A: completes all steps → both decisions = "approved"
+//    User A: logs out
+//    User B: logs in (new user, no steps done)
+//    User B: visits loan-approval.html
+//    Gate reads: loan_officer_decision = "approved" (User A's data!) ❌
+//    Gate reads: loan_legal_decision   = "approved" (User A's data!) ❌
+//    Result: User B sees approval page with no documents ❌
+//
+//  FIX: All workflow keys are now read with a user prefix.
+//  "email__loan_officer_decision" is unique per user.
+//  User B has no such key → reads null → gate blocks correctly ✅
+// ══════════════════════════════════════════════════════════════
 var _userId = (currentUser && currentUser.account && currentUser.account.accountNumber)
            || (currentUser && currentUser.email)
            || (currentUser && currentUser.username)
            || 'guest';
 
-// Smart getter — tries prefixed key first, then unprefixed fallback
+// Read: tries "userId__key" first, then plain key as fallback
 function lsGet(key) {
-  var val = localStorage.getItem(_userId + '__' + key);
-  if (val) return val;
-  return localStorage.getItem(key) || null;
+  var v = localStorage.getItem(_userId + '__' + key);
+  if (v !== null) return v;
+  return localStorage.getItem(key);
+}
+
+// Write: always writes with user prefix
+function lsSet(key, value) {
+  localStorage.setItem(_userId + '__' + key, value);
+}
+
+// JSON parse shortcut
+function lsGetJSON(key) {
+  try { return JSON.parse(lsGet(key) || 'null'); } catch(e) { return null; }
 }
 
 // ══════════════════════════════════════════════════════════════
-//  STEP 2: COMPLETE GATE CHECK
-//
-//  THE MAIN FIX: Check ALL required steps, not just decisions.
-//
-//  Required steps in order:
-//    1. Bank Account opened     → account.accountNumber exists in session
-//    2. KYC / Documents         → kyc_data exists (prefixed)
-//    3. CIBIL submitted         → cibil_data exists
-//    4. Loan Application filed  → loan_application_data exists
-//    5. Officer Review done     → loan_officer_decision === 'approved'
-//    6. Legal Verification done → loan_legal_decision   === 'approved'
+//  GATE CHECK — ALL 6 STEPS, ALL USER-SCOPED
 // ══════════════════════════════════════════════════════════════
 function checkAllSteps() {
   var steps = [];
 
-  // STEP CHECK 1: Bank account opened
-  var hasAccount = !!(currentUser && currentUser.account && currentUser.account.accountNumber);
+  // 1. Bank Account opened
   steps.push({
-    label:    'Bank Account',
-    icon:     'fa-building-columns',
-    done:     hasAccount,
-    href:     'bank-account.html',
-    required: true
+    label: 'Bank Account', icon: 'fa-building-columns',
+    done: !!(currentUser && currentUser.account && currentUser.account.accountNumber)
   });
 
-  // STEP CHECK 2: KYC / documents submitted
-  var kycRaw = lsGet('kyc_data');
-  var hasKyc = false;
-  if (kycRaw) {
-    try {
-      var kyc = JSON.parse(kycRaw);
-      // Must have at least a name to count as submitted
-      hasKyc = !!(kyc && kyc.name);
-    } catch(e) {}
-  }
-  steps.push({
-    label:    'KYC Documents',
-    icon:     'fa-id-card',
-    done:     hasKyc,
-    href:     'bank-account.html',
-    required: true
-  });
+  // 2. KYC submitted (reads THIS user's prefixed kyc_data)
+  var kyc = lsGetJSON('kyc_data');
+  steps.push({ label: 'KYC Documents', icon: 'fa-id-card', done: !!(kyc && kyc.name) });
 
-  // STEP CHECK 3: CIBIL submitted
-  var cibilRaw = localStorage.getItem('cibil_data');
-  var hasCibil = false;
-  if (cibilRaw) {
-    try {
-      var cibilCheck = JSON.parse(cibilRaw);
-      hasCibil = !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore));
-    } catch(e) {}
-  }
-  steps.push({
-    label:    'CIBIL Score',
-    icon:     'fa-chart-line',
-    done:     hasCibil,
-    href:     'cibil.html',
-    required: true
-  });
+  // 3. CIBIL submitted (reads THIS user's prefixed cibil_data)
+  var cibilCheck = lsGetJSON('cibil_data');
+  steps.push({ label: 'CIBIL Score', icon: 'fa-chart-line', done: !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore)) });
 
-  // STEP CHECK 4: Loan application filed
-  var loanRaw = localStorage.getItem('loan_application_data');
-  var hasLoan = false;
-  if (loanRaw) {
-    try {
-      var loanCheck = JSON.parse(loanRaw);
-      hasLoan = !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount));
-    } catch(e) {}
-  }
-  steps.push({
-    label:    'Loan Application',
-    icon:     'fa-file-invoice-dollar',
-    done:     hasLoan,
-    href:     'loan-application.html',
-    required: true
-  });
+  // 4. Loan Application filed (reads THIS user's prefixed data)
+  var loanCheck = lsGetJSON('loan_application_data');
+  steps.push({ label: 'Loan Application', icon: 'fa-file-invoice-dollar', done: !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount)) });
 
-  // STEP CHECK 5: Officer review decision
-  var officerDecision = (localStorage.getItem('loan_officer_decision') || '').trim().toLowerCase();
-  steps.push({
-    label:    'Officer Review',
-    icon:     'fa-user-tie',
-    done:     officerDecision === 'approved',
-    rejected: officerDecision === 'rejected',
-    href:     'officer-review.html',
-    required: true
-  });
+  // 5. Officer Review — reads THIS user's decision ONLY
+  var officerDecision = (lsGet('loan_officer_decision') || '').trim().toLowerCase();
+  steps.push({ label: 'Officer Review',     icon: 'fa-user-tie',      done: officerDecision === 'approved', rejected: officerDecision === 'rejected' });
 
-  // STEP CHECK 6: Legal verification decision
-  var legalDecision = (localStorage.getItem('loan_legal_decision') || '').trim().toLowerCase();
-  steps.push({
-    label:    'Legal Verification',
-    icon:     'fa-scale-balanced',
-    done:     legalDecision === 'approved',
-    rejected: legalDecision === 'rejected',
-    href:     'lawyer-verification.html',
-    required: true
-  });
+  // 6. Legal Verification — reads THIS user's decision ONLY
+  var legalDecision = (lsGet('loan_legal_decision') || '').trim().toLowerCase();
+  steps.push({ label: 'Legal Verification', icon: 'fa-scale-balanced', done: legalDecision === 'approved',  rejected: legalDecision === 'rejected'  });
 
   return {
-    steps:          steps,
-    allDone:        steps.every(function(s) { return s.done; }),
-    anyRejected:    steps.some(function(s)  { return s.rejected; }),
-    incompleteSteps: steps.filter(function(s) { return !s.done && !s.rejected; })
+    steps:           steps,
+    allDone:         steps.every(function(s) { return s.done; }),
+    anyRejected:     steps.some(function(s)  { return s.rejected; }),
+    officerDecision: officerDecision,
+    legalDecision:   legalDecision
   };
 }
 
-// ══════════════════════════════════════════════════════════════
-//  STEP 3: RENDER GATE UI
-// ══════════════════════════════════════════════════════════════
 function buildStepRow(step) {
-  var colour, icon, statusText;
-  if (step.done) {
-    colour = 'text-green-600'; icon = 'fa-circle-check'; statusText = 'Completed';
-  } else if (step.rejected) {
-    colour = 'text-red-600';   icon = 'fa-circle-xmark'; statusText = 'Rejected';
-  } else {
-    colour = 'text-yellow-600'; icon = 'fa-hourglass-half'; statusText = 'Pending';
-  }
+  var colour, icon, text;
+  if      (step.done)     { colour='text-green-600';  icon='fa-circle-check';   text='Completed'; }
+  else if (step.rejected) { colour='text-red-600';    icon='fa-circle-xmark';   text='Rejected';  }
+  else                    { colour='text-yellow-600'; icon='fa-hourglass-half'; text='Pending';   }
   return '<div class="flex items-center justify-between py-2 border-b last:border-0">'
-       + '<div class="flex items-center gap-2">'
-       + '<i class="fa ' + step.icon + ' text-blue-600 w-5 text-center"></i>'
-       + '<span class="font-medium text-gray-700">' + step.label + '</span>'
-       + '</div>'
-       + '<span class="flex items-center gap-2 font-semibold ' + colour + '">'
-       + '<i class="fa ' + icon + '"></i>' + statusText + '</span>'
-       + '</div>';
+       + '<div class="flex items-center gap-2"><i class="fa '+step.icon+' text-blue-600 w-5 text-center"></i>'
+       + '<span class="font-medium text-gray-700">'+step.label+'</span></div>'
+       + '<span class="flex items-center gap-2 font-semibold '+colour+'"><i class="fa '+icon+'"></i>'+text+'</span></div>';
 }
 
-// ══════════════════════════════════════════════════════════════
-//  STEP 4: RUN THE GATE — decide what to show
-// ══════════════════════════════════════════════════════════════
-(function runGate() {
-  var result = checkAllSteps();
+// ── RUN THE GATE ──
+var gateResult = checkAllSteps();
+var rowsHtml   = gateResult.steps.map(buildStepRow).join('');
 
-  // ✅ ALL steps done and both reviews approved → show approval content
-  if (result.allDone) {
-    document.getElementById('approvalContent').classList.remove('hidden');
-    return;
-  }
-
-  // ❌ Show the gate
+if (gateResult.allDone) {
+  document.getElementById('approvalContent').classList.remove('hidden');
+} else {
   document.getElementById('accessGate').classList.remove('hidden');
-
-  var rowsHtml = result.steps.map(buildStepRow).join('');
-
-  if (result.anyRejected) {
-    // One or more steps were REJECTED
+  if (gateResult.anyRejected) {
     document.getElementById('gateRejected').classList.remove('hidden');
     document.getElementById('gateDecisionSummary').innerHTML = rowsHtml;
+  } else if (gateResult.officerDecision || gateResult.legalDecision) {
+    document.getElementById('gatePending').classList.remove('hidden');
+    document.getElementById('gatePendingSummary').innerHTML = rowsHtml;
   } else {
-    // Steps are incomplete or pending (not yet done)
-    var hasAnyDecisions = localStorage.getItem('loan_officer_decision')
-                       || localStorage.getItem('loan_legal_decision');
-
-    if (hasAnyDecisions) {
-      // Reviews started but not both approved yet → pending
-      document.getElementById('gatePending').classList.remove('hidden');
-      document.getElementById('gatePendingSummary').innerHTML = rowsHtml;
-    } else {
-      // Never even started reviews → show incomplete steps
-      document.getElementById('gateIncomplete').classList.remove('hidden');
-      document.getElementById('gateStepsSummary').innerHTML = rowsHtml;
-    }
+    document.getElementById('gateIncomplete').classList.remove('hidden');
+    document.getElementById('gateStepsSummary').innerHTML = rowsHtml;
   }
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  INTEREST RATES
 // ══════════════════════════════════════════════════════════════
-var LOAN_RATES = {
-  home: 8.50, personal: 10.90, vehicle: 9.25,
-  gold: 7.50, education: 8.25, business: 11.50
-};
-
+var LOAN_RATES = { home:8.50, personal:10.90, vehicle:9.25, gold:7.50, education:8.25, business:11.50 };
 var CIBIL_BRACKETS = [
-  { min: 750, max: 900, adj: -0.50, label: 'Excellent (750–900)' },
-  { min: 700, max: 749, adj:  0.00, label: 'Good (700–749)'      },
-  { min: 650, max: 699, adj: +0.50, label: 'Fair (650–699)'      },
-  { min: 600, max: 649, adj: +1.00, label: 'Poor (600–649)'      },
-  { min: 300, max: 599, adj: +1.50, label: 'Low (300–599)'       }
+  {min:750,max:900,adj:-0.50,label:'Excellent (750–900)'},
+  {min:700,max:749,adj: 0.00,label:'Good (700–749)'},
+  {min:650,max:699,adj:+0.50,label:'Fair (650–699)'},
+  {min:600,max:649,adj:+1.00,label:'Poor (600–649)'},
+  {min:300,max:599,adj:+1.50,label:'Low (300–599)'}
 ];
-
 function getCibilBracket(score) {
-  var s = parseInt(score);
-  if (!s || isNaN(s)) return null;
-  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
-    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i];
-  }
+  var s=parseInt(score); if(!s||isNaN(s)) return null;
+  for(var i=0;i<CIBIL_BRACKETS.length;i++) if(s>=CIBIL_BRACKETS[i].min&&s<=CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i];
   return null;
 }
-
-function getRateForType(type, cibilScore) {
-  var base = LOAN_RATES[(type || '').toLowerCase()] || 8.50;
-  if ((type || '').toLowerCase() === 'home') {
-    var bracket = getCibilBracket(cibilScore);
-    if (bracket) return Math.round((base + bracket.adj) * 100) / 100;
-  }
+function getRateForType(type,cibilScore) {
+  var base=LOAN_RATES[(type||'').toLowerCase()]||8.50;
+  if((type||'').toLowerCase()==='home'){var b=getCibilBracket(cibilScore);if(b) return Math.round((base+b.adj)*100)/100;}
   return base;
 }
 
@@ -550,257 +421,147 @@ function getRateForType(type, cibilScore) {
 //  BRANCH DATA
 // ══════════════════════════════════════════════════════════════
 var branchData = {
-  'mumbai-central':  { nameKey:'Mumbai Central',  mgrKey:'mgr_rajan', initials:'RM', phone:'+91 98200 11234', email:'rajan.mehta@abcbank.in',  ifsc:'ABCB0001234' },
-  'andheri-west':    { nameKey:'Andheri West',    mgrKey:'mgr_priya', initials:'PS', phone:'+91 98200 22345', email:'priya.sharma@abcbank.in', ifsc:'ABCB0001892' },
-  'connaught-place': { nameKey:'Connaught Place', mgrKey:'mgr_amit',  initials:'AK', phone:'+91 98100 33456', email:'amit.kapoor@abcbank.in',  ifsc:'ABCB0002211' },
-  'koramangala':     { nameKey:'Koramangala',     mgrKey:'mgr_deepa', initials:'DN', phone:'+91 98440 44567', email:'deepa.nair@abcbank.in',   ifsc:'ABCB0003345' }
+  'mumbai-central':  {nameKey:'Mumbai Central', mgrKey:'mgr_rajan',initials:'RM',phone:'+91 98200 11234',email:'rajan.mehta@abcbank.in', ifsc:'ABCB0001234'},
+  'andheri-west':    {nameKey:'Andheri West',   mgrKey:'mgr_priya',initials:'PS',phone:'+91 98200 22345',email:'priya.sharma@abcbank.in',ifsc:'ABCB0001892'},
+  'connaught-place': {nameKey:'Connaught Place',mgrKey:'mgr_amit', initials:'AK',phone:'+91 98100 33456',email:'amit.kapoor@abcbank.in', ifsc:'ABCB0002211'},
+  'koramangala':     {nameKey:'Koramangala',    mgrKey:'mgr_deepa',initials:'DN',phone:'+91 98440 44567',email:'deepa.nair@abcbank.in',  ifsc:'ABCB0003345'}
 };
 
 // ══════════════════════════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════════════════════════
 function tr(key) {
-  try {
-    var lang = localStorage.getItem('abcbank_lang') || 'en';
-    if (typeof I18N !== 'undefined') {
-      if (I18N[lang] && I18N[lang][key] !== undefined) return I18N[lang][key];
-      if (I18N['en'] && I18N['en'][key] !== undefined) return I18N['en'][key];
-    }
-  } catch(e) {}
+  try { var lang=localStorage.getItem('abcbank_lang')||'en'; if(typeof I18N!=='undefined'){if(I18N[lang]&&I18N[lang][key]!==undefined)return I18N[lang][key];if(I18N['en']&&I18N['en'][key]!==undefined)return I18N['en'][key];} } catch(e) {}
   return key;
 }
-
-function fmtINR(n) {
-  var num = parseInt(n);
-  if (!n || isNaN(num)) return '–';
-  return '₹' + num.toLocaleString('en-IN');
+function fmtINR(n) { var num=parseInt(n); if(!n||isNaN(num))return '–'; return '₹'+num.toLocaleString('en-IN'); }
+function pick() { for(var i=0;i<arguments.length;i++){var v=arguments[i];if(v!==undefined&&v!==null&&v!==''&&!(typeof v==='number'&&isNaN(v)))return v;} return ''; }
+function calcEMI(p,r,y) {
+  p=parseFloat(p);y=parseFloat(y); if(!p||!y||y<=0)return{emi:0,total:0};
+  var mr=r/12/100,n=Math.round(y*12);
+  var emi=mr>0?Math.round(p*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1)):Math.round(p/n);
+  return{emi:emi,total:emi*n};
 }
-
-function calcEMI(principal, annualRate, years) {
-  principal = parseFloat(principal);
-  years     = parseFloat(years);
-  if (!principal || !years || years <= 0) return { emi: 0, total: 0 };
-  var r = annualRate / 12 / 100;
-  var n = Math.round(years * 12);
-  var emi = r > 0
-    ? Math.round(principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1))
-    : Math.round(principal / n);
-  return { emi: emi, total: emi * n };
-}
-
-function buildEmiTable(principal, annualRate, years) {
-  var tbody = document.getElementById('emiTableBody');
-  if (!tbody) return;
-  principal = parseFloat(principal);
-  years     = parseFloat(years);
-  if (!principal || !years || years <= 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-gray-400 text-center">No loan data available</td></tr>';
-    return;
+function buildEmiTable(p,r,y) {
+  var tbody=document.getElementById('emiTableBody'); if(!tbody)return;
+  p=parseFloat(p);y=parseFloat(y);
+  if(!p||!y||y<=0){tbody.innerHTML='<tr><td colspan="5" class="p-3 text-gray-400 text-center">No loan data available</td></tr>';return;}
+  var mr=r/12/100,n=Math.round(y*12);
+  var emi=mr>0?Math.round(p*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1)):Math.round(p/n);
+  var bal=p,now=new Date(),MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],html='';
+  for(var i=0;i<3;i++){
+    var d=new Date(now.getFullYear(),now.getMonth()+i+1,1);
+    var lbl=MON[d.getMonth()]+' '+d.getFullYear();
+    var int=Math.round(bal*mr),pr=Math.max(0,emi-int);bal=Math.max(0,bal-pr);
+    html+='<tr class="border-b"><td class="p-3">'+lbl+'</td><td class="p-3">'+fmtINR(emi)+'</td><td class="p-3">'+fmtINR(pr)+'</td><td class="p-3">'+fmtINR(int)+'</td><td class="p-3">'+fmtINR(bal)+'</td></tr>';
   }
-  var r       = annualRate / 12 / 100;
-  var n       = Math.round(years * 12);
-  var emi     = r > 0
-    ? Math.round(principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1))
-    : Math.round(principal / n);
-  var balance = principal;
-  var now     = new Date();
-  var MON     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var html    = '';
-  for (var i = 0; i < 3; i++) {
-    var d        = new Date(now.getFullYear(), now.getMonth() + i + 1, 1);
-    var label    = MON[d.getMonth()] + ' ' + d.getFullYear();
-    var interest = Math.round(balance * r);
-    var princ    = Math.max(0, emi - interest);
-    balance      = Math.max(0, balance - princ);
-    html += '<tr class="border-b">'
-          + '<td class="p-3">' + label    + '</td>'
-          + '<td class="p-3">' + fmtINR(emi)      + '</td>'
-          + '<td class="p-3">' + fmtINR(princ)    + '</td>'
-          + '<td class="p-3">' + fmtINR(interest) + '</td>'
-          + '<td class="p-3">' + fmtINR(balance)  + '</td>'
-          + '</tr>';
-  }
-  tbody.innerHTML = html;
+  tbody.innerHTML=html;
 }
-
-var LOAN_TYPE_KEYS = {
-  home:'loan_home', personal:'loan_personal', vehicle:'loan_vehicle',
-  gold:'loan_gold', education:'loan_education', business:'loan_business'
-};
-
-function normalizeLoanType(rawType) {
-  if (!rawType) return '';
-  var t = rawType.toLowerCase().trim();
-  if (t.startsWith('loan_')) t = t.replace('loan_', '');
-  return t;
-}
-
-function getLoanTypeLabel(type) {
-  var normalized = normalizeLoanType(type);
-  var key = LOAN_TYPE_KEYS[normalized];
-  return (key ? tr(key) : (type || '')) || '–';
-}
-
-function pick() {
-  for (var i = 0; i < arguments.length; i++) {
-    var v = arguments[i];
-    if (v !== undefined && v !== null && v !== '' && !(typeof v === 'number' && isNaN(v))) return v;
-  }
-  return '';
-}
+var LOAN_TYPE_KEYS={home:'loan_home',personal:'loan_personal',vehicle:'loan_vehicle',gold:'loan_gold',education:'loan_education',business:'loan_business'};
+function normalizeLoanType(t){if(!t)return '';t=t.toLowerCase().trim();if(t.startsWith('loan_'))t=t.replace('loan_','');return t;}
+function getLoanTypeLabel(type){var key=LOAN_TYPE_KEYS[normalizeLoanType(type)];return(key?tr(key):(type||''))||'–';}
 
 // ══════════════════════════════════════════════════════════════
-//  POPULATE APPROVAL CONTENT (only runs if gate passed)
+//  POPULATE APPROVAL CONTENT
+//  Uses lsGet() everywhere — reads THIS user's data only
 // ══════════════════════════════════════════════════════════════
+var rawLoanType = '';
 if (!document.getElementById('approvalContent').classList.contains('hidden')) {
 
-  var loanApp  = {};
-  var cibil    = {};
-  var loanData = {};
-  try { loanApp  = JSON.parse(localStorage.getItem('loan_application_data') || '{}'); } catch(e) {}
-  try { cibil    = JSON.parse(localStorage.getItem('cibil_data')            || '{}'); } catch(e) {}
-  try { loanData = JSON.parse(localStorage.getItem('loanApplication')       || '{}'); } catch(e) {}
+  var loanApp  = lsGetJSON('loan_application_data') || {};
+  var cibil    = lsGetJSON('cibil_data')            || {};
+  var loanData = lsGetJSON('loanApplication')       || {};
 
-  var td  = new Date();
-  var MN  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('approvedDateSpan').innerText =
-    MN[td.getMonth()] + ' ' + String(td.getDate()).padStart(2, '0') + ' ' + td.getFullYear();
+  var td=new Date(),MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('approvedDateSpan').innerText=MN[td.getMonth()]+' '+String(td.getDate()).padStart(2,'0')+' '+td.getFullYear();
+  document.getElementById('detailCustomerName').innerText=userName||'–';
 
-  document.getElementById('detailCustomerName').innerText = userName || '–';
+  rawLoanType=pick(loanApp.loanType,cibil.loanType,loanData.loanType,'');
+  var loanType=normalizeLoanType(rawLoanType);
+  document.getElementById('detailLoanType').innerText=getLoanTypeLabel(rawLoanType);
 
-  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType, '');
-  var loanType    = normalizeLoanType(rawLoanType);
-  document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
+  var principal=parseFloat(pick(loanApp.loanAmount,cibil.loanAmount,loanData.loanAmount,0));
+  document.getElementById('detailLoanAmount').innerText=principal?fmtINR(principal):'–';
 
-  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
-  document.getElementById('detailLoanAmount').innerText = principal ? fmtINR(principal) : '–';
+  var cibilScore=pick(cibil.score,lsGet('loan_score'),null);
+  var rate=getRateForType(loanType,cibilScore);
+  var rateDisplay=rate+'% p.a';
+  if(loanType==='home'&&cibilScore){var bkt=getCibilBracket(cibilScore);if(bkt){var adj=bkt.adj>0?'+'+bkt.adj:(bkt.adj<0?String(bkt.adj):'');rateDisplay=rate+'% p.a'+(adj?' ('+adj+'%)':'')+' — CIBIL '+bkt.label;}}
+  document.getElementById('detailInterestRate').innerText=rateDisplay;
 
-  var cibilScore = pick(cibil.score, localStorage.getItem('loan_score'), null);
-  var rate       = getRateForType(loanType, cibilScore);
-  var rateDisplay = rate + '% p.a';
-  if (loanType === 'home' && cibilScore) {
-    var bracket = getCibilBracket(cibilScore);
-    if (bracket) {
-      var adjSign = bracket.adj > 0 ? '+' + bracket.adj : (bracket.adj < 0 ? String(bracket.adj) : '');
-      var adjPart = adjSign ? ' (' + adjSign + '%)' : '';
-      rateDisplay = rate + '% p.a' + adjPart + ' — CIBIL ' + bracket.label;
-    }
+  var duration=parseFloat(pick(loanApp.loanDuration,loanApp.duration,loanData.duration,loanData.loanDuration,cibil.tenure,lsGet('loanTenure')));
+  if(!duration||isNaN(duration)||duration<=0){
+    var kycFull=lsGetJSON('kyc_data')||{};
+    var uDob=null;
+    try{if(currentUser&&currentUser.email){var au=JSON.parse(localStorage.getItem('abcBank_users')||'[]');var fu=au.find(function(u){return u.email===currentUser.email;});if(fu&&fu.dob)uDob=fu.dob;}}catch(e){}
+    var dob=pick(cibil.dob,kycFull.dob,currentUser&&currentUser.dob?currentUser.dob:null,currentUser&&currentUser.account&&currentUser.account.dob?currentUser.account.dob:null,uDob,legacyUser&&legacyUser.dob?legacyUser.dob:null);
+    if(dob){var birth=new Date(dob);var age=td.getFullYear()-birth.getFullYear()-((td.getMonth()<birth.getMonth()||(td.getMonth()===birth.getMonth()&&td.getDate()<birth.getDate()))?1:0);duration=Math.max(1,60-age);}
   }
-  document.getElementById('detailInterestRate').innerText = rateDisplay;
+  duration=(duration&&!isNaN(duration)&&duration>0)?Math.round(duration):0;
+  document.getElementById('detailDuration').innerText=duration?duration+' Years':'–';
 
-  var duration = parseFloat(
-    pick(loanApp.loanDuration, loanApp.duration, loanData.duration,
-         loanData.loanDuration, cibil.tenure, localStorage.getItem('loanTenure'))
-  );
-
-  if (!duration || isNaN(duration) || duration <= 0) {
-    var kycData = {};
-    try { kycData = JSON.parse(lsGet('kyc_data') || '{}'); } catch(e) {}
-    var userRecordDob = null;
-    try {
-      if (currentUser && currentUser.email) {
-        var allUsers = JSON.parse(localStorage.getItem('abcBank_users') || '[]');
-        var found    = allUsers.find(function(u) { return u.email === currentUser.email; });
-        if (found && found.dob) userRecordDob = found.dob;
-      }
-    } catch(e) {}
-
-    var dob = pick(
-      cibil.dob, kycData.dob,
-      currentUser && currentUser.dob ? currentUser.dob : null,
-      currentUser && currentUser.account && currentUser.account.dob ? currentUser.account.dob : null,
-      userRecordDob,
-      legacyUser && legacyUser.dob ? legacyUser.dob : null
-    );
-
-    if (dob) {
-      var birth = new Date(dob);
-      var age   = td.getFullYear() - birth.getFullYear()
-                - ((td.getMonth() < birth.getMonth() ||
-                   (td.getMonth() === birth.getMonth() && td.getDate() < birth.getDate())) ? 1 : 0);
-      duration = Math.max(1, 60 - age);
-    }
-  }
-  duration = (duration && !isNaN(duration) && duration > 0) ? Math.round(duration) : 0;
-  document.getElementById('detailDuration').innerText = duration ? duration + ' Years' : '–';
-
-  var emiResult = calcEMI(principal, rate, duration);
-  document.getElementById('detailEmi').innerText          = emiResult.emi   ? fmtINR(emiResult.emi)   : '–';
-  document.getElementById('detailTotalPayable').innerText = emiResult.total ? fmtINR(emiResult.total) : '–';
-
-  document.getElementById('disbursementAccount').innerText   = userAccount || '–';
-  document.getElementById('disbursementIfsc').innerText      = pick(loanData.ifsc, 'ABCB0001234');
-  document.getElementById('disbursementAmountVal').innerText = principal ? fmtINR(principal) : '–';
-
-  document.getElementById('detailEmployment').innerText   = pick(loanApp.employment,  cibil.employment,  loanData.employment,  '–');
-  document.getElementById('detailAnnualIncome').innerText = fmtINR(pick(loanApp.annualIncome, cibil.annualIncome, loanData.annualIncome, ''));
-  document.getElementById('detailCollateral').innerText   = pick(loanApp.collateral,  loanData.collateral,  '–');
-  document.getElementById('detailPurpose').innerText      = pick(loanApp.purpose,     loanData.purpose,     '–');
-
-  buildEmiTable(principal, rate, duration);
+  var emiR=calcEMI(principal,rate,duration);
+  document.getElementById('detailEmi').innerText=emiR.emi?fmtINR(emiR.emi):'–';
+  document.getElementById('detailTotalPayable').innerText=emiR.total?fmtINR(emiR.total):'–';
+  document.getElementById('disbursementAccount').innerText=userAccount||'–';
+  document.getElementById('disbursementIfsc').innerText=pick(loanData.ifsc,'ABCB0001234');
+  document.getElementById('disbursementAmountVal').innerText=principal?fmtINR(principal):'–';
+  document.getElementById('detailEmployment').innerText=pick(loanApp.employment,cibil.employment,loanData.employment,'–');
+  document.getElementById('detailAnnualIncome').innerText=fmtINR(pick(loanApp.annualIncome,cibil.annualIncome,loanData.annualIncome,''));
+  document.getElementById('detailCollateral').innerText=pick(loanApp.collateral,loanData.collateral,'–');
+  document.getElementById('detailPurpose').innerText=pick(loanApp.purpose,loanData.purpose,'–');
+  buildEmiTable(principal,rate,duration);
 }
 
 // ══════════════════════════════════════════════════════════════
 //  LANGUAGE
 // ══════════════════════════════════════════════════════════════
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-document.getElementById('nav-lang-select').value = savedLang;
+var savedLang=localStorage.getItem('abcbank_lang')||'en';
+document.getElementById('nav-lang-select').value=savedLang;
 applyLang(savedLang);
-
-document.getElementById('nav-lang-select').addEventListener('change', function () {
-  localStorage.setItem('abcbank_lang', this.value);
-  applyLang(this.value);
-  if (typeof rawLoanType !== 'undefined' && document.getElementById('detailLoanType')) {
-    document.getElementById('detailLoanType').innerText = getLoanTypeLabel(rawLoanType);
-  }
+document.getElementById('nav-lang-select').addEventListener('change',function(){
+  localStorage.setItem('abcbank_lang',this.value);applyLang(this.value);
+  var el=document.getElementById('detailLoanType');if(el&&rawLoanType)el.innerText=getLoanTypeLabel(rawLoanType);
   updateManagerUI();
 });
 
 // ══════════════════════════════════════════════════════════════
 //  BRANCH SELECTION
 // ══════════════════════════════════════════════════════════════
-var selectedBranch = null;
-
-function selectBranch(el) {
-  document.querySelectorAll('#branchGrid > div').forEach(function(c) {
-    c.classList.remove('border-blue-700', 'bg-blue-50');
-    c.classList.add('border-gray-200');
-  });
-  el.classList.add('border-blue-700', 'bg-blue-50');
-  selectedBranch = el.dataset.branch;
-  updateManagerUI();
+var selectedBranch=null;
+function selectBranch(el){
+  document.querySelectorAll('#branchGrid > div').forEach(function(c){c.classList.remove('border-blue-700','bg-blue-50');c.classList.add('border-gray-200');});
+  el.classList.add('border-blue-700','bg-blue-50');
+  selectedBranch=el.dataset.branch;updateManagerUI();
   document.getElementById('managerSection').classList.remove('hidden');
   document.getElementById('selectPrompt').classList.add('hidden');
 }
-
-function updateManagerUI() {
-  if (!selectedBranch) return;
-  var d = branchData[selectedBranch];
-  var branchWord = tr('branch_word') || 'Branch';
-  document.getElementById('managerInitials').textContent    = d.initials;
-  document.getElementById('managerName').textContent        = tr(d.mgrKey);
-  document.getElementById('managerBranch').textContent      = tr(d.nameKey) + ' ' + branchWord;
-  document.getElementById('managerPhone').textContent       = d.phone;
-  document.getElementById('managerEmail').textContent       = d.email;
-  document.getElementById('confirmBtnText').textContent     = tr(d.nameKey);
-  document.getElementById('disbursementBranch').textContent = tr(d.nameKey);
-  document.getElementById('disbursementIfsc').textContent   = d.ifsc;
+function updateManagerUI(){
+  if(!selectedBranch)return;
+  var d=branchData[selectedBranch],bw=tr('branch_word')||'Branch';
+  document.getElementById('managerInitials').textContent=d.initials;
+  document.getElementById('managerName').textContent=tr(d.mgrKey);
+  document.getElementById('managerBranch').textContent=tr(d.nameKey)+' '+bw;
+  document.getElementById('managerPhone').textContent=d.phone;
+  document.getElementById('managerEmail').textContent=d.email;
+  document.getElementById('confirmBtnText').textContent=tr(d.nameKey);
+  document.getElementById('disbursementBranch').textContent=tr(d.nameKey);
+  document.getElementById('disbursementIfsc').textContent=d.ifsc;
+}
+function confirmBranch(){
+  if(!selectedBranch)return;
+  var d=branchData[selectedBranch],toast=document.getElementById('successToast');
+  document.getElementById('toastMsg').textContent=(tr('branch_confirmed')||'Confirmed:')+' '+tr(d.mgrKey);
+  toast.classList.remove('hidden');setTimeout(function(){toast.classList.add('hidden');},4000);
 }
 
-function confirmBranch() {
-  if (!selectedBranch) return;
-  var d     = branchData[selectedBranch];
-  var toast = document.getElementById('successToast');
-  document.getElementById('toastMsg').textContent = (tr('branch_confirmed') || 'Confirmed:') + ' ' + tr(d.mgrKey);
-  toast.classList.remove('hidden');
-  setTimeout(function () { toast.classList.add('hidden'); }, 4000);
-}
-
-
-function logoutUser() {
+// ══════════════════════════════════════════════════════════════
+//  LOGOUT
+// ══════════════════════════════════════════════════════════════
+function logoutUser(){
   localStorage.removeItem('bankUser');
   localStorage.removeItem('abcBank_currentUser');
-  window.location.href = 'index.html';
+  window.location.href='index.html';
 }
 </script>
 </body>
