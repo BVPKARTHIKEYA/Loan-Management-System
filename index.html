@@ -1,119 +1,284 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
+<!-- Character encoding so browser supports all characters -->
 <meta charset="UTF-8">
+
+<!-- Makes the page responsive on mobile, tablet, laptop -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Title shown in browser tab -->
 <title>ABC Bank</title>
+
+<!-- Tailwind CSS CDN used for quick styling using utility classes -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome CDN used to display icons (globe, social icons etc.) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
+
+/* --------------------------------------------------------
+   Animation for login/register buttons
+   Initially buttons are invisible then appear after 4 seconds
+---------------------------------------------------------*/
+
 .fade-in {
-  opacity: 0;
-  animation: fadeIn 2s forwards;
-  animation-delay: 4s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  opacity: 0;                /* element initially invisible */
+  animation: fadeIn 2s forwards;  /* animation duration 2 seconds */
+  animation-delay: 4s;       /* animation starts after 4 seconds */
 }
 
+/* Keyframes define how animation happens */
+@keyframes fadeIn {
+
+  /* starting state */
+  from { opacity: 0; }
+
+  /* ending state */
+  to   { opacity: 1; }
+
+}
+
+/* --------------------------------------------------------
+   Language Switcher Styling
+   Small floating language selector on top right
+---------------------------------------------------------*/
+
 #lang-switcher {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(6px);
+
+  position: fixed;           /* fixed position so it stays visible */
+  top: 16px;                 /* distance from top */
+  right: 16px;               /* distance from right */
+
+  z-index: 9999;             /* ensures it stays above all elements */
+
+  display: flex;             /* arrange items horizontally */
+  align-items: center;       /* vertical alignment */
+  gap: 8px;                  /* space between items */
+
+  background: rgba(0,0,0,0.55); /* semi-transparent background */
+  backdrop-filter: blur(6px);   /* glass effect */
+
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 12px;
-  padding: 6px 12px;
+
+  padding: 6px 12px;         /* internal spacing */
+
 }
+
+/* label styling for "Language" text */
+
 #lang-switcher label {
-  color: #facc15;
+
+  color: #facc15;            /* yellow color */
   font-size: 13px;
   font-weight: 600;
-  white-space: nowrap;
+  white-space: nowrap;       /* prevents text wrapping */
+
 }
+
+/* language dropdown styling */
+
 #lang-select {
+
   background: transparent;
   color: #fff;
   border: none;
   outline: none;
+
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
+
+  cursor: pointer;           /* pointer cursor when hovering */
+
 }
+
+/* dropdown options background color */
+
 #lang-select option {
+
   background: #1e3a5f;
   color: #fff;
+
 }
+
 </style>
 </head>
 
+
+<!-- --------------------------------------------------------
+     BODY SECTION
+--------------------------------------------------------- -->
+
 <body class="h-screen overflow-hidden">
 
-<!-- LANGUAGE SWITCHER -->
+<!-- --------------------------------------------------------
+     LANGUAGE SWITCHER (TOP RIGHT DROPDOWN)
+     Allows user to change the website language
+--------------------------------------------------------- -->
+
 <div id="lang-switcher">
-  <label><i class="fa fa-globe"></i> Language:</label>
+
+  <!-- globe icon + text -->
+  <label>
+    <i class="fa fa-globe"></i> Language:
+  </label>
+
+  <!-- language dropdown -->
   <select id="lang-select" onchange="applyLang(this.value)">
+
+    <!-- Each option represents a supported language -->
+
     <option value="en">English</option>
     <option value="te">తెలుగు</option>
     <option value="ta">தமிழ்</option>
     <option value="ml">മലയാളം</option>
     <option value="kn">ಕನ್ನಡ</option>
     <option value="hi">हिन्दी</option>
+
   </select>
+
 </div>
 
+
+<!-- --------------------------------------------------------
+     VIDEO BACKGROUND SECTION
+     Full screen background video playing automatically
+--------------------------------------------------------- -->
+
 <header>
-  <video autoplay muted loop class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
+
+  <video autoplay muted loop
+         class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
+
+    <!-- video source -->
     <source src="motion.mp4" type="video/mp4">
+
   </video>
+
 </header>
 
-<!-- DARK OVERLAY -->
+
+<!-- --------------------------------------------------------
+     DARK OVERLAY
+     Adds black transparent layer above video
+     Improves text visibility
+--------------------------------------------------------- -->
+
 <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+
+<!-- --------------------------------------------------------
+     MAIN CONTENT
+--------------------------------------------------------- -->
 
 <main class="relative h-screen text-white">
 
+  <!-- ----------------------------------------------------
+       WEBSITE TITLE / WELCOME TEXT
+  ---------------------------------------------------- -->
+
   <section class="flex justify-center text-center pt-28">
-    <h1 class="text-6xl font-bold tracking-wide" data-i18n="welcome"></h1>
+
+    <!-- text will be inserted using translation dictionary -->
+    <h1 class="text-6xl font-bold tracking-wide"
+        data-i18n="welcome"></h1>
+
   </section>
 
+
+  <!-- ----------------------------------------------------
+       DESCRIPTION + BUTTONS
+  ---------------------------------------------------- -->
+
   <section class="absolute bottom-24 w-full text-center px-6">
+
+    <!-- description text -->
     <article>
-      <p class="text-xl max-w-3xl mx-auto leading-relaxed" data-i18n="desc1"></p>
-      <p class="text-lg mt-4 max-w-3xl mx-auto" data-i18n="desc2"></p>
+
+      <!-- main description -->
+      <p class="text-xl max-w-3xl mx-auto leading-relaxed"
+         data-i18n="desc1"></p>
+
+      <!-- secondary description -->
+      <p class="text-lg mt-4 max-w-3xl mx-auto"
+         data-i18n="desc2"></p>
+
     </article>
 
+
+    <!-- ------------------------------------------------
+         LOGIN + REGISTER BUTTONS
+         Buttons appear after animation delay
+    ------------------------------------------------ -->
+
     <nav class="flex justify-center gap-6 mt-10 fade-in">
+
+      <!-- LOGIN BUTTON -->
       <a href="login.html"
-        class="bg-blue-900 hover:bg-blue-800 px-8 py-3 rounded-lg text-lg font-semibold shadow-lg"
-        data-i18n="login"></a>
+         class="bg-blue-900 hover:bg-blue-800
+                px-8 py-3 rounded-lg
+                text-lg font-semibold shadow-lg"
+         data-i18n="login"></a>
+
+      <!-- REGISTER BUTTON -->
       <a href="register.html"
-        class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-3 rounded-lg text-lg font-semibold shadow-lg"
-        data-i18n="register"></a>
+         class="bg-yellow-400 hover:bg-yellow-500
+                text-black
+                px-8 py-3 rounded-lg
+                text-lg font-semibold shadow-lg"
+         data-i18n="register"></a>
+
     </nav>
+
   </section>
 
 </main>
 
+
+<!-- --------------------------------------------------------
+     FOOTER
+--------------------------------------------------------- -->
+
 <footer class="absolute bottom-2 w-full text-center text-gray-300 text-sm">
+
+  <!-- footer text translated dynamically -->
   <p data-i18n="footer"></p>
+
 </footer>
 
 
+
+<!-- --------------------------------------------------------
+     JAVASCRIPT SECTION
+--------------------------------------------------------- -->
+
+<!-- shared.js contains translation dictionary + applyLang() function -->
 <script src="shared.js"></script>
+
 <script>
 
-  const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-  document.getElementById('lang-select').value = savedLang;
-  applyLang(savedLang);
+/* --------------------------------------------------------
+   LANGUAGE LOADING LOGIC
+--------------------------------------------------------- */
+
+// Get the language previously selected by the user
+// stored in browser localStorage
+const savedLang = localStorage.getItem('abcbank_lang') || 'en';
+
+// Set dropdown value equal to saved language
+document.getElementById('lang-select').value = savedLang;
+
+// Apply language immediately when page loads
+// applyLang() function comes from shared.js
+applyLang(savedLang);
+
 </script>
 
 </body>
 </html>
+

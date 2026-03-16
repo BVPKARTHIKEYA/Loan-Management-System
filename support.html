@@ -1,280 +1,652 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABC Bank Support</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="shared.js"></script>
-    <script src="logic.js"></script>
+<!-- Character encoding -->
+<meta charset="UTF-8">
 
-    <style>
-        #lang-switcher { display: none !important; }
-    </style>
+<!-- Makes page responsive on all devices -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Browser tab title -->
+<title>ABC Bank Support</title>
+
+<!-- Tailwind CSS for UI styling -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- SweetAlert for pop-up alerts -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<!-- Language translation system -->
+<script src="shared.js"></script>
+
+<!-- Banking logic (login, session, logout etc.) -->
+<script src="logic.js"></script>
+
+<style>
+
+/* Hide global language switcher because navbar has its own */
+#lang-switcher {
+    display: none !important;
+}
+
+</style>
+
 </head>
+
+
+
 <body class="bg-gray-100">
 
-<!-- NAVBAR -->
+<!-- =========================================================
+     NAVIGATION BAR
+========================================================= -->
+
 <header>
-  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
-    <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
-      <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
-        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
-      </a>
+<nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
 
-      <a href="home.html"
-         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
-        <i class="fa fa-arrow-left"></i>
-        <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-      </a>
+<div class="w-full px-10 py-5 flex justify-between items-center gap-6">
 
-      <div class="flex items-center gap-4 flex-shrink-0">
 
-        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
-          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
-            <i class="fa fa-globe"></i> Lang:
-          </label>
-          <select id="nav-lang-select"
-                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
-            <option value="en" style="background:#1e3a5f">English</option>
-            <option value="te" style="background:#1e3a5f">తెలుగు</option>
-            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
-            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
-            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
-            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
-          </select>
-        </div>
+<!-- BANK LOGO -->
 
-        <div class="relative group">
-          <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
-            <i class="fa fa-user-circle text-2xl"></i>
-            <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">Loading...</span>
-              <span id="userid" class="text-xs opacity-70">ID: —</span>
-            </div>
-            <i class="fa fa-chevron-down text-sm ml-1"></i>
-          </div>
-          <div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-            <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">Loading...</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
-            </div>
-            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
-              <i class="fa fa-home mr-2"></i>
-              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-            </a>
-            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
-              <i class="fa fa-sign-out-alt mr-2"></i>
-              <span data-i18n="nav_logout">Logout</span>
-            </a>
-          </div>
-        </div>
+<a href="home.html" class="flex items-center gap-3">
 
-      </div>
-    </div>
-  </nav>
-</header>
+<img src="abc-bank-logo.jpeg"
+     class="w-12 h-12 rounded-full"
+     alt="ABC Bank">
 
-<!-- PAGE HEADER -->
-<div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
-  <h1 class="text-4xl font-bold mt-1" data-i18n="support_page_title">Customer Support</h1>
-  <p class="text-gray-600 text-lg mt-1" data-i18n="support_page_desc">We are here to help you with your banking and loan related queries.</p>
+<h1 class="text-3xl font-bold"
+    data-i18n="footer_bank_title">
+
+ABC Bank
+
+</h1>
+
+</a>
+
+
+
+<!-- BACK TO DASHBOARD BUTTON -->
+
+<a href="home.html"
+   class="flex items-center gap-2 font-semibold text-lg
+          bg-white/10 border border-white/25
+          px-5 py-2 rounded-lg hover:bg-white/20">
+
+<i class="fa fa-arrow-left"></i>
+
+<span data-i18n="account_back_dashboard">
+Back to Dashboard
+</span>
+
+</a>
+
+
+
+<!-- RIGHT SIDE: LANGUAGE + USER PROFILE -->
+
+<div class="flex items-center gap-4">
+
+
+<!-- LANGUAGE SWITCHER -->
+
+<div style="display:flex;align-items:center;gap:6px">
+
+<label style="color:#facc15">
+
+<i class="fa fa-globe"></i> Lang:
+
+</label>
+
+<select id="nav-lang-select">
+
+<option value="en">English</option>
+<option value="te">తెలుగు</option>
+<option value="ta">தமிழ்</option>
+<option value="ml">മലയാളം</option>
+<option value="kn">ಕನ್ನಡ</option>
+<option value="hi">हिन्दी</option>
+
+</select>
+
 </div>
 
-<!-- MAIN CONTENT -->
+
+
+<!-- USER PROFILE DROPDOWN -->
+
+<div class="relative group">
+
+<div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold">
+
+<i class="fa fa-user-circle text-2xl"></i>
+
+<div>
+
+<span id="username">Loading...</span>
+
+<span id="userid">ID: —</span>
+
+</div>
+
+</div>
+
+
+
+<!-- DROPDOWN MENU -->
+
+<div class="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+
+<div class="p-4 border-b">
+
+<p id="profileName">Loading...</p>
+
+<p id="profileAccount">Account: —</p>
+
+</div>
+
+
+<a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
+
+<i class="fa fa-home"></i>
+
+Back to Dashboard
+
+</a>
+
+
+<a href="#" onclick="abcBank.logout(); return false;"
+   class="block px-4 py-3 hover:bg-red-100 text-red-600">
+
+<i class="fa fa-sign-out-alt"></i>
+
+Logout
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
+
+<h1 class="text-4xl font-bold"
+    data-i18n="support_page_title">
+
+Customer Support
+
+</h1>
+
+<p class="text-gray-600 text-lg"
+   data-i18n="support_page_desc">
+
+We are here to help you with your banking and loan related queries.
+
+</p>
+
+</div>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
 <main class="max-w-7xl mx-auto p-8">
 
-  <!-- CONTACT CARDS -->
-  <section class="grid md:grid-cols-3 gap-6 mb-10">
 
-    <article class="bg-white shadow rounded-xl p-6 text-center">
-      <i class="fa fa-phone text-3xl text-blue-700 mb-3"></i>
-      <h3 class="font-bold text-xl" data-i18n="support_call_title">Call Support</h3>
-      <p class="text-gray-600 mt-2" data-i18n="support_call_number">1800-123-456</p>
-    </article>
 
-    <article class="bg-white shadow rounded-xl p-6 text-center">
-      <i class="fa fa-envelope text-3xl text-blue-700 mb-3"></i>
-      <h3 class="font-bold text-xl" data-i18n="support_email_title">Email Support</h3>
-      <p class="text-gray-600 mt-2" data-i18n="support_email_address">support@abcbank.com</p>
-    </article>
+<!-- =========================================================
+     CONTACT INFORMATION CARDS
+========================================================= -->
 
-    <article class="bg-white shadow rounded-xl p-6 text-center">
-      <i class="fa fa-location-dot text-3xl text-blue-700 mb-3"></i>
-      <h3 class="font-bold text-xl" data-i18n="support_head_office">Head Office</h3>
-      <p class="text-gray-600 mt-2" data-i18n="support_head_office_location">Mumbai, India</p>
-    </article>
+<section class="grid md:grid-cols-3 gap-6 mb-10">
 
-  </section>
 
-  <!-- SUPPORT FORM -->
-  <section class="bg-white shadow rounded-xl p-8 mb-10">
-    <header>
-      <h2 class="text-2xl font-bold mb-6" data-i18n="support_form_title">Submit a Support Request</h2>
-    </header>
-    <form class="grid md:grid-cols-2 gap-6">
+<!-- PHONE SUPPORT -->
 
-      <div>
-        <label class="font-semibold" data-i18n="support_full_name">Full Name</label>
-        <input type="text" class="w-full border rounded-lg p-3 mt-2">
-      </div>
+<article class="bg-white shadow rounded-xl p-6 text-center">
 
-      <div>
-        <label class="font-semibold" data-i18n="support_email">Email</label>
-        <input type="email" class="w-full border rounded-lg p-3 mt-2">
-      </div>
+<i class="fa fa-phone text-3xl text-blue-700"></i>
 
-      <div>
-        <label class="font-semibold" data-i18n="support_phone">Phone Number</label>
-        <input type="tel" class="w-full border rounded-lg p-3 mt-2">
-      </div>
+<h3 class="font-bold text-xl"
+    data-i18n="support_call_title">
 
-      <div>
-        <label class="font-semibold" data-i18n="support_issue_type">Issue Type</label>
-        <select class="w-full border rounded-lg p-3 mt-2">
-          <option data-i18n="support_issue_select">Select Issue</option>
-          <option data-i18n="support_issue_loan">Loan Application</option>
-          <option data-i18n="support_issue_account">Account Issue</option>
-          <option data-i18n="support_issue_cibil">CIBIL Query</option>
-          <option data-i18n="support_issue_payment">Payment Issue</option>
-        </select>
-      </div>
+Call Support
 
-      <div class="md:col-span-2">
-        <label class="font-semibold" data-i18n="support_issue_desc">Describe Your Issue</label>
-        <textarea rows="4" class="w-full border rounded-lg p-3 mt-2"></textarea>
-      </div>
+</h3>
 
-      <div class="md:col-span-2">
-        <button type="button"
-                class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition">
-          <i class="fa fa-paper-plane mr-2"></i>
-          <span data-i18n="support_submit_btn">Submit Request</span>
-        </button>
-      </div>
+<p class="text-gray-600"
+   data-i18n="support_call_number">
 
-    </form>
-  </section>
+1800-123-456
 
-  <!-- FAQ -->
-  <section class="bg-white shadow rounded-xl p-8">
-    <h2 class="text-2xl font-bold mb-6" data-i18n="support_faq_title">Support FAQs</h2>
-    <div class="space-y-4">
+</p>
 
-      <article>
-        <details class="border rounded-lg p-4">
-          <summary class="font-semibold" data-i18n="support_faq_q1">How long does loan approval take?</summary>
-          <p class="mt-2 text-gray-600" data-i18n="support_faq_a1">Loan approval typically takes 24–72 hours.</p>
-        </details>
-      </article>
+</article>
 
-      <article>
-        <details class="border rounded-lg p-4">
-          <summary class="font-semibold" data-i18n="support_faq_q2">How can I check my loan status?</summary>
-          <p class="mt-2 text-gray-600" data-i18n="support_faq_a2">You can check your status in the Approval Status page.</p>
-        </details>
-      </article>
 
-      <article>
-        <details class="border rounded-lg p-4">
-          <summary class="font-semibold" data-i18n="support_faq_q3">What documents are required for loans?</summary>
-          <p class="mt-2 text-gray-600" data-i18n="support_faq_a3">PAN card, Aadhaar, income proof, and property documents.</p>
-        </details>
-      </article>
 
-    </div>
-  </section>
+<!-- EMAIL SUPPORT -->
+
+<article class="bg-white shadow rounded-xl p-6 text-center">
+
+<i class="fa fa-envelope text-3xl text-blue-700"></i>
+
+<h3 class="font-bold text-xl"
+    data-i18n="support_email_title">
+
+Email Support
+
+</h3>
+
+<p class="text-gray-600"
+   data-i18n="support_email_address">
+
+support@abcbank.com
+
+</p>
+
+</article>
+
+
+
+<!-- HEAD OFFICE -->
+
+<article class="bg-white shadow rounded-xl p-6 text-center">
+
+<i class="fa fa-location-dot text-3xl text-blue-700"></i>
+
+<h3 class="font-bold text-xl"
+    data-i18n="support_head_office">
+
+Head Office
+
+</h3>
+
+<p class="text-gray-600"
+   data-i18n="support_head_office_location">
+
+Mumbai, India
+
+</p>
+
+</article>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     SUPPORT REQUEST FORM
+========================================================= -->
+
+<section class="bg-white shadow rounded-xl p-8 mb-10">
+
+<h2 class="text-2xl font-bold mb-6"
+    data-i18n="support_form_title">
+
+Submit a Support Request
+
+</h2>
+
+
+<form class="grid md:grid-cols-2 gap-6">
+
+
+<!-- FULL NAME -->
+
+<div>
+
+<label data-i18n="support_full_name">
+Full Name
+</label>
+
+<input type="text"
+       class="w-full border rounded-lg p-3">
+
+</div>
+
+
+
+<!-- EMAIL -->
+
+<div>
+
+<label data-i18n="support_email">
+Email
+</label>
+
+<input type="email"
+       class="w-full border rounded-lg p-3">
+
+</div>
+
+
+
+<!-- PHONE -->
+
+<div>
+
+<label data-i18n="support_phone">
+Phone Number
+</label>
+
+<input type="tel"
+       class="w-full border rounded-lg p-3">
+
+</div>
+
+
+
+<!-- ISSUE TYPE -->
+
+<div>
+
+<label data-i18n="support_issue_type">
+Issue Type
+</label>
+
+<select class="w-full border rounded-lg p-3">
+
+<option data-i18n="support_issue_select">Select Issue</option>
+<option data-i18n="support_issue_loan">Loan Application</option>
+<option data-i18n="support_issue_account">Account Issue</option>
+<option data-i18n="support_issue_cibil">CIBIL Query</option>
+<option data-i18n="support_issue_payment">Payment Issue</option>
+
+</select>
+
+</div>
+
+
+
+<!-- ISSUE DESCRIPTION -->
+
+<div class="md:col-span-2">
+
+<label data-i18n="support_issue_desc">
+Describe Your Issue
+</label>
+
+<textarea rows="4"
+          class="w-full border rounded-lg p-3">
+
+</textarea>
+
+</div>
+
+
+
+<!-- SUBMIT BUTTON -->
+
+<div class="md:col-span-2">
+
+<button type="button"
+        class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold">
+
+<i class="fa fa-paper-plane"></i>
+
+<span data-i18n="support_submit_btn">
+Submit Request
+</span>
+
+</button>
+
+</div>
+
+
+</form>
+
+</section>
+
+
+
+<!-- =========================================================
+     FAQ SECTION
+========================================================= -->
+
+<section class="bg-white shadow rounded-xl p-8">
+
+<h2 class="text-2xl font-bold mb-6"
+    data-i18n="support_faq_title">
+
+Support FAQs
+
+</h2>
+
+
+<!-- FAQ ITEMS -->
+
+<details class="border rounded-lg p-4">
+
+<summary class="font-semibold"
+         data-i18n="support_faq_q1">
+
+How long does loan approval take?
+
+</summary>
+
+<p data-i18n="support_faq_a1">
+
+Loan approval typically takes 24–72 hours.
+
+</p>
+
+</details>
+
+
+<details class="border rounded-lg p-4">
+
+<summary data-i18n="support_faq_q2">
+
+How can I check my loan status?
+
+</summary>
+
+<p data-i18n="support_faq_a2">
+
+You can check your status in the Approval Status page.
+
+</p>
+
+</details>
+
+
+<details class="border rounded-lg p-4">
+
+<summary data-i18n="support_faq_q3">
+
+What documents are required for loans?
+
+</summary>
+
+<p data-i18n="support_faq_a3">
+
+PAN card, Aadhaar, income proof, and property documents.
+
+</p>
+
+</details>
+
+
+</section>
 
 </main>
 
-<!-- FOOTER -->
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
 <footer class="bg-blue-900 text-white mt-16">
-  <div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
 
-    <section>
-      <h3 class="text-xl font-bold" data-i18n="footer_bank_title">ABC Bank</h3>
-      <p class="mt-3 opacity-80" data-i18n="footer_bank_desc">Trusted digital banking and loan services across India.</p>
-    </section>
+<div class="w-full px-10 py-12 grid md:grid-cols-4 gap-8">
 
-    <nav>
-      <h4 class="font-semibold mb-3" data-i18n="footer_quick_links">Quick Links</h4>
-      <ul class="space-y-2">
-        <li><a href="home.html" class="hover:text-yellow-300" data-i18n="footer_home">Home</a></li>
-        <li><a href="loan-application.html" class="hover:text-yellow-300" data-i18n="footer_loans">Loans</a></li>
-        <li><a href="officer-review.html" class="hover:text-yellow-300" data-i18n="footer_officer_review">Officer Review</a></li>
-        <li><a href="loan-approval.html" class="hover:text-yellow-300" data-i18n="footer_loan_approval">Loan Approval</a></li>
-      </ul>
-    </nav>
 
-    <section>
-      <h4 class="font-semibold mb-3" data-i18n="footer_loan_services">Loan Services</h4>
-      <ul class="space-y-2">
-        <li data-i18n="loan_personal">Personal Loan</li>
-        <li data-i18n="loan_home">Home Loan</li>
-        <li data-i18n="loan_vehicle">Vehicle Loan</li>
-        <li data-i18n="loan_business">Business Loan</li>
-      </ul>
-    </section>
+<!-- BANK INFO -->
 
-    <aside>
-      <h4 class="font-semibold mb-3" data-i18n="footer_follow_us">Follow Us</h4>
-      <div class="flex gap-4 text-2xl">
-        <i class="fab fa-facebook hover:text-yellow-300 cursor-pointer"></i>
-        <i class="fab fa-instagram hover:text-yellow-300 cursor-pointer"></i>
-        <i class="fab fa-linkedin hover:text-yellow-300 cursor-pointer"></i>
-        <i class="fab fa-twitter hover:text-yellow-300 cursor-pointer"></i>
-      </div>
-    </aside>
+<section>
 
-  </div>
-  <div class="text-center border-t border-blue-700 py-4" data-i18n="footer_copyright">
-    © 2026 ABC Bank
-  </div>
+<h3 data-i18n="footer_bank_title">
+ABC Bank
+</h3>
+
+<p data-i18n="footer_bank_desc">
+
+Trusted digital banking and loan services across India.
+
+</p>
+
+</section>
+
+
+
+<!-- QUICK LINKS -->
+
+<nav>
+
+<h4 data-i18n="footer_quick_links">
+Quick Links
+</h4>
+
+<ul>
+
+<li><a href="home.html">Home</a></li>
+<li><a href="loan-application.html">Loans</a></li>
+<li><a href="officer-review.html">Officer Review</a></li>
+<li><a href="loan-approval.html">Loan Approval</a></li>
+
+</ul>
+
+</nav>
+
+
+
+</div>
+
+<div class="text-center border-t border-blue-700 py-4">
+
+© 2026 ABC Bank
+
+</div>
+
 </footer>
 
+
+
 <script>
-// ── Page protection ────────────────────────────────────────────────
+
+/* ======================================================
+   PAGE PROTECTION
+   Redirect user to login page if not logged in
+====================================================== */
+
 if (!abcBank?.isLoggedIn?.()) {
+
     window.location.replace("login.html");
+
 }
 
-// ── Load real current user (same as home.html / other pages) ───────
-const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
-const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
-document.getElementById("username").textContent     = fullName;
-document.getElementById("profileName").textContent  = fullName;
+/* ======================================================
+   LOAD CURRENT USER
+====================================================== */
+
+const currentUser =
+      abcBank.getCurrentUser() || {};
+
+const fullName =
+      [currentUser.firstName, currentUser.lastName]
+      .filter(Boolean)
+      .join(" ") || "User";
+
+
+document.getElementById("username").textContent = fullName;
+
+document.getElementById("profileName").textContent = fullName;
+
+
+/* Show account ID */
 
 if (currentUser.account?.accountNumber) {
+
     const accNum = currentUser.account.accountNumber;
-    document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
-    document.getElementById("userid").textContent = `ID: ${accNum.slice(-6) || "—"}`;
-} else {
-    document.getElementById("profileAccount").textContent = "Account: Not Opened";
+
+    document.getElementById("profileAccount").textContent =
+        `Account: ${accNum}`;
+
+    document.getElementById("userid").textContent =
+        `ID: ${accNum.slice(-6)}`;
+
+}
+
+else {
+
+    document.getElementById("profileAccount").textContent =
+        "Account: Not Opened";
+
     document.getElementById("userid").textContent = "ID: —";
+
 }
 
-// ── Language setup ─────────────────────────────────────────────────
+
+/* ======================================================
+   LANGUAGE SYSTEM
+====================================================== */
+
 const navSel = document.getElementById("nav-lang-select");
-const savedLang = localStorage.getItem('abcbank_lang') || 'en';
-if (navSel) {
-    navSel.value = savedLang;
-    navSel.addEventListener('change', function() {
-        applyLang(this.value);
-    });
-    applyLang(savedLang);
+
+const savedLang =
+      localStorage.getItem("abcbank_lang") || "en";
+
+
+navSel.value = savedLang;
+
+navSel.addEventListener("change", function () {
+
+    applyLang(this.value);
+
+});
+
+
+applyLang(savedLang);
+
+
+/* ======================================================
+   LOGOUT
+====================================================== */
+
+function logoutUser(){
+
+    abcBank.logout();
+
 }
 
-// ── Logout function (updated to use abcBank) ──────────────────────
-function logoutUser() {
-    abcBank.logout();
-}
 </script>
 
 </body>
 </html>
+
