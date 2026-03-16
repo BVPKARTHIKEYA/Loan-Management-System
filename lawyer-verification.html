@@ -3,36 +3,32 @@
 
 <head>
 
-<!-- Character encoding -->
 <meta charset="UTF-8">
 
-<!-- Responsive layout -->
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Browser tab title -->
+
 <title>Lawyer Verification</title>
 
-<!-- Tailwind CSS framework for styling -->
+
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Font Awesome icons -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- SweetAlert for popup alerts -->
+<link rel="icon" type="image/x-icon" href="abc-bank-logo.jpeg">
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<!-- Translation system & shared utilities -->
+
 <script src="shared.js"></script>
 
 <style>
 
-/* Hide global language switcher (navbar has its own) */
+
 #lang-switcher { display: none !important; }
 
-/* --------------------------------------------------
-   DOCUMENT VIEWER MODAL
-   Fullscreen overlay used to preview uploaded docs
--------------------------------------------------- */
+
 #doc-modal {
   display: none;
   position: fixed;
@@ -43,10 +39,10 @@
   justify-content: center;
 }
 
-/* Modal becomes visible when JS adds the .active class */
+
 #doc-modal.active { display: flex; }
 
-/* White card container for the modal contents */
+
 #doc-modal-inner {
   background: #fff;
   border-radius: 16px;
@@ -59,7 +55,7 @@
   box-shadow: 0 25px 60px rgba(0,0,0,0.4);
 }
 
-/* Blue header bar inside modal */
+
 #doc-modal-header {
   display: flex;
   align-items: center;
@@ -69,7 +65,7 @@
   color: #fff;
 }
 
-/* Scrollable body — centres the image */
+
 #doc-modal-body {
   flex: 1;
   overflow: auto;
@@ -81,7 +77,7 @@
   min-height: 300px;
 }
 
-/* Preview image inside modal */
+
 #doc-modal-body img {
   max-width: 100%;
   max-height: 65vh;
@@ -89,11 +85,10 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
-/* Subtle hover lift on document cards */
+
 .doc-card { transition: box-shadow 0.2s; }
 .doc-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 
-/* Status badges */
 .badge-uploaded { background:#dcfce7; color:#16a34a; }
 .badge-missing  { background:#fee2e2; color:#dc2626; }
 
@@ -103,15 +98,11 @@
 <body class="bg-gray-100">
 
 
-<!-- =====================================================
-     DOCUMENT VIEWER MODAL
-     Opens when user clicks "View" on a document card.
-     JS writes the image src and filename into it.
-===================================================== -->
+
 <div id="doc-modal">
   <div id="doc-modal-inner">
 
-    <!-- Header: document name + close button -->
+   
     <div id="doc-modal-header">
       <div class="flex items-center gap-3">
         <i class="fa fa-file-image text-xl"></i>
@@ -120,13 +111,12 @@
       <button onclick="closeDocModal()" class="text-white text-2xl">&times;</button>
     </div>
 
-    <!-- Body: shows image preview or a "no document" placeholder -->
+    
     <div id="doc-modal-body">
       <p id="doc-modal-placeholder" class="text-gray-400 text-lg">No document uploaded.</p>
       <img id="doc-modal-img" src="" alt="Document" class="hidden">
     </div>
 
-    <!-- Footer: filename label + download link -->
     <div class="px-6 py-4 bg-gray-50 border-t flex justify-between items-center">
       <span id="doc-modal-filename" class="text-sm text-gray-500 font-mono"></span>
       <a id="doc-modal-download" href="#" download class="text-blue-700 hidden">
@@ -138,25 +128,22 @@
 </div>
 
 
-<!-- =====================================================
-     NAVBAR
-===================================================== -->
+
 <header>
   <nav class="bg-blue-900 text-white shadow-xl">
     <div class="w-full px-10 py-5 flex justify-between items-center">
 
-      <!-- Bank logo — links back to dashboard -->
+     
       <a href="home.html" class="flex items-center gap-3">
         <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
         <h1 class="text-3xl font-bold">ABC Bank</h1>
       </a>
 
-      <!-- Back-to-dashboard shortcut -->
       <a href="home.html" class="flex items-center gap-2 font-semibold text-lg">
         <i class="fa fa-arrow-left"></i> Back to Dashboard
       </a>
 
-      <!-- Logged-in user badge -->
+     
       <div class="relative group">
         <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold">
           <i class="fa fa-user-circle text-2xl"></i>
@@ -172,9 +159,7 @@
 </header>
 
 
-<!-- =====================================================
-     PAGE HEADER
-===================================================== -->
+
 <div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold">Legal Document Verification</h1>
   <p class="text-gray-600 text-lg">
@@ -183,16 +168,11 @@
 </div>
 
 
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
+
 <main class="max-w-7xl mx-auto p-8">
 
 
-  <!-- =====================================================
-       ASSIGNED LEGAL OFFICER PANEL
-       Static — shows the lawyer assigned to this application
-  ===================================================== -->
+
   <section class="bg-blue-50 border rounded-xl p-6 mb-8 flex items-center gap-6">
     <img src="vimg.jpg" class="w-20 h-20 rounded-full border-4 border-blue-400">
     <div>
@@ -204,10 +184,6 @@
   </section>
 
 
-  <!-- =====================================================
-       APPLICANT SUMMARY
-       Populated by populateSummary() from kyc_data + cibil_data
-  ===================================================== -->
   <section class="bg-white shadow rounded-xl p-6 mb-8">
     <h2 class="text-xl font-bold mb-4">Applicant Summary</h2>
     <div class="grid md:grid-cols-3 gap-4 text-lg">
@@ -216,34 +192,26 @@
       <p>Mobile:      <span id="lv-mobile"     class="font-semibold">—</span></p>
       <p>Aadhaar:     <span id="lv-aadhaar"    class="font-semibold">—</span></p>
       <p>PAN:         <span id="lv-pan"        class="font-semibold">—</span></p>
-      <!-- FIX: these two were missing — loanType and loanAmount now read from cibil_data -->
+      
       <p>Loan Type:   <span id="lv-loantype"   class="font-semibold">—</span></p>
       <p>Loan Amount: <span id="lv-loanamount" class="font-semibold">—</span></p>
     </div>
   </section>
 
 
-  <!-- =====================================================
-       UPLOADED DOCUMENTS GRID
-       Cards are built dynamically by renderDocGrid().
-       Each card shows the doc name, upload status badge,
-       and a "View" button that opens the modal.
-  ===================================================== -->
+
   <section class="bg-white shadow rounded-xl p-8 mb-8">
     <header class="mb-6 flex justify-between items-center">
       <h2 class="text-2xl font-bold">Uploaded Documents</h2>
-      <!-- Summary badge: e.g. "3 / 5 uploaded" — set by renderDocGrid() -->
+      
       <span id="docs-summary" class="text-gray-500 font-semibold"></span>
     </header>
-    <!-- JS injects one .doc-card per document entry here -->
+
     <div id="doc-grid" class="grid md:grid-cols-2 gap-6"></div>
   </section>
 
 
-  <!-- =====================================================
-       LEGAL REVIEW NOTES
-       Free-text textarea for the lawyer to record observations
-  ===================================================== -->
+
   <section class="bg-white shadow rounded-xl p-8 mb-8">
     <h2 class="text-2xl font-bold mb-4">Legal Review Notes</h2>
     <textarea id="legal-notes"
@@ -253,10 +221,7 @@
   </section>
 
 
-  <!-- =====================================================
-       LEGAL DECISION BUTTONS
-       Calls legalDecision('approve') or legalDecision('reject')
-  ===================================================== -->
+ 
   <section class="bg-white shadow rounded-xl p-8">
     <h2 class="text-2xl font-bold mb-6">Legal Decision</h2>
     <div id="decision-buttons" class="flex gap-6">
@@ -274,18 +239,10 @@
 </main>
 
 
-<!-- =====================================================
-     JAVASCRIPT LOGIC
-===================================================== -->
+
 <script>
 
-/* ============================================================
-   STEP 1: IDENTIFY THE CURRENT USER
-   - Reads the session object stored by the login flow
-   - Returns the user's email, which is used as a key prefix
-     so each user's documents are stored separately in
-     localStorage (prevents cross-user data leaks)
-============================================================ */
+
 function getCurrentUserId() {
   try {
     var session = JSON.parse(localStorage.getItem("abcBank_currentUser"));
@@ -297,42 +254,20 @@ function getCurrentUserId() {
 
 var userId = getCurrentUserId();
 
-/* ============================================================
-   STEP 2: KEY HELPER FUNCTIONS
-   prefixedKey(key) → "user@email.com__key"
-     Namespaces every localStorage key under the user's email
-     so multiple users on the same browser don't share data.
 
-   lsGetDoc(key) — Smart getter with two-stage fallback:
-     Stage 1: Try the prefixed key (user-specific upload)
-     Stage 2: Try the plain key (set by cibil-verification.html
-              or kyc pages which may not prefix their writes)
-     This two-stage approach fixes the key mismatch bug where
-     the upload pages stored plain keys but this page looked
-     only for prefixed keys, causing documents to never appear.
-============================================================ */
 function prefixedKey(key) {
   return userId ? (userId + "__" + key) : key;
 }
 
 function lsGetDoc(key) {
-  // Stage 1: user-prefixed key (ideal path)
+ 
   var val = localStorage.getItem(prefixedKey(key));
   if (val) return val;
-  // Stage 2: plain key fallback (covers uploads from other pages)
+
   return localStorage.getItem(key);
 }
 
-/* ============================================================
-   STEP 3: DOCUMENT DEFINITION LIST
-   Each entry describes one expected document:
-     label     — Human-readable name shown on the card
-     storageKey— The plain localStorage key where the file's
-                 Base64 Data URL is saved by the upload page
-     nameKey   — The plain localStorage key for the filename
-                 (used in the modal footer and download link)
-   Add new document types here as the app grows.
-============================================================ */
+
 var DOC_LIST = [
   {
     label:      "Aadhaar Card",
@@ -352,22 +287,15 @@ var DOC_LIST = [
   },
   {
     label:      "CIBIL Report",
-    // FIX: matches exactly the key used in cibil-verification.html
+   
     storageKey: "kyc_doc_cibil",
     nameKey:    "kyc_doc_cibil_name"
   }
 ];
 
-/* ============================================================
-   STEP 4: POPULATE APPLICANT SUMMARY
-   Reads from two localStorage sources:
-     - "kyc_data"   → personal info (name, email, mobile, IDs)
-     - "cibil_data" → loan info (loan type, loan amount)
-   FIX: the original code only read kyc_data, so Loan Type
-   and Loan Amount always showed "—". Now both are populated.
-============================================================ */
+
 function populateSummary() {
-  // Personal KYC details
+
   var kyc = null;
   try { kyc = JSON.parse(localStorage.getItem("kyc_data")); } catch(e) {}
   if (kyc) {
@@ -378,20 +306,20 @@ function populateSummary() {
     document.getElementById("lv-pan").innerText     = kyc.pan     || "—";
   }
 
-  // Loan details from CIBIL submission
+ 
   var cibil = null;
   try { cibil = JSON.parse(localStorage.getItem("cibil_data")); } catch(e) {}
   if (cibil) {
     document.getElementById("lv-loantype").innerText =
       (cibil.loanType || "—").charAt(0).toUpperCase() +
-      (cibil.loanType || "").slice(1); // Capitalize first letter (e.g. "home" → "Home")
+      (cibil.loanType || "").slice(1); 
 
     document.getElementById("lv-loanamount").innerText = cibil.loanAmount
       ? "₹" + Number(cibil.loanAmount).toLocaleString("en-IN")
       : "—";
   }
 
-  // Fallback: also check individual localStorage keys written by cibil-verification.html
+
   if (!cibil) {
     var lt = localStorage.getItem("loan_type_selected");
     var la = localStorage.getItem("loan_amount_requested");
@@ -400,45 +328,31 @@ function populateSummary() {
   }
 }
 
-/* ============================================================
-   STEP 5: RENDER DOCUMENT GRID
-   FIX: This function was completely missing in the original file,
-   which is why #doc-grid was always empty.
 
-   For each entry in DOC_LIST:
-     1. Calls lsGetDoc() to fetch the Base64 Data URL
-     2. Determines upload status (uploaded vs missing)
-     3. Builds an HTML card with:
-        - Document label and status badge
-        - Thumbnail preview (if image) or PDF icon
-        - "View" button (disabled if not uploaded)
-     4. Injects all cards into #doc-grid
-     5. Updates the "X / Y uploaded" summary badge
-============================================================ */
 function renderDocGrid() {
   var grid      = document.getElementById("doc-grid");
   var summaryEl = document.getElementById("docs-summary");
 
-  grid.innerHTML = ""; // Clear any previous content
+  grid.innerHTML = ""; 
 
   var uploadedCount = 0;
 
   DOC_LIST.forEach(function(doc) {
-    var dataUrl  = lsGetDoc(doc.storageKey); // Try prefixed then plain key
+    var dataUrl  = lsGetDoc(doc.storageKey); 
     var fileName = lsGetDoc(doc.nameKey) || "";
     var uploaded = !!dataUrl;
 
     if (uploaded) uploadedCount++;
 
-    // Determine if the file is an image or a non-image (PDF etc.)
+    
     var isImage = uploaded && dataUrl.startsWith("data:image/");
 
-    // Build the card HTML
+   
     var card = document.createElement("div");
     card.className = "doc-card border rounded-xl p-5 bg-gray-50 flex flex-col gap-3";
 
     card.innerHTML =
-      /* Card header: label + uploaded/missing badge */
+      
       '<div class="flex justify-between items-center">' +
         '<span class="font-bold text-lg">' + doc.label + '</span>' +
         '<span class="text-sm font-semibold px-3 py-1 rounded-full ' +
@@ -447,7 +361,7 @@ function renderDocGrid() {
         '</span>' +
       '</div>' +
 
-      /* Preview area: thumbnail for images, icon for PDFs, placeholder if missing */
+      
       '<div class="flex items-center justify-center h-24 bg-white rounded-lg border overflow-hidden">' +
         (uploaded
           ? (isImage
@@ -456,7 +370,7 @@ function renderDocGrid() {
           : '<span class="text-gray-300 text-sm">No file uploaded</span>') +
       '</div>' +
 
-      /* Footer: filename label + View button */
+      
       '<div class="flex justify-between items-center">' +
         '<span class="text-xs text-gray-400 font-mono truncate">' + (fileName || "—") + '</span>' +
         '<button ' +
@@ -471,34 +385,19 @@ function renderDocGrid() {
     grid.appendChild(card);
   });
 
-  // Update the summary counter badge
+
   summaryEl.innerHTML =
     '<span class="' + (uploadedCount === DOC_LIST.length ? 'text-green-700' : 'text-orange-600') + ' font-bold">' +
     uploadedCount + ' / ' + DOC_LIST.length + ' uploaded</span>';
 }
 
-/* ============================================================
-   STEP 6: ESCAPE HELPER
-   Prevents breaking the inline onclick attribute string when
-   a filename or label contains single-quote characters.
-============================================================ */
+
 function escapeQuotes(str) {
   if (!str) return "";
   return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 }
 
-/* ============================================================
-   STEP 7: DOCUMENT VIEWER MODAL
-   viewDoc(dataUrl, label, fileName):
-     - Sets the modal image src to the Base64 Data URL
-     - Shows/hides the image vs placeholder depending on content
-     - Wires up the Download link with the correct filename
-     - Adds the .active class to make the modal visible
 
-   closeDocModal():
-     - Removes .active to hide the modal
-     - Clears the image src to free memory
-============================================================ */
 function viewDoc(dataUrl, label, fileName) {
   var img         = document.getElementById("doc-modal-img");
   var placeholder = document.getElementById("doc-modal-placeholder");
@@ -508,12 +407,12 @@ function viewDoc(dataUrl, label, fileName) {
   document.getElementById("doc-modal-title").innerText = label;
 
   if (dataUrl && dataUrl.startsWith("data:image/")) {
-    // Image file: show the <img> preview
+   
     img.src = dataUrl;
     img.classList.remove("hidden");
     placeholder.classList.add("hidden");
   } else if (dataUrl) {
-    // Non-image (PDF): can't render inline — show a message instead
+   
     img.classList.add("hidden");
     placeholder.classList.remove("hidden");
     placeholder.innerText = "Preview not available for this file type. Use the Download button below.";
@@ -523,7 +422,7 @@ function viewDoc(dataUrl, label, fileName) {
     placeholder.innerText = "No document uploaded.";
   }
 
-  // Set up download link
+  
   if (dataUrl) {
     dlLink.href = dataUrl;
     dlLink.download = fileName || label;
@@ -538,17 +437,11 @@ function viewDoc(dataUrl, label, fileName) {
 
 function closeDocModal() {
   document.getElementById("doc-modal").classList.remove("active");
-  // Clear src to free Base64 memory when modal closes
+ 
   document.getElementById("doc-modal-img").src = "";
 }
 
-/* ============================================================
-   STEP 8: LEGAL DECISION
-   Persists the decision to localStorage so loan-approval.html
-   can read it. Shows a SweetAlert confirmation.
-   On approval: redirects to loan-approval.html.
-   On rejection: stays on the page (lawyer may re-review).
-============================================================ */
+
 function legalDecision(type) {
   if (type === "approve") {
     localStorage.setItem("loan_legal_decision", "approved");
@@ -562,14 +455,9 @@ function legalDecision(type) {
   }
 }
 
-/* ============================================================
-   STEP 9: PAGE INITIALISATION
-   Runs both population functions on page load.
-   Order matters: summary first, then docs (both are independent
-   but summary is faster so the page feels snappy sooner).
-============================================================ */
-populateSummary();   // Fill applicant info panel
-renderDocGrid();     // FIX: was never called in original — builds all document cards
+
+populateSummary();  
+renderDocGrid();    
 
 </script>
 

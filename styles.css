@@ -1,10 +1,4 @@
-/* ═══════════════════════════════════════════════════════
-   ABC BANK – LOAN MANAGEMENT SYSTEM
-   External Stylesheet (CSS Type 3)
-   File: styles.css
-═══════════════════════════════════════════════════════ */
 
-/* ── CSS Custom Properties ── */
 :root {
   --navy:        #0B1F4A;
   --navy-mid:    #1A3A6B;
@@ -31,7 +25,7 @@
   --radius-xl:   28px;
 }
 
-/* ── Reset ── */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -45,13 +39,11 @@ a { text-decoration: none; }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
 
-/* ── Typography ── */
+
 .font-display { font-family: 'Playfair Display', serif; }
 h1,h2,h3 { font-family: 'Playfair Display', serif; }
 
-/* ══════════════════════════════════════
-   NAVIGATION BAR
-══════════════════════════════════════ */
+
 .navbar {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
   position: sticky;
@@ -172,7 +164,7 @@ h1,h2,h3 { font-family: 'Playfair Display', serif; }
   border-color: rgba(255,255,255,0.5);
   color: white;
 }
-/* Hamburger - mobile */
+
 .nav-hamburger {
   display: none;
   background: none;
@@ -188,9 +180,7 @@ h1,h2,h3 { font-family: 'Playfair Display', serif; }
   .nav-username { display: none; }
 }
 
-/* ══════════════════════════════════════
-   PAGE WRAPPER
-══════════════════════════════════════ */
+
 .page-wrapper {
   max-width: 1280px;
   margin: 0 auto;
@@ -207,9 +197,6 @@ h1,h2,h3 { font-family: 'Playfair Display', serif; }
   padding: 2rem 1rem 4rem;
 }
 
-/* ══════════════════════════════════════
-   AUTH LAYOUT
-══════════════════════════════════════ */
 .auth-page {
   min-height: 100vh;
   background: linear-gradient(145deg, var(--navy) 0%, #1A3875 50%, #0D3166 100%);
@@ -279,9 +266,6 @@ h1,h2,h3 { font-family: 'Playfair Display', serif; }
 .auth-card-sub { font-size: 0.875rem; color: rgba(255,255,255,0.65); margin-top: 0.25rem; }
 .auth-card-body { padding: 2.25rem 2rem 2.5rem; }
 
-/* ══════════════════════════════════════
-   FORM CONTROLS
-══════════════════════════════════════ */
 .form-group { margin-bottom: 1.125rem; }
 .form-label {
   display: block;
@@ -327,7 +311,6 @@ select.form-control { cursor: pointer; }
 .form-control[readonly] { background: var(--gray-soft); cursor: not-allowed; color: var(--text-muted); }
 .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
 
-/* Grid helpers */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
@@ -393,9 +376,6 @@ select.form-control { cursor: pointer; }
 .btn-lg { font-size: 1.0625rem; padding: 0.875rem 2.5rem; }
 .btn-full { width: 100%; }
 
-/* ══════════════════════════════════════
-   SECTION HEADERS
-══════════════════════════════════════ */
 .page-head { margin-bottom: 1.75rem; }
 .page-head .back-link {
   display: inline-flex;
@@ -424,9 +404,7 @@ select.form-control { cursor: pointer; }
   margin: 0.5rem 0 0;
 }
 
-/* ══════════════════════════════════════
-   CARDS
-══════════════════════════════════════ */
+
 .card {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -499,9 +477,7 @@ select.form-control { cursor: pointer; }
 .action-title { font-size: 0.9375rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem; }
 .action-desc  { font-size: 0.8125rem; color: var(--text-muted); line-height: 1.4; }
 
-/* ══════════════════════════════════════
-   HERO BANNER
-══════════════════════════════════════ */
+
 .hero-banner {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 55%, var(--navy-light) 100%);
   border-radius: var(--radius-xl);
@@ -535,9 +511,7 @@ select.form-control { cursor: pointer; }
 .hero-sub  { font-size: 0.9375rem; color: rgba(255,255,255,0.65); margin-top: 0.5rem; }
 .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
-/* ══════════════════════════════════════
-   STEPPER
-══════════════════════════════════════ */
+
 .stepper-wrap { overflow-x: auto; padding-bottom: 0.5rem; }
 .stepper {
   display: flex;
@@ -571,9 +545,7 @@ select.form-control { cursor: pointer; }
 .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 -1px; margin-bottom: 1.25rem; }
 .step-line.done { background: var(--success); }
 
-/* ══════════════════════════════════════
-   TABLES
-══════════════════════════════════════ */
+
 .table-wrap { overflow-x: auto; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .data-table thead tr { background: var(--navy); }
@@ -596,10 +568,7 @@ select.form-control { cursor: pointer; }
 .data-table tbody tr:hover td { background: #F5F7FF; }
 .data-table tbody tr:last-child td { border-bottom: none; }
 
-/* ══════════════════════════════════════
-   BADGES
-══════════════════════════════════════ */
-.badge {
+badge {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -617,9 +586,6 @@ select.form-control { cursor: pointer; }
 .badge-purple  { background: #EDE9FE; color: #6D28D9; }
 .badge-dark    { background: var(--navy); color: white; }
 
-/* ══════════════════════════════════════
-   CANVAS PREVIEW
-══════════════════════════════════════ */
 .canvas-drop-zone {
   border: 2px dashed var(--border);
   border-radius: var(--radius-md);
@@ -639,9 +605,6 @@ select.form-control { cursor: pointer; }
 .canvas-placeholder i { font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 0.5rem; }
 .canvas-placeholder p { font-size: 0.8125rem; }
 
-/* ══════════════════════════════════════
-   LOAN TYPE CARDS
-══════════════════════════════════════ */
 .loan-type-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; }
 @media (max-width: 640px) { .loan-type-grid { grid-template-columns: repeat(2, 1fr); } }
 .loan-type-card {
@@ -662,9 +625,6 @@ select.form-control { cursor: pointer; }
 .loan-type-card .lt-icon { font-size: 2rem; margin-bottom: 0.5rem; }
 .loan-type-card .lt-name { font-size: 0.8125rem; font-weight: 700; color: var(--navy); }
 
-/* ══════════════════════════════════════
-   RECEIPT / APPROVAL CARDS
-══════════════════════════════════════ */
 .receipt-wrap {
   background: white;
   border-radius: var(--radius-xl);
@@ -720,7 +680,7 @@ select.form-control { cursor: pointer; }
 .info-label { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
 .info-value { font-size: 0.9375rem; font-weight: 600; color: var(--text-dark); text-align: right; }
 
-/* Officer Badge */
+
 .officer-badge {
   display: flex;
   align-items: center;
@@ -744,7 +704,7 @@ select.form-control { cursor: pointer; }
 .officer-name { font-weight: 700; font-size: 1rem; color: var(--navy); }
 .officer-role { font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.15rem; }
 
-/* Approval Banner */
+
 .approval-banner {
   background: linear-gradient(135deg, #064E3B, #065F46);
   border-radius: var(--radius-xl);
@@ -774,9 +734,6 @@ select.form-control { cursor: pointer; }
   font-size: 2.5rem;
 }
 
-/* ══════════════════════════════════════
-   PROGRESS BAR
-══════════════════════════════════════ */
 .progress-bg {
   background: #EEF1FA;
   border-radius: 999px;
@@ -790,7 +747,6 @@ select.form-control { cursor: pointer; }
   background: linear-gradient(90deg, #DC2626 0%, #D97706 45%, #16A34A 100%);
 }
 
-/* EMI Preview Box */
 .emi-box {
   background: linear-gradient(135deg, var(--navy), var(--navy-mid));
   border-radius: var(--radius-md);
@@ -804,9 +760,7 @@ select.form-control { cursor: pointer; }
 .emi-cell .emi-label { font-size: 0.75rem; opacity: 0.65; margin-bottom: 0.25rem; }
 .emi-cell .emi-val   { font-size: 1.5rem; font-weight: 800; }
 
-/* ══════════════════════════════════════
-   NOTICE BOXES
-══════════════════════════════════════ */
+
 .notice {
   border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
@@ -822,7 +776,6 @@ select.form-control { cursor: pointer; }
 .notice.danger  { background: #FFF1F2; border: 1px solid #FECDD3; color: #9F1239; }
 .notice-title   { font-weight: 700; margin-bottom: 0.2rem; }
 
-/* CIBIL Score boxes */
 .cibil-range-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
 @media (max-width: 480px) { .cibil-range-grid { grid-template-columns: 1fr; } }
 .cibil-box { border-radius: var(--radius-md); padding: 0.875rem; text-align: center; }
@@ -830,7 +783,6 @@ select.form-control { cursor: pointer; }
 .cibil-box .cr-status { font-size: 0.75rem; font-weight: 700; margin-top: 0.25rem; }
 .cibil-box .cr-label  { font-size: 0.75rem; margin-top: 0.1rem; }
 
-/* Section inside form */
 .form-section { margin-bottom: 2rem; }
 .form-section-title {
   font-size: 1.0625rem;
@@ -845,7 +797,6 @@ select.form-control { cursor: pointer; }
 }
 .form-section-title i { color: var(--navy-light); }
 
-/* Consent box */
 .consent-box {
   background: #F0F4FF;
   border: 1px solid #C7D2FE;
@@ -865,7 +816,6 @@ select.form-control { cursor: pointer; }
 .consent-row input[type="checkbox"] { margin-top: 0.2rem; accent-color: var(--navy-light); width: 15px; height: 15px; flex-shrink: 0; }
 .consent-row span { font-size: 0.875rem; color: var(--text-mid); line-height: 1.45; }
 
-/* Approval detail grid */
 .approval-grid { display: grid; grid-template-columns: 1fr 1fr; }
 .approval-cell {
   padding: 0.875rem 1.125rem;
@@ -878,7 +828,6 @@ select.form-control { cursor: pointer; }
 .approval-cell .ac-value { font-size: 0.9375rem; font-weight: 600; color: var(--text-dark); }
 .approval-cell .ac-value.big { font-size: 1.375rem; font-weight: 800; }
 
-/* Disbursal strip */
 .disbursal-strip {
   background: linear-gradient(135deg, var(--navy), var(--navy-mid));
   border-radius: var(--radius-md);
@@ -893,7 +842,6 @@ select.form-control { cursor: pointer; }
 .disbursal-cell .d-label { font-size: 0.75rem; opacity: 0.6; margin-bottom: 0.2rem; }
 .disbursal-cell .d-val   { font-size: 0.9375rem; font-weight: 700; font-family: monospace; }
 
-/* Terms list */
 .terms-list { list-style: none; }
 .terms-list li {
   display: flex;
@@ -907,9 +855,6 @@ select.form-control { cursor: pointer; }
 .terms-list li:last-child { border-bottom: none; }
 .terms-list li i { color: var(--navy-light); font-size: 0.625rem; margin-top: 0.4rem; flex-shrink: 0; }
 
-/* ══════════════════════════════════════
-   FOOTER
-══════════════════════════════════════ */
 .site-footer {
   background: var(--navy);
   padding: 2rem 1.5rem;
@@ -931,9 +876,7 @@ select.form-control { cursor: pointer; }
 .footer-link:hover { color: var(--gold); }
 .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
 
-/* ══════════════════════════════════════
-   ANIMATIONS
-══════════════════════════════════════ */
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -961,9 +904,7 @@ select.form-control { cursor: pointer; }
 .d6 { animation-delay: 0.48s; }
 .pulse-gold { animation: pulseGold 2.2s infinite; }
 
-/* ══════════════════════════════════════
-   UTILITY
-══════════════════════════════════════ */
+
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }

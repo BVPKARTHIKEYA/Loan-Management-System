@@ -14,10 +14,10 @@
     <style>
         #lang-switcher { display: none !important; }
     </style>
+    <link rel="icon" type="image/x-icon" href="abc-bank-logo.jpeg">
 </head>
 <body class="bg-gray-100">
 
-<!-- NAVBAR -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
@@ -78,16 +78,16 @@
   </nav>
 </header>
 
-<!-- PAGE HEADER -->
+
 <div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold mt-1" data-i18n="officer_page_title">Loan Officer Review Panel</h1>
   <p class="text-gray-600 text-lg mt-1" data-i18n="officer_page_desc">Review applicant details and finalize loan approval.</p>
 </div>
 
-<!-- MAIN CONTENT -->
+
 <main class="max-w-7xl mx-auto p-6">
 
-  <!-- ASSIGNED OFFICER -->
+ 
   <section class="bg-yellow-50 border border-yellow-300 rounded-xl p-6 mb-6 flex items-center gap-6">
     <figure class="flex items-center gap-6">
       <img src="vimg.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-yellow-400" alt="Officer">
@@ -101,7 +101,7 @@
     </figure>
   </section>
 
-  <!-- PERSONAL DETAILS -->
+  
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="personal_info_title">Personal Information</h2>
@@ -116,7 +116,7 @@
     </div>
   </section>
 
-  <!-- PARENT DETAILS -->
+ 
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="parent_details_title">Parent Details</h2>
@@ -127,7 +127,6 @@
     </div>
   </section>
 
-  <!-- INCOME DETAILS -->
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="income_info_title">Income Information</h2>
@@ -141,7 +140,7 @@
     </div>
   </section>
 
-  <!-- CIBIL REPORT -->
+  
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="cibil_report_title">CIBIL Report</h2>
@@ -156,7 +155,7 @@
     </div>
   </section>
 
-  <!-- LOAN DETAILS -->
+  
   <section class="bg-white shadow rounded-xl p-6 mb-6">
     <header>
       <h2 class="text-2xl font-bold mb-4" data-i18n="loan_application_details_title">Loan Application Details</h2>
@@ -170,7 +169,7 @@
     </div>
   </section>
 
-  <!-- OFFICER DECISION -->
+
   <section class="bg-white shadow rounded-xl p-6">
     <header class="mb-4">
       <h2 class="text-2xl font-bold" data-i18n="officer_decision_title">Officer Decision</h2>
@@ -197,18 +196,17 @@
 
 </main>
 
-<!-- FOOTER -->
 <footer class="bg-blue-900 text-white text-center py-6 mt-10">
   <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
 </footer>
 
 <script>
-// ── Page protection ──────────────────────────────────────────────────
+
 if (!abcBank?.isLoggedIn?.()) {
   window.location.replace("login.html");
 }
 
-// ── Navbar user ──────────────────────────────────────────────────────
+
 const currentUser = abcBank.getCurrentUser() || { firstName: "", lastName: "", email: "" };
 const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ") || "User";
 
@@ -224,7 +222,7 @@ if (currentUser.account?.accountNumber) {
   document.getElementById("userid").textContent         = "ID: —";
 }
 
-// ── Language setup ───────────────────────────────────────────────────
+
 const navSel    = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (navSel) {
@@ -236,34 +234,19 @@ if (navSel) {
   applyLang(savedLang);
 }
 
-// ══════════════════════════════════════════════════════════════
-//  loadAllSources()
-//
-//  KEY FIX — parent names:
-//  bank-account.html saves kyc_data as:
-//    { fatherName: "...", motherName: "..." }
-//  The old code also checked loanApp?.fatherName, but
-//  loan_application_data never stores parent names, so that
-//  was a red herring. The ONLY reliable source is kyc_data.
-//
-//  KEY FIX — address fields:
-//  bank-account.html saves kyc_data.address as a nested object:
-//    { line, city, state, pincode }
-//  The old code tried kyc?.city / kyc?.state (top-level) which
-//  are always undefined. Now we correctly read kyc?.address?.city etc.
-// ══════════════════════════════════════════════════════════════
+
 function loadAllSources() {
   var out = {};
   function jp(key) { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e) { return null; } }
 
   var session      = jp("abcBank_currentUser");
   var bankUser     = jp("bankUser");
-  var kyc          = jp("kyc_data");           // written by bank-account.html
-  var loanApp      = jp("loan_application_data"); // written by loan-application.html
-  var cibil        = jp("cibil_data");         // written by cibil.html
+  var kyc          = jp("kyc_data");           
+  var loanApp      = jp("loan_application_data");
+  var cibil        = jp("cibil_data");         
   var loanApproval = jp("loanApplication");
 
-  // kyc.address is a nested object { line, city, state, pincode }
+ 
   var kycAddr = (kyc?.address && typeof kyc.address === "object") ? kyc.address : {};
 
   var userRecord = null;
@@ -274,7 +257,6 @@ function loadAllSources() {
     } catch(e) {}
   }
 
-  // ── Name ──────────────────────────────────────────────────────────
   var name = "";
   if (session) {
     if (session.fullName) name = session.fullName;
@@ -287,11 +269,10 @@ function loadAllSources() {
     else if (userRecord.name) name = userRecord.name;
   }
   if (!name && bankUser) name = bankUser.name || "";
-  // Also accept the name saved directly in kyc_data
+ 
   if (!name && kyc?.name) name = kyc.name;
   out.name = name;
 
-  // ── Personal fields ───────────────────────────────────────────────
   out.dob    = cibil?.dob || kyc?.dob || session?.dob || userRecord?.dob || "";
   out.email  = session?.email  || userRecord?.email  || "";
   out.mobile = session?.mobile || session?.phone || session?.mobileNumber
@@ -306,55 +287,44 @@ function loadAllSources() {
          || session?.pan || session?.panNumber
          || userRecord?.pan || userRecord?.panNumber || "";
 
-  // ── Parent names ─────────────────────────────────────────────────
-  // SOURCE: bank-account.html saves these into kyc_data as
-  //         fatherName / motherName — that is the definitive source.
-  // Fallback to session/userRecord in case user object carries them.
+  
   out.fatherName = kyc?.fatherName
                || session?.fatherName || userRecord?.fatherName || "";
 
   out.motherName = kyc?.motherName
                || session?.motherName || userRecord?.motherName || "";
 
-  // ── Address — kyc.address is a nested object ──────────────────────
-  var addrObj = (session?.address && typeof session.address === "object") ? session.address : {};
+   var addrObj = (session?.address && typeof session.address === "object") ? session.address : {};
 
   out.address = kycAddr.line  || addrObj.line  || (typeof session?.address === "string" ? session.address : "") || "";
   out.city    = kycAddr.city  || addrObj.city  || session?.city    || "";
   out.state   = kycAddr.state || addrObj.state || session?.state   || "";
   out.pincode = kycAddr.pincode || kycAddr.pin || addrObj.pincode  || session?.pincode || "";
   out.country = "India";
-
-  // ── Employment ────────────────────────────────────────────────────
   out.employment = cibil?.employment || loanApp?.employment || loanApproval?.employment || "";
 
-  // ── Monthly income ────────────────────────────────────────────────
-  out.monthlyIncome = cibil?.monthlyIncome
+   out.monthlyIncome = cibil?.monthlyIncome
                    || kyc?.monthlyNetIncome
                    || userRecord?.monthlyNetIncome
                    || session?.monthlyNetIncome
                    || "";
 
-  // ── Gross annual income ───────────────────────────────────────────
-  out.annualIncome  = cibil?.annualIncome
+   out.annualIncome  = cibil?.annualIncome
                    || kyc?.grossAnnualIncome
                    || userRecord?.grossAnnualIncome
                    || session?.grossAnnualIncome
                    || loanApproval?.annualIncome
                    || "";
 
-  // ── Other income ──────────────────────────────────────────────────
-  out.otherIncome   = kyc?.otherIncome
+    out.otherIncome   = kyc?.otherIncome
                    || loanApp?.otherIncome
                    || userRecord?.otherIncome
                    || session?.otherIncome
                    || "";
 
-  // ── CIBIL ─────────────────────────────────────────────────────────
   out.cibilScore = cibil?.score || localStorage.getItem("loan_score") || "";
 
-  // ── Tenure ────────────────────────────────────────────────────────
-  var tenure = null;
+   var tenure = null;
   if (out.dob) {
     var birth = new Date(out.dob);
     var today = new Date();
@@ -366,8 +336,7 @@ function loadAllSources() {
   if (tenure === null) tenure = parseInt(localStorage.getItem("loanTenure")) || null;
   out.tenure = tenure;
 
-  // ── Loan fields ───────────────────────────────────────────────────
-  out.loanType     = cibil?.loanTypeLabel || cibil?.loanType || loanApproval?.loanType || localStorage.getItem("loan_type_selected") || "";
+    out.loanType     = cibil?.loanTypeLabel || cibil?.loanType || loanApproval?.loanType || localStorage.getItem("loan_type_selected") || "";
   out.loanAmount   = cibil?.loanAmount    || loanApproval?.loanAmount || localStorage.getItem("loan_amount_requested") || "";
   out.loanDuration = loanApp?.loanDuration || loanApp?.duration || tenure || "";
   out.collateral   = loanApproval?.collateral || loanApp?.collateral || "";
@@ -375,7 +344,6 @@ function loadAllSources() {
   return out;
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────
 function fmtCurr(n) {
   var num = parseInt(n);
   return isNaN(num) || n === "" || n === null || n === 0 ? "—" : "₹" + num.toLocaleString("en-IN");
@@ -398,7 +366,6 @@ function set(id, value) {
   if (el) el.textContent = (value !== undefined && value !== null && value !== "") ? value : "—";
 }
 
-// ── Populate page ────────────────────────────────────────────────────
 function populatePage() {
   var d = loadAllSources();
   set("disp-name",    d.name);
@@ -430,7 +397,6 @@ function populatePage() {
 
 populatePage();
 
-// ── Decision banner ──────────────────────────────────────────────────
 function updateDecisionBanner(type) {
   var banner = document.getElementById("decision-banner");
 
@@ -462,7 +428,6 @@ function updateDecisionBanner(type) {
 
 updateDecisionBanner(localStorage.getItem("loan_officer_decision"));
 
-// ── Officer decision ─────────────────────────────────────────────────
 function officerDecision(action) {
   if (action === 'approve') {
     localStorage.setItem("loan_officer_decision", "approved");

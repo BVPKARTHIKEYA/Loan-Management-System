@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="shared.js"></script>
 <script src="logic.js"></script>
+<link rel="icon" type="image/x-icon" href="abc-bank-logo.jpeg">
 <style>
   html, body { height:100%; width:100%; margin:0; padding:0; }
   #lang-switcher { display: none !important; }
@@ -16,7 +17,7 @@
 
 <body class="bg-gray-100 text-xl w-full min-h-screen">
 
-<!-- NAVBAR -->
+
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
@@ -32,7 +33,7 @@
       </a>
 
       <div class="flex items-center gap-4 flex-shrink-0">
-        <!-- LANGUAGE SWITCHER -->
+       
         <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
           <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
             <i class="fa fa-globe"></i> Lang:
@@ -47,7 +48,7 @@
           </select>
         </div>
 
-        <!-- PROFILE DROPDOWN -->
+        
         <div class="relative group">
           <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
             <i class="fa fa-user-circle text-2xl"></i>
@@ -76,19 +77,19 @@
   </nav>
 </header>
 
-<!-- PAGE TITLE -->
+
 <div class="w-full px-10 pt-10 pb-2">
   <h1 class="text-4xl font-bold text-blue-900" id="pageTitle">My Account</h1>
   <p class="text-gray-500 text-lg mt-1" id="pageSubtitle">Your complete account overview</p>
 </div>
 
-<!-- MAIN -->
+
 <main class="w-full px-10 py-6">
 
-  <!-- HERO -->
+ 
   <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-12 mb-10 flex flex-col md:flex-row justify-between gap-10">
 
-    <!-- LEFT: Personal details -->
+  
     <article>
       <p class="text-lg opacity-80" id="lblWelcome">Account Holder</p>
       <h2 class="text-5xl font-bold mt-2" id="heroName">—</h2>
@@ -100,7 +101,7 @@
       </div>
     </article>
 
-    <!-- RIGHT: Account snapshot -->
+   
     <aside class="bg-white/10 border border-white/20 rounded-xl p-10 w-full md:w-96 flex-shrink-0">
       <p class="text-lg opacity-70" id="lblAccountType">Account Type</p>
       <p class="text-2xl font-bold mt-1 capitalize" id="heroAccountType">—</p>
@@ -119,7 +120,7 @@
 
   </section>
 
-  <!-- ACCOUNT INFORMATION CARD -->
+  
   <section class="bg-white shadow rounded-xl p-8 mb-10 max-w-3xl">
     <h2 class="text-2xl font-bold text-blue-900 mb-6" id="sectionAccount">Account Information</h2>
     <div class="space-y-0 text-lg">
@@ -158,7 +159,7 @@
 
 </main>
 
-<!-- FOOTER -->
+
 <footer class="bg-blue-900 text-white mt-10">
   <div class="border-t border-blue-700 px-10 py-6 text-center text-sm text-gray-300">
     <span data-i18n="footer_copy">© 2026 ABC Bank. All Rights Reserved | Secure Digital Banking Platform</span>
@@ -166,9 +167,7 @@
 </footer>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-//  TRANSLATIONS
-// ══════════════════════════════════════════════════════════════
+
 var T = {
   en: {
     pageTitle:'My Account', pageSubtitle:'Your complete account overview',
@@ -274,40 +273,25 @@ function fmtDate(iso) {
   return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
 }
 
-// ══════════════════════════════════════════════════════════════
-//  resolveDob()
-//
-//  Searches every localStorage location where DOB could have
-//  been saved by register.html / bank-account.html / cibil.html.
-//
-//  Priority:
-//    1. cibil_data.dob          — cibil.html copies it here explicitly
-//    2. kyc_data.dob            — bank-account.html saves full KYC here
-//    3. currentUser.dob         — top-level on session object
-//    4. currentUser.account.dob — nested inside account sub-object
-//    5. abcBank_users[].dob     — full user record lookup by email
-//    6. bankUser.dob            — legacy key
-// ══════════════════════════════════════════════════════════════
+
 function resolveDob(cu) {
   function jp(key) {
     try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; }
   }
 
-  // 1. cibil_data.dob
+ 
   var cibil = jp('cibil_data');
   if (cibil && cibil.dob) return cibil.dob;
 
-  // 2. kyc_data.dob
+
   var kyc = jp('kyc_data');
   if (kyc && kyc.dob) return kyc.dob;
 
-  // 3. currentUser.dob (top-level)
+  
   if (cu && cu.dob) return cu.dob;
 
-  // 4. currentUser.account.dob
   if (cu && cu.account && cu.account.dob) return cu.account.dob;
 
-  // 5. full abcBank_users[] lookup by email
   if (cu && cu.email) {
     try {
       var users = JSON.parse(localStorage.getItem('abcBank_users') || '[]');
@@ -316,24 +300,21 @@ function resolveDob(cu) {
     } catch(e) {}
   }
 
-  // 6. legacy bankUser
+
   var legacy = jp('bankUser');
   if (legacy && legacy.dob) return legacy.dob;
 
   return null;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  calcAge(dobStr) — floor-based, accurate age
-//  Returns null if dob is missing/invalid.
-// ══════════════════════════════════════════════════════════════
+
 function calcAge(dobStr) {
   if (!dobStr) return null;
   var birth = new Date(dobStr);
   if (isNaN(birth)) return null;
   var today = new Date();
   var age   = today.getFullYear() - birth.getFullYear();
-  // Subtract 1 if birthday hasn't occurred yet this year
+ 
   if (
     today.getMonth() < birth.getMonth() ||
     (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
@@ -343,15 +324,13 @@ function calcAge(dobStr) {
   return age >= 0 ? age : null;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  RENDER PAGE
-// ══════════════════════════════════════════════════════════════
+
 function renderPage() {
   var cu       = abcBank.getCurrentUser() || {};
   var acct     = abcBank.getUserAccount();
   var fullName = ((cu.firstName||'') + ' ' + (cu.lastName||'')).trim() || 'User';
 
-  // ── Labels ──────────────────────────────────────────────────
+
   var labelIds = [
     'pageTitle','pageSubtitle','lblWelcome','lblEmail','lblMobile','lblDob','lblAge',
     'lblAccountType','lblAccountNumber','lblBalance','lblStatus','sectionAccount',
@@ -362,7 +341,6 @@ function renderPage() {
     if (el) el.textContent = tr(id);
   });
 
-  // ── DOB — resolved from all storage sources ─────────────────
   var dob    = resolveDob(cu);
   var age    = calcAge(dob);
   var tenure = (age !== null) ? Math.max(0, 60 - age) : null;
@@ -371,12 +349,11 @@ function renderPage() {
   document.getElementById('heroAge').textContent  = age    !== null ? age    + ' ' + tr('years')   : '—';
   document.getElementById('infoLoanTenure').textContent = tenure !== null ? tenure + ' ' + tr('yrAvail') : '—';
 
-  // ── Personal / hero ──────────────────────────────────────────
+
   document.getElementById('heroName').textContent   = fullName;
   document.getElementById('heroEmail').textContent  = cu.email  || '—';
   document.getElementById('heroMobile').textContent = cu.mobile || (cu.phone) || '—';
 
-  // ── Account ──────────────────────────────────────────────────
   if (acct && acct.accountNumber) {
     var raw       = acct.accountNumber;
     var acctType  = (acct.accountType || 'savings').toLowerCase();
@@ -394,14 +371,14 @@ function renderPage() {
 
     var bal = (acct.balance !== undefined && acct.balance !== null) ? acct.balance : null;
 
-    // Hero
+   
     document.getElementById('heroAccountType').textContent   = typeLabel;
     document.getElementById('heroAccountNumber').textContent = raw;
     document.getElementById('heroBalance').textContent       = bal !== null ? fmtINR(bal) : '₹ —';
     document.getElementById('heroStatus').textContent        = statusTxt;
     document.getElementById('heroStatus').className          = 'px-3 py-1 rounded-full text-sm font-bold ' + heroBg;
 
-    // Info card
+  
     document.getElementById('infoAcctNo').textContent   = raw;
     document.getElementById('infoAcctType').textContent = typeLabel;
     document.getElementById('infoBranch').textContent   = acct.branch || tr('notAvail');
@@ -420,9 +397,7 @@ function renderPage() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════════════════════
+
 (function init() {
   if (!abcBank.isLoggedIn()) {
     window.location.href = 'login.html';

@@ -14,6 +14,7 @@
     <style>
         #lang-switcher { display: none !important; }
     </style>
+    <link rel="icon" type="image/x-icon" href="abc-bank-logo.jpeg">
 </head>
 <body class="bg-gray-100">
 
@@ -118,7 +119,6 @@
         </p>
       </div>
 
-      <!-- STEP 2 – LOAN DETAILS -->
       <div>
         <h2 class="text-2xl font-bold mb-4" data-i18n="loan_step2_title">Step 2 – Loan Details</h2>
         <div class="space-y-6">
@@ -262,7 +262,7 @@ const fullName = [currentUser.firstName, currentUser.lastName].filter(Boolean).j
 document.getElementById("username").textContent     = fullName;
 document.getElementById("profileName").textContent  = fullName;
 
-// Account & ID display
+
 if (currentUser.account?.accountNumber) {
     const accNum = currentUser.account.accountNumber;
     document.getElementById("profileAccount").textContent = `Account: ${accNum}`;
@@ -272,7 +272,7 @@ if (currentUser.account?.accountNumber) {
     document.getElementById("userid").textContent = "ID: —";
 }
 
-// ── Language setup ─────────────────────────────────────────────────
+
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (navSel) {
@@ -283,7 +283,6 @@ if (navSel) {
     applyLang(savedLang);
 }
 
-// ── Loan type selection ─────────────────────────────────────────────
 let selectedLoanType = "";
 let selectedLoanLabel = "";
 
@@ -306,9 +305,7 @@ loanCards.forEach(card => {
     });
 });
 
-// ── AUTO-SELECT loan type carried over from CIBIL page ──────────────
-// cibil.html saves: localStorage.setItem("loan_type_selected", loanType)
-// Values match data-loan attributes: "home","personal","vehicle","education"
+
 (function prefillLoanType() {
     const saved = localStorage.getItem("loan_type_selected");
     if (!saved) return;
@@ -316,11 +313,10 @@ loanCards.forEach(card => {
     const card = document.querySelector(`.loan-card[data-loan="${saved}"]`);
     if (!card) return;
 
-    // Visually highlight the pre-selected card
+   
     loanCards.forEach(c => c.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600'));
     card.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-600');
 
-    // Set global variables so submit validation passes without manual click
     const labelEl = card.querySelector('[data-i18n]');
     if (labelEl) {
         selectedLoanType  = saved;
@@ -329,11 +325,11 @@ loanCards.forEach(card => {
         document.getElementById("selectedLoanLabel").classList.remove("hidden");
     }
 
-    // Scroll the card into view so the user can see what was pre-selected
+    
     card.scrollIntoView({ behavior: "smooth", block: "nearest" });
 })();
 
-// ── Also prefill loan amount from CIBIL page ────────────────────────
+
 (function prefillLoanAmount() {
     const saved = localStorage.getItem("loan_amount_requested");
     if (!saved) return;
@@ -341,7 +337,7 @@ loanCards.forEach(card => {
     if (el && !el.value) el.value = saved;
 })();
 
-// ── Tenure from account (if available) ─────────────────────────────
+
 (function showTenure() {
     let tenure = null;
     if (currentUser.dob) {
@@ -351,7 +347,7 @@ loanCards.forEach(card => {
                      (new Date().getMonth() === birth.getMonth() && new Date().getDate() < birth.getDate()) ? 1 : 0);
         tenure = Math.max(0, 60 - age);
     }
-    // Fallback to previously saved value
+    
     if (!tenure) {
         tenure = parseInt(localStorage.getItem("loanTenure")) || null;
     }
@@ -362,7 +358,6 @@ loanCards.forEach(card => {
     }
 })();
 
-// ── Submit logic ────────────────────────────────────────────────────
 document.getElementById("submitBtn").onclick = function submitLoanApplication() {
     const amount     = document.getElementById("loanAmountInput").value.trim();
     const income     = document.getElementById("annualIncomeInput").value.trim();
@@ -389,12 +384,10 @@ document.getElementById("submitBtn").onclick = function submitLoanApplication() 
         return;
     }
 
-    // Disable button
     const btn = document.getElementById("submitBtn");
     btn.disabled = true;
     btn.classList.add("opacity-50", "cursor-not-allowed");
 
-    // Save application data
     const loanAppData = {
         loanType: selectedLoanType,
         loanAmount: amount,
@@ -406,8 +399,7 @@ document.getElementById("submitBtn").onclick = function submitLoanApplication() 
     };
     localStorage.setItem("loan_application_data", JSON.stringify(loanAppData));
 
-    // Update cibil_data if exists
-    let cibil = JSON.parse(localStorage.getItem("cibil_data") || "{}");
+     let cibil = JSON.parse(localStorage.getItem("cibil_data") || "{}");
     cibil = {
         ...cibil,
         loanType: selectedLoanType,
@@ -417,12 +409,10 @@ document.getElementById("submitBtn").onclick = function submitLoanApplication() 
     };
     localStorage.setItem("cibil_data", JSON.stringify(cibil));
 
-    // Clear old decisions
-    localStorage.removeItem("loan_officer_decision");
+     localStorage.removeItem("loan_officer_decision");
     localStorage.removeItem("loan_legal_decision");
 
-    // Success flow
-    swal({
+     swal({
         title: "Processing Application",
         text: "Sending details for Bank Officer verification...",
         icon: "info",

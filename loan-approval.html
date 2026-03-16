@@ -11,10 +11,10 @@
 <style>
   #lang-switcher { display: none !important; }
 </style>
+<link rel="icon" type="image/x-icon" href="abc-bank-logo.jpeg">
 </head>
 <body class="bg-gray-100 text-lg">
 
-<!-- NAVBAR -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
@@ -65,10 +65,10 @@
   </nav>
 </header>
 
-<!-- ACCESS GATE -->
+
 <div id="accessGate" class="hidden max-w-2xl mx-auto mt-20 px-6 pb-20">
 
-  <!-- INCOMPLETE STEPS -->
+ 
   <div id="gateIncomplete" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-list-check text-5xl text-orange-500"></i>
@@ -81,7 +81,7 @@
     </a>
   </div>
 
-  <!-- REJECTED -->
+
   <div id="gateRejected" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-circle-xmark text-5xl text-red-500"></i>
@@ -94,7 +94,7 @@
     </a>
   </div>
 
-  <!-- PENDING -->
+
   <div id="gatePending" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
     <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <i class="fa fa-hourglass-half text-5xl text-yellow-500"></i>
@@ -109,7 +109,7 @@
 
 </div>
 
-<!-- MAIN APPROVAL CONTENT -->
+
 <div id="approvalContent" class="hidden">
 <div class="max-w-5xl mx-auto px-6 pt-8 pb-2">
   <h1 class="text-4xl font-bold mt-1" data-i18n="approval_page_title">Loan Approval</h1>
@@ -257,13 +257,7 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-//  i18n PATCH — inject missing gate + step keys into I18N
-//  Runs after shared.js so I18N already exists.
-//  NOTE: step_bank_account keys are kept in the patch object for
-//  completeness but the step itself is no longer added to the
-//  gate check array, so they will never be displayed.
-// ══════════════════════════════════════════════════════════════
+
 (function() {
   var patch = {
     en: {
@@ -276,7 +270,6 @@
       gate_pending_title:    "Review In Progress",
       gate_pending_desc:     "Your loan application is still under review. The approval letter will be available once both stages are completed.",
       gate_pending_btn:      "Back to Dashboard",
-      // step_bank_account intentionally omitted — step removed from gate
       step_kyc:              "KYC Documents",
       step_cibil:            "CIBIL Score",
       step_loan_app:         "Loan Application",
@@ -391,9 +384,7 @@
   }
 })();
 
-// ══════════════════════════════════════════════════════════════
-//  CURRENT USER
-// ══════════════════════════════════════════════════════════════
+
 var currentUser = null;
 try { if (typeof abcBank !== 'undefined' && abcBank.getCurrentUser) currentUser = abcBank.getCurrentUser(); } catch(e) {}
 
@@ -414,9 +405,7 @@ document.getElementById('profileAccount').innerText = 'Account: ' + userAccount;
 var acct = (userAccount && userAccount !== 'NIL') ? String(userAccount) : '';
 document.getElementById('userid').innerText = 'ID: ' + (acct.length > 6 ? acct.slice(-6) : acct || '–');
 
-// ══════════════════════════════════════════════════════════════
-//  USER-SCOPED STORAGE
-// ══════════════════════════════════════════════════════════════
+
 var _userId = (currentUser && currentUser.account && currentUser.account.accountNumber)
            || (currentUser && currentUser.email)
            || (currentUser && currentUser.username)
@@ -434,9 +423,7 @@ function lsGetJSON(key) {
   try { return JSON.parse(lsGet(key) || 'null'); } catch(e) { return null; }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  tr() HELPER — reads from I18N with current lang
-// ══════════════════════════════════════════════════════════════
+
 function tr(key) {
   try {
     var lang = localStorage.getItem('abcbank_lang') || 'en';
@@ -448,41 +435,26 @@ function tr(key) {
   return key;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  GATE CHECK
-//  REMOVED: "Bank Account" step (step_bank_account).
-//  It was auto-true for any logged-in user and added no value
-//  as a gate condition — it just confused the checklist display.
-//  Remaining 5 steps: KYC, CIBIL, Loan App, Officer, Legal.
-// ══════════════════════════════════════════════════════════════
+
 function checkAllSteps() {
   var steps = [];
 
-  // ── REMOVED ──────────────────────────────────────────────────
-  // Bank Account step deleted. It was:
-  //   steps.push({
-  //     labelKey: 'step_bank_account', icon: 'fa-building-columns',
-  //     done: !!(currentUser && currentUser.account && currentUser.account.accountNumber)
-  //   });
-  // ─────────────────────────────────────────────────────────────
+ 
 
-  // Step 1 — KYC Documents
   var kyc = lsGetJSON('kyc_data');
   steps.push({ labelKey: 'step_kyc', icon: 'fa-id-card', done: !!(kyc && kyc.name) });
 
-  // Step 2 — CIBIL Score
   var cibilCheck = lsGetJSON('cibil_data');
   steps.push({ labelKey: 'step_cibil', icon: 'fa-chart-line', done: !!(cibilCheck && (cibilCheck.score || cibilCheck.cibilScore)) });
 
-  // Step 3 — Loan Application
+
   var loanCheck = lsGetJSON('loan_application_data');
   steps.push({ labelKey: 'step_loan_app', icon: 'fa-file-invoice-dollar', done: !!(loanCheck && (loanCheck.loanType || loanCheck.loanAmount)) });
 
-  // Step 4 — Officer Review
   var officerDecision = (lsGet('loan_officer_decision') || '').trim().toLowerCase();
   steps.push({ labelKey: 'step_officer', icon: 'fa-user-tie', done: officerDecision === 'approved', rejected: officerDecision === 'rejected' });
 
-  // Step 5 — Legal Verification
+ 
   var legalDecision = (lsGet('loan_legal_decision') || '').trim().toLowerCase();
   steps.push({ labelKey: 'step_legal', icon: 'fa-scale-balanced', done: legalDecision === 'approved', rejected: legalDecision === 'rejected' });
 
@@ -495,7 +467,7 @@ function checkAllSteps() {
   };
 }
 
-// ── Build one step row for the gate summary panels ──────────
+
 function buildStepRow(step) {
   var colour, icon, statusKey;
   if      (step.done)     { colour = 'text-green-600'; icon = 'fa-circle-check';   statusKey = 'step_completed'; }
@@ -512,7 +484,7 @@ function buildStepRow(step) {
        + '</span></div>';
 }
 
-// ── RUN THE GATE ────────────────────────────────────────────
+
 var gateResult = checkAllSteps();
 var rowsHtml   = gateResult.steps.map(buildStepRow).join('');
 
@@ -532,9 +504,7 @@ if (gateResult.allDone) {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  INTEREST RATES
-// ══════════════════════════════════════════════════════════════
+
 var LOAN_RATES = { home:8.50, personal:10.90, vehicle:9.25, gold:7.50, education:8.25, business:11.50 };
 var CIBIL_BRACKETS = [
   {min:750,max:900,adj:-0.50,label:'Excellent (750–900)'},
@@ -554,9 +524,7 @@ function getRateForType(type,cibilScore) {
   return base;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  BRANCH DATA
-// ══════════════════════════════════════════════════════════════
+
 var branchData = {
   'mumbai-central':  {nameKey:'Mumbai Central', mgrKey:'mgr_rajan',initials:'RM',phone:'+91 98200 11234',email:'rajan.mehta@abcbank.in', ifsc:'ABCB0001234'},
   'andheri-west':    {nameKey:'Andheri West',   mgrKey:'mgr_priya',initials:'PS',phone:'+91 98200 22345',email:'priya.sharma@abcbank.in',ifsc:'ABCB0001892'},
@@ -564,9 +532,6 @@ var branchData = {
   'koramangala':     {nameKey:'Koramangala',    mgrKey:'mgr_deepa',initials:'DN',phone:'+91 98440 44567',email:'deepa.nair@abcbank.in',  ifsc:'ABCB0003345'}
 };
 
-// ══════════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════════
 function fmtINR(n) { var num=parseInt(n); if(!n||isNaN(num))return '–'; return '₹'+num.toLocaleString('en-IN'); }
 function pick() { for(var i=0;i<arguments.length;i++){var v=arguments[i];if(v!==undefined&&v!==null&&v!==''&&!(typeof v==='number'&&isNaN(v)))return v;} return ''; }
 function calcEMI(p,r,y) {
@@ -594,9 +559,7 @@ var LOAN_TYPE_KEYS={home:'loan_home',personal:'loan_personal',vehicle:'loan_vehi
 function normalizeLoanType(t){if(!t)return '';t=t.toLowerCase().trim();if(t.startsWith('loan_'))t=t.replace('loan_','');return t;}
 function getLoanTypeLabel(type){var key=LOAN_TYPE_KEYS[normalizeLoanType(type)];return(key?tr(key):(type||''))||'–';}
 
-// ══════════════════════════════════════════════════════════════
-//  POPULATE APPROVAL CONTENT
-// ══════════════════════════════════════════════════════════════
+
 var rawLoanType = '';
 if (!document.getElementById('approvalContent').classList.contains('hidden')) {
 
@@ -645,9 +608,7 @@ if (!document.getElementById('approvalContent').classList.contains('hidden')) {
   buildEmiTable(principal,rate,duration);
 }
 
-// ══════════════════════════════════════════════════════════════
-//  LANGUAGE — re-render gate rows on switch
-// ══════════════════════════════════════════════════════════════
+
 var savedLang = localStorage.getItem('abcbank_lang') || 'en';
 document.getElementById('nav-lang-select').value = savedLang;
 applyLang(savedLang);
@@ -669,9 +630,7 @@ document.getElementById('nav-lang-select').addEventListener('change', function()
   updateManagerUI();
 });
 
-// ══════════════════════════════════════════════════════════════
-//  BRANCH SELECTION
-// ══════════════════════════════════════════════════════════════
+
 var selectedBranch = null;
 function selectBranch(el) {
   document.querySelectorAll('#branchGrid > div').forEach(function(c){c.classList.remove('border-blue-700','bg-blue-50');c.classList.add('border-gray-200');});
@@ -701,9 +660,7 @@ function confirmBranch() {
   setTimeout(function(){ toast.classList.add('hidden'); }, 4000);
 }
 
-// ══════════════════════════════════════════════════════════════
-//  LOGOUT
-// ══════════════════════════════════════════════════════════════
+
 function logoutUser() {
   localStorage.removeItem('bankUser');
   localStorage.removeItem('abcBank_currentUser');
