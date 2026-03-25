@@ -160,10 +160,48 @@
       <div>
         <label class="font-semibold text-lg" data-i18n="state">State</label>
         <select id="state" class="w-full border rounded-md p-3 mt-2 text-lg">
+          <!-- Default -->
           <option value="" data-i18n="state_select">Select</option>
-          <option data-i18n="state_andhra">Andhra Pradesh</option>
-          <option data-i18n="state_maharashtra">Maharashtra</option>
-          <option data-i18n="state_karnataka">Karnataka</option>
+
+          <!-- 28 States -->
+          <option value="Andhra Pradesh" data-i18n="state_andhra_pradesh">Andhra Pradesh</option>
+          <option value="Arunachal Pradesh" data-i18n="state_arunachal_pradesh">Arunachal Pradesh</option>
+          <option value="Assam" data-i18n="state_assam">Assam</option>
+          <option value="Bihar" data-i18n="state_bihar">Bihar</option>
+          <option value="Chhattisgarh" data-i18n="state_chhattisgarh">Chhattisgarh</option>
+          <option value="Goa" data-i18n="state_goa">Goa</option>
+          <option value="Gujarat" data-i18n="state_gujarat">Gujarat</option>
+          <option value="Haryana" data-i18n="state_haryana">Haryana</option>
+          <option value="Himachal Pradesh" data-i18n="state_himachal_pradesh">Himachal Pradesh</option>
+          <option value="Jharkhand" data-i18n="state_jharkhand">Jharkhand</option>
+          <option value="Karnataka" data-i18n="state_karnataka">Karnataka</option>
+          <option value="Kerala" data-i18n="state_kerala">Kerala</option>
+          <option value="Madhya Pradesh" data-i18n="state_madhya_pradesh">Madhya Pradesh</option>
+          <option value="Maharashtra" data-i18n="state_maharashtra">Maharashtra</option>
+          <option value="Manipur" data-i18n="state_manipur">Manipur</option>
+          <option value="Meghalaya" data-i18n="state_meghalaya">Meghalaya</option>
+          <option value="Mizoram" data-i18n="state_mizoram">Mizoram</option>
+          <option value="Nagaland" data-i18n="state_nagaland">Nagaland</option>
+          <option value="Odisha" data-i18n="state_odisha">Odisha</option>
+          <option value="Punjab" data-i18n="state_punjab">Punjab</option>
+          <option value="Rajasthan" data-i18n="state_rajasthan">Rajasthan</option>
+          <option value="Sikkim" data-i18n="state_sikkim">Sikkim</option>
+          <option value="Tamil Nadu" data-i18n="state_tamil_nadu">Tamil Nadu</option>
+          <option value="Telangana" data-i18n="state_telangana">Telangana</option>
+          <option value="Tripura" data-i18n="state_tripura">Tripura</option>
+          <option value="Uttar Pradesh" data-i18n="state_uttar_pradesh">Uttar Pradesh</option>
+          <option value="Uttarakhand" data-i18n="state_uttarakhand">Uttarakhand</option>
+          <option value="West Bengal" data-i18n="state_west_bengal">West Bengal</option>
+
+          <!-- 8 Union Territories -->
+          <option value="Andaman and Nicobar Islands" data-i18n="state_andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+          <option value="Chandigarh" data-i18n="state_chandigarh">Chandigarh</option>
+          <option value="Dadra and Nagar Haveli and Daman and Diu" data-i18n="state_dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+          <option value="Delhi" data-i18n="state_delhi">Delhi</option>
+          <option value="Jammu and Kashmir" data-i18n="state_jammu_and_kashmir">Jammu and Kashmir</option>
+          <option value="Ladakh" data-i18n="state_ladakh">Ladakh</option>
+          <option value="Lakshadweep" data-i18n="state_lakshadweep">Lakshadweep</option>
+          <option value="Puducherry" data-i18n="state_puducherry">Puducherry</option>
         </select>
       </div>
       <div><label class="font-semibold text-lg" data-i18n="pincode">PIN Code</label><input id="pincode" type="number" class="w-full border rounded-md p-3 mt-2 text-lg"></div>
@@ -200,7 +238,6 @@
         <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="w-full border rounded-md p-3 mt-2 text-lg">
         <div id="progress-incomeDoc" class="upload-progress"><div class="spinner"></div> Compressing &amp; saving…</div>
         <div id="badge-incomeDoc"></div>
-        <!-- FIX: preview-container starts hidden, shown only after image loads -->
         <div id="preview-incomeDoc" class="preview-container mt-2" style="display:none;">
           <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
         </div>
@@ -298,14 +335,12 @@ if (currentUser.account?.accountNumber) {
 
 // ════════════════════════════════════════════════════════════════════
 //  USER-SCOPED STORAGE HELPERS
-//  Each user gets their own localStorage keys using their ID as prefix
 // ════════════════════════════════════════════════════════════════════
 const _userId = currentUser?.account?.accountNumber
              || currentUser?.email
              || currentUser?.username
              || "guest";
 
-// Creates a unique key per user: "alice@gmail.com__kyc_data"
 function sk(key)         { return `${_userId}__${key}`; }
 function lsGet(key)      { return localStorage.getItem(sk(key)); }
 function lsSet(key, val) { localStorage.setItem(sk(key), val); }
@@ -322,35 +357,19 @@ if (navSel) {
 }
 
 // ════════════════════════════════════════════════════════════════════
-//  IMAGE COMPRESSION via <canvas>
-//
-//  FIX 1: Added white background fill before drawing image
-//         → prevents black background when PNG (transparent) is
-//           converted to JPEG
-//
-//  FIX 2: Validates canvas output is not empty before resolving
-//
-//  Settings:
-//    MAX_PX   = 1200px  — longest side after downscale
-//    IMG_QUAL = 0.82    — JPEG quality (~70-80% smaller than original)
+//  IMAGE COMPRESSION
 // ════════════════════════════════════════════════════════════════════
 const MAX_PX   = 1200;
 const IMG_QUAL = 0.82;
 
 function compressImage(file) {
     return new Promise((resolve, reject) => {
-
-        // STEP 1: Read file as base64 data URL
         const reader = new FileReader();
         reader.onerror = () => reject(new Error("FileReader failed"));
-
         reader.onload = (evt) => {
-            // STEP 2: Create image object and load the base64 data
             const img = new Image();
             img.onerror = () => reject(new Error("Image decode failed"));
-
             img.onload = () => {
-                // STEP 3: Calculate new dimensions keeping aspect ratio
                 let { width, height } = img;
                 if (width > MAX_PX || height > MAX_PX) {
                     if (width >= height) {
@@ -361,45 +380,28 @@ function compressImage(file) {
                         height = MAX_PX;
                     }
                 }
-
-                // STEP 4: Draw onto canvas
                 const canvas = document.createElement("canvas");
                 canvas.width  = width;
                 canvas.height = height;
                 const ctx = canvas.getContext("2d");
-
-                // FIX 1: Fill white background first
-                // Without this, PNG transparent areas become BLACK in JPEG
                 ctx.fillStyle = "#ffffff";
                 ctx.fillRect(0, 0, width, height);
-
-                // STEP 5: Draw the image on top of white background
                 ctx.drawImage(img, 0, 0, width, height);
-
-                // STEP 6: Export as JPEG base64 string
                 const result = canvas.toDataURL("image/jpeg", IMG_QUAL);
-
-                // FIX 2: Validate canvas output is not empty
                 if (!result || result === "data:,") {
                     reject(new Error("Canvas produced empty output"));
                     return;
                 }
-
-                resolve(result); // Returns "data:image/jpeg;base64,..."
+                resolve(result);
             };
-
-            // STEP 7: Trigger image decode
             img.src = evt.target.result;
         };
-
-        // STEP 8: Start reading the file
         reader.readAsDataURL(file);
     });
 }
 
 // ════════════════════════════════════════════════════════════════════
 //  FILE CONFIG
-//  Maps each input ID to its preview, badge, storage, and progress IDs
 // ════════════════════════════════════════════════════════════════════
 const FILE_CONFIG = {
     aadhaarFile:   { preview:"preview-aadhaar",   img:"img-aadhaar",   storage:"kyc_doc_aadhaar",   nameKey:"kyc_doc_aadhaar_name",   badge:"badge-aadhaarFile",   progress:"progress-aadhaarFile"   },
@@ -410,7 +412,7 @@ const FILE_CONFIG = {
 };
 
 // ════════════════════════════════════════════════════════════════════
-//  showBadge() — shows green ✓ badge (or red PDF badge) under input
+//  showBadge & showImagePreview
 // ════════════════════════════════════════════════════════════════════
 function showBadge(cfg, fileName, isPdf) {
     const b = document.getElementById(cfg.badge);
@@ -420,64 +422,29 @@ function showBadge(cfg, fileName, isPdf) {
     </span>`;
 }
 
-// ════════════════════════════════════════════════════════════════════
-//  showImagePreview() — THE MAIN FIX
-//
-//  ORIGINAL BUG: Used classList.remove("hidden") which relies on
-//  Tailwind's "hidden" class. But the img.src was set without waiting
-//  for the image to actually load, so sometimes the container showed
-//  but the image was blank or broken.
-//
-//  FIX: Use style.display instead of classList for reliable toggling.
-//       Wait for img.onload before showing the container.
-//       Handle img.onerror to hide container on failure.
-// ════════════════════════════════════════════════════════════════════
 function showImagePreview(cfg, dataUrl) {
-
-    // STEP 1: Validate the data URL exists and is an image
     if (!dataUrl) return;
-    if (dataUrl.startsWith("pdf::")) return;           // skip PDF markers
-    if (!dataUrl.startsWith("data:")) return;          // skip invalid data
+    if (dataUrl.startsWith("pdf::")) return;
+    if (!dataUrl.startsWith("data:")) return;
 
-    // STEP 2: Get the preview container and img element
     const previewContainer = document.getElementById(cfg.preview);
     const imgElement       = document.getElementById(cfg.img);
+    if (!previewContainer || !imgElement) return;
 
-    // STEP 3: Safety check — both elements must exist in DOM
-    if (!previewContainer || !imgElement) {
-        console.warn("Preview elements not found:", cfg.preview, cfg.img);
-        return;
-    }
-
-    // STEP 4: Hide container first while image loads
     previewContainer.style.display = "none";
-
-    // STEP 5: Set image source — this triggers browser to decode the image
     imgElement.src = dataUrl;
 
-    // STEP 6: FIX — wait for image to fully load, THEN show container
-    // Without this, container shows but image may still be blank
     imgElement.onload = function () {
-        previewContainer.style.display = "flex"; // show container ✅
+        previewContainer.style.display = "flex";
     };
-
-    // STEP 7: FIX — if image fails to load, keep container hidden
     imgElement.onerror = function () {
-        console.warn("Image failed to display for:", cfg.img);
-        previewContainer.style.display = "none"; // hide safely ✅
-        imgElement.src = ""; // clear broken src
+        previewContainer.style.display = "none";
+        imgElement.src = "";
     };
 }
 
 // ════════════════════════════════════════════════════════════════════
-//  RESTORE SAVED PREVIEWS ON PAGE LOAD
-//
-//  FIX: Wrapped in DOMContentLoaded to ensure all img elements
-//  exist in the DOM before trying to set their src.
-//
-//  ORIGINAL BUG: The restore code ran immediately when the script
-//  executed — at that point, some elements may not be in the DOM yet,
-//  causing getElementById() to return null and preview to silently fail.
+//  RESTORE SAVED PREVIEWS
 // ════════════════════════════════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", function () {
     Object.keys(FILE_CONFIG).forEach(function (id) {
@@ -485,33 +452,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = lsGet(cfg.storage);
         const name = lsGet(cfg.nameKey) || "";
 
-        // Skip if nothing was ever saved for this input
         if (!data && !name) return;
 
-        const isPdf = (data && data.startsWith("pdf::"))
-                   || name.toLowerCase().endsWith(".pdf");
-
-        // Always restore the badge (file name label)
+        const isPdf = (data && data.startsWith("pdf::")) || name.toLowerCase().endsWith(".pdf");
         showBadge(cfg, name, isPdf);
 
-        // Only restore image preview for non-PDF files
         if (!isPdf && data) {
-            showImagePreview(cfg, data); // ✅ DOM is ready now
+            showImagePreview(cfg, data);
         }
     });
 });
 
 // ════════════════════════════════════════════════════════════════════
 //  IN-MEMORY FILE STORE
-//  Keeps actual File objects during current session.
-//  PDFs are too large for localStorage so we only store a marker
-//  "pdf::filename" and keep the real File object here in memory.
 // ════════════════════════════════════════════════════════════════════
 const fileStore = {};
 
 // ════════════════════════════════════════════════════════════════════
 //  FILE INPUT EVENT LISTENERS
-//  Attached to each file input — runs when user selects a file
 // ════════════════════════════════════════════════════════════════════
 Object.keys(FILE_CONFIG).forEach(function (id) {
     const input = document.getElementById(id);
@@ -523,80 +481,52 @@ Object.keys(FILE_CONFIG).forEach(function (id) {
 
         const cfg    = FILE_CONFIG[id];
         const progEl = document.getElementById(cfg.progress);
-        const isPdf  = file.type === "application/pdf"
-                    || file.name.toLowerCase().endsWith(".pdf");
+        const isPdf  = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
 
-        // STEP 1: Clear previous preview before showing new one
         const previewContainer = document.getElementById(cfg.preview);
         const imgElement       = document.getElementById(cfg.img);
         if (previewContainer) previewContainer.style.display = "none";
         if (imgElement)       imgElement.src = "";
 
-        // STEP 2: Show loading spinner
         if (progEl) progEl.classList.add("active");
 
         try {
             if (isPdf) {
-                // ── PDF path ─────────────────────────────────────────
-                // Store only a text marker to avoid localStorage size limit
-                // Keep actual File in memory for validation
                 lsSet(cfg.storage, `pdf::${file.name}`);
                 lsSet(cfg.nameKey, file.name);
                 fileStore[id] = file;
                 showBadge(cfg, file.name, true);
-                // No image preview for PDFs
-
             } else {
-                // ── Image path ───────────────────────────────────────
-                // Compress image to fit within localStorage limits
                 const compressed = await compressImage(file);
-
-                // Save to localStorage (wrapped in try-catch for quota errors)
-                try {
-                    lsSet(cfg.storage, compressed);
-                } catch (quotaErr) {
-                    // localStorage is full — keep only in memory this session
-                    console.warn("localStorage quota exceeded, keeping in memory:", quotaErr);
-                }
-
+                try { lsSet(cfg.storage, compressed); } catch (e) {}
                 lsSet(cfg.nameKey, file.name);
                 fileStore[id] = file;
-
-                // Show badge and preview
                 showBadge(cfg, file.name, false);
-                showImagePreview(cfg, compressed); // ✅ Fixed function
+                showImagePreview(cfg, compressed);
             }
-
         } catch (err) {
-            // Compression failed — still accept the file in memory
-            console.warn("Compression failed, accepting file in-memory only:", err);
+            console.warn("File processing failed, storing in memory only:", err);
             fileStore[id] = file;
             showBadge(cfg, file.name, isPdf);
             lsSet(cfg.nameKey, file.name);
-
         } finally {
-            // STEP 3: Always hide spinner whether success or error
             if (progEl) progEl.classList.remove("active");
         }
     });
 });
 
 // ════════════════════════════════════════════════════════════════════
-//  hasFile() — checks if a file exists via 3 sources:
-//  1. fileStore (in-memory, current session)
-//  2. input.files (directly selected this session)
-//  3. localStorage (previously saved, persists across visits)
+//  hasFile
 // ════════════════════════════════════════════════════════════════════
 function hasFile(inputId, storageKey) {
-    if (fileStore[inputId])                                    return true;
-    if (document.getElementById(inputId)?.files?.length > 0)  return true;
+    if (fileStore[inputId]) return true;
+    if (document.getElementById(inputId)?.files?.length > 0) return true;
     const stored = lsGet(storageKey);
-    return !!stored; // "pdf::name" markers also count as truthy
+    return !!stored;
 }
 
 // ════════════════════════════════════════════════════════════════════
 //  PRE-FILL FROM REGISTRATION
-//  Auto-populates form with data from the registration session
 // ════════════════════════════════════════════════════════════════════
 (function prefillFromRegistration() {
     const setField = (id, val) => {
@@ -606,26 +536,18 @@ function hasFile(inputId, storageKey) {
         }
     };
 
-    // Full name from first + last
-    const regName = [currentUser.firstName, currentUser.lastName]
-                    .filter(Boolean).join(" ");
+    const regName = [currentUser.firstName, currentUser.lastName].filter(Boolean).join(" ");
     if (regName) setField("name", regName);
 
-    // DOB (try multiple possible field names)
-    const regDob = currentUser.dob
-                || currentUser.dateOfBirth
-                || currentUser.date_of_birth
-                || "";
-    if (regDob)   setField("dob",    regDob);
+    const regDob = currentUser.dob || currentUser.dateOfBirth || currentUser.date_of_birth || "";
+    if (regDob) setField("dob", regDob);
 
-    // Email and mobile
-    if (currentUser.email)                       setField("email",  currentUser.email);
+    if (currentUser.email) setField("email", currentUser.email);
     if (currentUser.mobile || currentUser.phone) setField("mobile", currentUser.mobile || currentUser.phone);
 })();
 
 // ════════════════════════════════════════════════════════════════════
-//  RESTORE TEXT FIELDS FROM PREVIOUS VISIT
-//  If user filled the form before, restore their data
+//  RESTORE TEXT FIELDS
 // ════════════════════════════════════════════════════════════════════
 (function restoreTextFields() {
     try {
@@ -634,9 +556,7 @@ function hasFile(inputId, storageKey) {
 
         const set = (id, val) => {
             const el = document.getElementById(id);
-            // Only restore if element exists, value present, and not already filled
-            if (el && val !== undefined && val !== null
-                   && String(val).trim() !== "" && !el.value) {
+            if (el && val !== undefined && val !== null && String(val).trim() !== "" && !el.value) {
                 el.value = val;
             }
         };
@@ -655,12 +575,10 @@ function hasFile(inputId, storageKey) {
             set("city",    kyc.address.city);
             set("pincode", kyc.address.pincode);
 
-            // Restore state dropdown
             const stEl = document.getElementById("state");
             if (stEl && kyc.address.state && !stEl.value) {
                 Array.from(stEl.options).forEach(o => {
-                    if (o.value === kyc.address.state
-                     || o.textContent.trim() === kyc.address.state) {
+                    if (o.value === kyc.address.state || o.textContent.trim() === kyc.address.state) {
                         stEl.value = o.value;
                     }
                 });
@@ -671,9 +589,7 @@ function hasFile(inputId, storageKey) {
         if (kyc.monthlyNetIncome)  set("netIncome",   kyc.monthlyNetIncome);
         if (kyc.otherIncome)       set("otherIncome", kyc.otherIncome);
 
-    } catch (e) {
-        // Silent fail — form just won't be pre-filled
-    }
+    } catch (e) {}
 })();
 
 // ════════════════════════════════════════════════════════════════════
@@ -699,7 +615,6 @@ function validateForm() {
         alert_application_success_text:  "Your account has been opened successfully."
     };
 
-    // ── Read all form values ──
     const name        = document.getElementById("name").value.trim();
     const dob         = document.getElementById("dob").value;
     const email       = document.getElementById("email").value.trim();
@@ -717,12 +632,10 @@ function validateForm() {
     const netIncome   = document.getElementById("netIncome").value.trim();
     const otherIncome = document.getElementById("otherIncome").value.trim();
 
-    // ── Check file uploads ──
     const hasAadhaar   = hasFile("aadhaarFile",  "kyc_doc_aadhaar");
     const hasPan       = hasFile("panFile",       "kyc_doc_pan");
     const hasSignature = hasFile("signatureFile", "kyc_doc_signature");
 
-    // ── Validations ──
     if (!name)                                return swal("Error", d.alert_name_missing, "error");
     if (!/^[6-9]\d{9}$/.test(mobile))        return swal(d.alert_invalid_mobile_title,  d.alert_invalid_mobile_text,  "error");
     if (!/^\d{12}$/.test(aadhaar))            return swal(d.alert_invalid_aadhaar_title, d.alert_invalid_aadhaar_text, "error");
@@ -733,7 +646,6 @@ function validateForm() {
     if (!hasSignature)                        return swal(d.alert_missing_document_title, d.alert_missing_signature,  "warning");
     if (!accountType)                         return swal("Error", "Please select account type", "error");
 
-    // ── Calculate age from DOB ──
     let age = null;
     if (dob) {
         const birth = new Date(dob);
@@ -741,10 +653,9 @@ function validateForm() {
         age = today.getFullYear() - birth.getFullYear();
         const m = today.getMonth() - birth.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-        if (age < 0 || age > 120) age = null; // sanity check
+        if (age < 0 || age > 120) age = null;
     }
 
-    // ── Build KYC payload ──
     const kycPayload = JSON.stringify({
         name, dob, ageInYears: age, email, mobile, aadhaar, pan,
         fatherName: father,
@@ -755,12 +666,9 @@ function validateForm() {
         otherIncome:       Number(otherIncome) || 0
     });
 
-    // Save for self-restore (scoped to user)
     lsSet("kyc_data", kycPayload);
-    // Save globally for other pages (officer-review, lawyer-verification etc.)
     localStorage.setItem("kyc_data", kycPayload);
 
-    // ── Build account details object ──
     const accountDetails = {
         fullName:  name, dob, ageInYears: age,
         mobile, email, aadhaar, pan,
@@ -774,7 +682,6 @@ function validateForm() {
         documentsUploaded: { aadhaar: hasAadhaar, pan: hasPan, signature: hasSignature }
     };
 
-    // ── Save to logic.js user store ──
     const result = abcBank.updateUserAccountDetails(accountDetails);
 
     if (result?.success) {
