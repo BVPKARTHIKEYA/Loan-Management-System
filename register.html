@@ -71,7 +71,7 @@ body {
           class="border rounded-lg p-3 w-full">
 
         <div class="grid grid-cols-2 gap-4">
-          <input id="password" type="password" required minlength="6"
+          <input id="password" type="password" required minlength="8"
             data-i18n-placeholder="reg_password_placeholder" placeholder="Password"
             class="border rounded-lg p-3 w-full">
           <input id="confirmPassword" type="password" required
@@ -113,8 +113,8 @@ body {
 var savedLang = localStorage.getItem('abcbank_lang') || 'en';
 if (typeof applyLang === 'function') applyLang(savedLang);
 
-// ── Registration form ─────────────────────────────────────────
-document.getElementById('registerForm').addEventListener('submit', function(e) {
+// ── Registration form (async) ─────────────────────────────────
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   var lang = localStorage.getItem('abcbank_lang') || 'en';
@@ -129,10 +129,10 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
   var confirmPassword = document.getElementById('confirmPassword').value;
 
   // ── Client-side validation ──────────────────────────────────
-  if (password.length < 6) {
+  if (password.length < 8) {
     swal(
       d.reg_alert_weak_pwd_title   || 'Weak Password',
-      d.reg_alert_weak_pwd_text    || 'Password must be at least 6 characters.',
+      d.reg_alert_weak_pwd_text    || 'Password must be at least 8 characters.',
       'error'
     );
     return;
@@ -147,8 +147,8 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     return;
   }
 
-  // ── Call logic.js registerUser ──────────────────────────────
-  var result = abcBank.registerUser({ fname, lname, email, mobile, dob, password });
+  // ── Call async registerUser ─────────────────────────────────
+  var result = await abcBank.registerUser({ fname, lname, email, mobile, dob, password });
 
   if (result.success) {
     // Registration successful — auto-login and redirect
@@ -156,11 +156,10 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
       d.reg_alert_success_title || 'Registered Successfully!',
       d.reg_alert_success_text  || 'Welcome to ABC Bank. Redirecting to dashboard...',
       'success'
-    ).then(function() {
-      abcBank.loginUser(email, password);
+    ).then(async function() {
+      await abcBank.loginUser(email, password);
       window.location.href = 'home.html';
     });
-
   } else {
     // Email already registered or other error
     swal(
