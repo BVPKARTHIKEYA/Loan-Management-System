@@ -92,7 +92,9 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   const lang = localStorage.getItem('abcbank_lang') || 'en';
-  const d = I18N?.[lang] || I18N?.['en'] || {
+
+  // Default messages – ensures all required fields exist
+  const defaultMessages = {
     alert_missing_title: "Missing Fields",
     alert_missing_text: "Please fill in both email and password.",
     alert_invalid_pwd_title: "Invalid Password",
@@ -102,10 +104,14 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     alert_login_failed_title: "Login Failed",
   };
 
+  // Get translations from I18N (if available) and merge with defaults
+  const userMessages = (I18N && (I18N[lang] || I18N['en'])) || {};
+  const d = { ...defaultMessages, ...userMessages };
+
   const email    = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  // Basic client-side checks
+  // Client-side validation
   if (!email || !password) {
     swal(d.alert_missing_title, d.alert_missing_text, "warning");
     return;
@@ -116,16 +122,23 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     return;
   }
 
-  // Actual authentication against localStorage "database"
+  // Authenticate using stored users
   const result = abcBank.loginUser(email, password);
 
   if (result.success) {
-    swal(d.alert_login_success_title, result.message || d.alert_login_success_text, "success")
-      .then(() => {
-        window.location.href = "home.html";
-      });
+    swal(
+      d.alert_login_success_title,
+      result.message || d.alert_login_success_text,
+      "success"
+    ).then(() => {
+      window.location.href = "home.html";
+    });
   } else {
-    swal(d.alert_login_failed_title || "Login Failed", result.message, "error");
+    swal(
+      d.alert_login_failed_title || "Login Failed",
+      result.message || "Invalid email or password.",
+      "error"
+    );
   }
 });
 </script>
