@@ -101,46 +101,60 @@ const DEFAULT_MESSAGES = {
 
 function getTranslation(key) {
   const lang = localStorage.getItem('abcbank_lang') || 'en';
-  // Safely access I18N, fallback to empty object if undefined
   const userMessages = (window.I18N && (window.I18N[lang] || window.I18N['en'])) || {};
-  // Return the key from user messages, or from defaults, or key itself as fallback
   return userMessages[key] || DEFAULT_MESSAGES[key] || key;
 }
 
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+const loginForm = document.getElementById("loginForm");
+const submitBtn = loginForm.querySelector("button[type='submit']");
+
+loginForm.addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const email    = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  // Disable button to prevent double submission
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Signing in...';
 
-  // Client-side validation with safe translations
-  if (!email || !password) {
-    swal(getTranslation('alert_missing_title'), getTranslation('alert_missing_text'), "warning");
-    return;
-  }
+  try {
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-  if (password.length < 8) {
-    swal(getTranslation('alert_invalid_pwd_title'), getTranslation('alert_invalid_pwd_text'), "error");
-    return;
-  }
+    // Client-side validation with safe translations
+    if (!email || !password) {
+      swal(getTranslation('alert_missing_title'), getTranslation('alert_missing_text'), "warning");
+      return;
+    }
 
-  // Authenticate using stored users
-  const result = abcBank.loginUser(email, password);
+    if (password.length < 8) {
+      swal(getTranslation('alert_invalid_pwd_title'), getTranslation('alert_invalid_pwd_text'), "error");
+      return;
+    }
 
-  if (result.success) {
-    swal(
-      getTranslation('alert_login_success_title'),
-      result.message || getTranslation('alert_login_success_text'),
-      "success"
-    ).then(() => {
-      window.location.href = "home.html";
-    });
-  } else {
-    swal(
-      getTranslation('alert_login_failed_title'),
-      result.message || "Invalid email or password.",
-      "error"
-    );
+    // ✅ Await the async login function
+    const result = await abcBank.loginUser(email, password);
+
+    if (result.success) {
+      swal(
+        getTranslation('alert_login_success_title'),
+        result.message || getTranslation('alert_login_success_text'),
+        "success"
+      ).then(() => {
+        window.location.href = "home.html";
+      });
+    } else {
+      swal(
+        getTranslation('alert_login_failed_title'),
+        result.message || "Invalid email or password.",
+        "error"
+      );
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    swal("Error", "Something went wrong. Please try again.", "error");
+  } finally {
+    // Re-enable button after all operations
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa fa-right-to-bracket mr-2"></i><span data-i18n="login_btn">Sign In</span>';
   }
 });
 </script>
