@@ -39,7 +39,7 @@
 </head>
 <body class="bg-gray-100">
 
-<!-- NAVBAR -->
+<!-- NAVBAR (unchanged) -->
 <header>
   <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
     <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
@@ -201,26 +201,7 @@
             <span id="cibil-file-name-text" class="font-mono truncate"></span>
           </div>
 
-          <!--
-            ┌─────────────────────────────────────────────────────────────┐
-            │  "Previously uploaded" banner                               │
-            │                                                             │
-            │  Visible ONLY when THIS user's own prefixed key exists:     │
-            │    localStorage["ACC123456__kyc_doc_cibil_name"]            │
-            │                                                             │
-            │  It is NEVER read from the plain/unprefixed key             │
-            │    localStorage["kyc_doc_cibil_name"]                       │
-            │  so User A's filename cannot appear for User B.             │
-            └─────────────────────────────────────────────────────────────┘
-          -->
-          <div id="existing-file-banner"
-               class="hidden mt-2 flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-blue-700 text-sm">
-            <i class="fa fa-paperclip"></i>
-            <span>Previously uploaded:</span>
-            <span id="existing-file-name" class="font-mono font-semibold truncate"></span>
-            <button type="button" onclick="clearExistingFile()"
-                    class="ml-auto text-red-500 hover:text-red-700 text-xs underline">Remove</button>
-          </div>
+          <!-- Previously uploaded banner REMOVED as requested -->
         </div>
 
         <button type="button" onclick="validateCibil()"
@@ -310,7 +291,7 @@ function lsRemoveUser(key) {
     localStorage.removeItem(key);
 }
 
-// Guard cross-user leak
+// Guard cross-user leak (optional but safe)
 (function guardCrossUserData() {
     const storedOwner = localStorage.getItem("__cibil_owner__");
     if (storedOwner && storedOwner !== _userKey) {
@@ -332,23 +313,7 @@ const FILE_CONFIG = {
     }
 };
 
-// Restore previously uploaded (only current user)
-(function restoreExistingFile() {
-    const savedName = lsGetUser(FILE_CONFIG.cibilFile.nameKey);
-    if (savedName) {
-        document.getElementById("existing-file-name").textContent = savedName;
-        document.getElementById("existing-file-banner").classList.remove("hidden");
-    }
-})();
-
-function clearExistingFile() {
-    lsRemoveUser(FILE_CONFIG.cibilFile.storageKey);
-    lsRemoveUser(FILE_CONFIG.cibilFile.nameKey);
-    document.getElementById("existing-file-banner").classList.add("hidden");
-    document.getElementById("cibilFile").value = "";
-}
-
-// ====================== FILE UPLOAD (NOW SAVES BOTH KEYS) ======================
+// ====================== FILE UPLOAD (saves to per‑user storage) ======================
 document.getElementById("cibilFile").addEventListener("change", function () {
     const file = this.files[0];
     if (!file) return;
@@ -366,8 +331,6 @@ document.getElementById("cibilFile").addEventListener("change", function () {
             lsSetUser(cfg.nameKey, file.name);
 
             // Show preview
-            document.getElementById("existing-file-banner").classList.add("hidden");
-
             if (file.type.startsWith("image/")) {
                 document.getElementById(cfg.previewImg).src = e.target.result;
                 document.getElementById(cfg.previewDiv).classList.remove("hidden");
@@ -389,7 +352,7 @@ document.getElementById("cibilFile").addEventListener("change", function () {
     reader.readAsDataURL(file);
 });
 
-// ====================== LANGUAGE, DOB, METER, VALIDATE (unchanged) ======================
+// ====================== LANGUAGE, DOB, METER, VALIDATE ======================
 const navSel = document.getElementById("nav-lang-select");
 const savedLang = localStorage.getItem("abcbank_lang") || "en";
 if (navSel) {
@@ -448,7 +411,6 @@ function updateMeter(val) {
 }
 
 function validateCibil() {
-    // ... (your existing validation code - unchanged) ...
     const score = parseInt(document.getElementById("score").value);
     const employment = document.getElementById("employment").value;
     const income = document.getElementById("income").value.trim();
@@ -467,10 +429,14 @@ function validateCibil() {
     if (!loanAmount) return swal("Error", "Enter loan amount.", "error");
     if (!hasFile) return swal("Error", "Upload your CIBIL report.", "warning");
 
-    const cibilData = { /* your existing object */ 
-        dob: accountDob, score, employment,
-        monthlyIncome: parseInt(income), annualIncome: parseInt(income)*12,
-        loanType, loanAmount: parseInt(loanAmount),
+    const cibilData = {
+        dob: accountDob,
+        score,
+        employment,
+        monthlyIncome: parseInt(income),
+        annualIncome: parseInt(income) * 12,
+        loanType,
+        loanAmount: parseInt(loanAmount),
         tenure: accountTenure || 20,
         submittedAt: new Date().toISOString(),
         submittedBy: _userKey
@@ -486,7 +452,6 @@ function validateCibil() {
 
     console.log("✅ CIBIL details saved successfully");
 
-    // SweetAlert (unchanged)
     let title, text, icon;
     if (score >= 750) { title="Approved"; text="Excellent score! You are eligible to apply for a loan."; icon="success"; }
     else if (score >= 650) { title="Under Review"; text="Your score is average. A bank representative will contact you soon."; icon="warning"; }
