@@ -1,4 +1,4 @@
-// logic.js — Handles user registration, login, session management,
+// /utils/logic.js — Handles user registration, login, session management,
 // and bank account handling using browser localStorage
 // This is a demo backend logic implemented entirely in JavaScript
 
@@ -40,15 +40,11 @@ function findUserByEmail(email) {
 // PASSWORD HASHING (SHA-256)
 // ------------------------------------------------------------------
 async function hashPassword(password) {
-  // Convert the password string to a Uint8Array
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
-  // Compute SHA-256 hash
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  // Convert buffer to hex string
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // ------------------------------------------------------------------
@@ -94,17 +90,16 @@ async function registerUser(userData) {
     };
   }
 
-  // Hash the password
+  // ✅ await the hash — this is async
   const hashedPassword = await hashPassword(userData.password);
 
-  // Create new user object with hashed password
   const newUser = {
     firstName : userData.fname.trim(),
     lastName  : userData.lname.trim(),
     email     : userData.email.trim(),
     mobile    : userData.mobile.trim(),
     dob       : userData.dob,
-    password  : hashedPassword,      // store hash, not plaintext
+    password  : hashedPassword,
     createdAt : new Date().toISOString(),
     account   : null,
   };
@@ -114,28 +109,32 @@ async function registerUser(userData) {
 
   return {
     success : true,
+    message : "Registration successful! Please log in.",  // ✅ always return a message
     user    : newUser
   };
 }
 
 // ------------------------------------------------------------------
 // LOGIN SYSTEM (ASYNC)
+// ✅ KEY FIX: This function is async — callers MUST await it.
+//    Without await, the caller gets a Promise, not { success, message }.
 // ------------------------------------------------------------------
 async function loginUser(email, password) {
   const u = findUserByEmail(email);
   if (!u) {
     return {
       success : false,
-      message : "No account with this email"
+      message : "No account found with this email."   // ✅ always a string
     };
   }
 
-  // Hash the entered password and compare with stored hash
+  // ✅ await the hash before comparing
   const hashedInput = await hashPassword(password);
+
   if (u.password !== hashedInput) {
     return {
       success : false,
-      message : "Incorrect password"
+      message : "Incorrect password. Please try again."  // ✅ always a string
     };
   }
 
@@ -158,6 +157,7 @@ async function loginUser(email, password) {
 
   return {
     success : true,
+    message : "Welcome back, " + u.firstName + "!",  // ✅ always a string
     user    : u
   };
 }
@@ -177,7 +177,7 @@ function isLoggedIn() {
 function logout() {
   localStorage.removeItem(CURRENT_USER_KEY);
   localStorage.removeItem("bankUser");
-  window.location.href = "login.html";
+  window.location.href = "/pages/index.html";
 }
 
 // ------------------------------------------------------------------
@@ -191,12 +191,12 @@ function updateUserAccountDetails(details) {
   const users       = getAllUsers();
   const currentUser = getCurrentUser();
   if (!currentUser) {
-    return { success: false, message: "Not logged in or session expired" };
+    return { success: false, message: "Not logged in or session expired." };
   }
 
   const i = users.findIndex(u => u.email === currentUser.email);
   if (i === -1) {
-    return { success: false, message: "User not found" };
+    return { success: false, message: "User not found." };
   }
 
   const updatedAccount = {
@@ -224,7 +224,7 @@ function updateUserAccountDetails(details) {
 
   return {
     success : true,
-    message : "Account updated",
+    message : "Account updated successfully.",
     account : updatedAccount
   };
 }
@@ -240,11 +240,13 @@ function getUserAccount() {
 }
 
 // ------------------------------------------------------------------
-// PUBLIC API (async methods)
+// PUBLIC API
+// ⚠️  registerUser and loginUser are ASYNC — always await them:
+//     const result = await abcBank.loginUser(email, password);
 // ------------------------------------------------------------------
 window.abcBank = {
-  registerUser,    // async
-  loginUser,       // async
+  registerUser,    // async — must be awaited
+  loginUser,       // async — must be awaited
   getCurrentUser,
   isLoggedIn,
   logout,

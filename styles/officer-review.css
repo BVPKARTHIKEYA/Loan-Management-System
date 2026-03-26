@@ -1,0 +1,131 @@
+
+  #lang-switcher { display: none !important; }
+
+  /* ─── CSS variables: light ──────────────────────────────────────── */
+  :root {
+    --bg-page:       #f3f4f6;
+    --bg-panel:      #ffffff;
+    --text-primary:  #111827;
+    --text-secondary:#6b7280;
+    --border:        #e5e7eb;
+    --toggle-bg:     rgba(255,255,255,0.18);
+    --toggle-border: rgba(255,255,255,0.30);
+    --toggle-track:  rgba(255,255,255,0.25);
+    --toggle-active: #facc15;
+    --toggle-knob:   #ffffff;
+  }
+
+  /* ─── CSS variables: dark ───────────────────────────────────────── */
+  html.dark {
+    --bg-page:       #0f172a;
+    --bg-panel:      #1e293b;
+    --text-primary:  #f1f5f9;
+    --text-secondary:#94a3b8;
+    --border:        #334155;
+    --toggle-track:  rgba(255,255,255,0.15);
+    --toggle-active: #facc15;
+    --toggle-knob:   #1e293b;
+  }
+
+  /* ─── Base ──────────────────────────────────────────────────────── */
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* ─── Dark overrides for Tailwind utility classes ────────────────── */
+  html.dark .bg-white        { background-color: var(--bg-panel) !important; }
+  html.dark .bg-gray-50      { background-color: #0f172a !important; }
+  html.dark .bg-gray-100     { background-color: var(--bg-page) !important; }
+  html.dark .bg-yellow-50    { background-color: #1c1a09 !important; }
+  html.dark .bg-blue-50      { background-color: #172554 !important; }
+  html.dark .border-yellow-300 { border-color: #713f12 !important; }
+  html.dark .border-blue-200   { border-color: #1e40af !important; }
+  html.dark .text-yellow-800   { color: #fde68a !important; }
+  html.dark .text-blue-800     { color: #93c5fd !important; }
+  html.dark .text-blue-500     { color: #60a5fa !important; }
+  html.dark .text-gray-600     { color: var(--text-secondary) !important; }
+  html.dark .text-gray-500     { color: var(--text-secondary) !important; }
+  html.dark .text-gray-400     { color: #64748b !important; }
+  html.dark .text-gray-700     { color: #cbd5e1 !important; }
+  html.dark .border             { border-color: var(--border) !important; }
+  html.dark .shadow             { box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
+  html.dark #cibil-modal-inner  { background: var(--bg-panel) !important; }
+  html.dark #cibil-modal-body   { background: #0f172a !important; }
+  html.dark .px-6.py-4.bg-gray-50 { background: var(--bg-panel) !important; }
+  html.dark .bg-gray-100.hover\:bg-gray-200 { background-color: #1e293b !important; color: #cbd5e1 !important; }
+
+  /* ─── Nav dark toggle switch (identical to home.html) ────────────── */
+  .nav-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    border-radius: 9999px;
+    padding: 5px 12px;
+  }
+  .nav-toggle-icon { font-size: 0.8rem; color: #facc15; }
+  .nav-toggle-switch {
+    position: relative;
+    width: 38px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .nav-toggle-switch input { display: none; }
+  .nav-toggle-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: var(--toggle-track);
+    transition: background-color 0.3s;
+  }
+  .nav-toggle-switch input:checked ~ .nav-toggle-track { background-color: var(--toggle-active); }
+  .nav-toggle-knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 9999px;
+    background-color: var(--toggle-knob);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  .nav-toggle-switch input:checked ~ .nav-toggle-knob { transform: translateX(18px); }
+
+  /* ─── Original styles ────────────────────────────────────────────── */
+  .profile-group:hover .profile-dropdown,
+  .profile-group:focus-within .profile-dropdown {
+    opacity: 1; visibility: visible;
+  }
+  .profile-dropdown {
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.15s, visibility 0.15s;
+  }
+
+  #cibil-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  #cibil-modal.active { display: flex; }
+  #cibil-modal-inner {
+    background: #fff; border-radius: 16px;
+    max-width: 90vw; max-height: 90vh; width: 720px;
+    display: flex; flex-direction: column;
+    overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  }
+  #cibil-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: #1e3a8a; color: #fff;
+  }
+  #cibil-modal-body {
+    flex: 1; overflow: auto; padding: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: #f8fafc; min-height: 300px;
+  }
+  #cibil-modal-body img {
+    max-width: 100%; max-height: 65vh;
+    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }

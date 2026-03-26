@@ -1,4 +1,4 @@
-/* shared.js – common utilities for ABC Bank LMS */
+/* /utils/lang.js – common utilities for ABC Bank LMS */
 
 /* ══════════════════════════════════════════════
    🌐 LANGUAGE / i18n SYSTEM
@@ -154,7 +154,7 @@ state_puducherry: "Puducherry",
     reg_alert_success_title:   "Registration Successful",
     reg_alert_success_text:    "Your account has been created successfully.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:           "Dashboard",
     home_welcome:         "Welcome back",
     home_total_loans:     "Total Loans",
@@ -685,7 +685,7 @@ state_puducherry: "పుదుచ్చేరి",
     reg_alert_success_title:   "నమోదు విజయవంతమైంది",
     reg_alert_success_text:    "మీ ఖాతా విజయవంతంగా సృష్టించబడింది.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "డాష్‌బోర్డ్",
     home_welcome:          "తిరిగి స్వాగతం",
     home_total_loans:      "మొత్తం రుణాలు",
@@ -1213,7 +1213,7 @@ state_puducherry: "புதுச்சேரி",
     reg_alert_success_title:   "பதிவு வெற்றிகரமானது",
     reg_alert_success_text:    "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "டாஷ்போர்டு",
     home_welcome:          "மீண்டும் வரவேற்கிறோம்",
     home_total_loans:      "மொத்த கடன்கள்",
@@ -1740,7 +1740,7 @@ state_puducherry: "പുതുച്ചേരി",
     reg_alert_success_title:   "രജിസ്ട്രേഷൻ വിജയകരം",
     reg_alert_success_text:    "നിങ്ങളുടെ അക്കൗണ്ട് വിജയകരമായി സൃഷ്ടിക്കപ്പെട്ടു.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "ഡാഷ്‌ബോർഡ്",
     home_welcome:          "തിരിച്ചു സ്വാഗതം",
     home_total_loans:      "ആകെ വായ്പകൾ",
@@ -2260,7 +2260,7 @@ state_puducherry: "ಪುಡುಚ್ಚೇರಿ",
     reg_alert_success_title:    "ನೋಂದಣಿ ಯಶಸ್ವಿ",
     reg_alert_success_text:     "ನಿಮ್ಮ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:             "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
     home_welcome:           "ಮತ್ತೆ ಸ್ವಾಗತ",
     home_total_loans:       "ಒಟ್ಟು ಸಾಲಗಳು",
@@ -2783,7 +2783,7 @@ state_puducherry: "पुदुचेरी",
     reg_alert_success_title:    "पंजीकरण सफल",
     reg_alert_success_text:     "आपका खाता सफलतापूर्वक बनाया गया है।",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:              "डैशबोर्ड",
     home_welcome:            "वापसी पर स्वागत है",
     home_total_loans:        "कुल ऋण",
@@ -3265,12 +3265,12 @@ function injectNavbar(activePage) {
 
   const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   const pages = [
-    { id: 'home',         href: 'home.html',             icon: 'fa-gauge-high',          label: d.nav_dashboard },
-    { id: 'bank-account', href: 'bank-account.html',     icon: 'fa-building-columns',    label: d.nav_bankaccount },
-    { id: 'cibil',        href: 'cibil.html',            icon: 'fa-chart-line',          label: d.nav_cibil },
-    { id: 'loan-app',     href: 'loan-application.html', icon: 'fa-file-invoice-dollar', label: d.nav_applyloan },
-    { id: 'receipt',      href: 'loan-receipt.html',     icon: 'fa-receipt',             label: d.nav_receipt },
-    { id: 'approval',     href: 'loan-approval.html',    icon: 'fa-stamp',               label: d.nav_approval },
+    { id: 'home',         href: '/pages/home.html',             icon: 'fa-gauge-high',          label: d.nav_dashboard },
+    { id: 'bank-account', href: '/pages/bank-account.html',     icon: 'fa-building-columns',    label: d.nav_bankaccount },
+    { id: 'cibil',        href: '/pages/cibil.html',            icon: 'fa-chart-line',          label: d.nav_cibil },
+    { id: 'loan-app',     href: '/pages/loan-application.html', icon: 'fa-file-invoice-dollar', label: d.nav_applyloan },
+    { id: 'receipt',      href: '/pages/loan-receipt.html',     icon: 'fa-receipt',             label: d.nav_receipt },
+    { id: 'approval',     href: '/pages/loan-approval.html',    icon: 'fa-stamp',               label: d.nav_approval },
   ];
 
   const linksHTML = pages.map(p =>
@@ -3282,7 +3282,7 @@ function injectNavbar(activePage) {
   const html = `
   <nav class="navbar">
     <div class="navbar-inner">
-      <a href="home.html" class="navbar-brand">
+      <a href="/pages/home.html" class="navbar-brand">
         <div class="brand-logo"><i class="fa fa-landmark"></i></div>
         <span class="brand-text">ABC Bank</span>
         <span class="brand-badge">LMS</span>

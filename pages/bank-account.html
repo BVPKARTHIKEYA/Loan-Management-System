@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Bank Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/utils/lang.js"></script>
+    <script src="/utils/logic.js"></script>
+    <link rel="icon" type="image/x-icon" href="/assets/images/abc-bank-logo.jpeg">
+    <link href="/styles/bank-account.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
+    <section class="w-full px-10 py-5 flex justify-between items-center gap-6">
+
+      <!-- LOGO -->
+      <a href="/pages/home.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="/assets/images/abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
+        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
+      </a>
+
+      <!-- BACK -->
+      <a href="/pages/home.html" class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i><span data-i18n="account_back_dashboard">Back to Dashboard</span>
+      </a>
+
+      <!-- RIGHT: Lang + Dark Toggle + Profile -->
+      <section class="flex items-center gap-4 flex-shrink-0">
+
+        <!-- Language -->
+        <section style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;"><i class="fa fa-globe"></i> Lang:</label>
+          <select id="nav-lang-select" style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+            <option value="en" style="background:#1e3a5f">English</option>
+            <option value="te" style="background:#1e3a5f">తెలుగు</option>
+            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
+            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
+            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
+            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
+          </select>
+        </section>
+
+        <!-- ── Dark mode toggle ── -->
+        <section class="nav-toggle-wrap" title="Toggle dark mode">
+          <i class="fa-solid fa-sun nav-toggle-icon"></i>
+          <label class="nav-toggle-switch" aria-label="Toggle dark mode">
+            <input type="checkbox" id="darkToggle">
+            <span class="nav-toggle-track"></span>
+            <span class="nav-toggle-knob"></span>
+          </label>
+          <i class="fa-solid fa-moon nav-toggle-icon"></i>
+        </section>
+
+        <!-- Profile dropdown -->
+        <section class="relative group">
+          <section class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
+            <i class="fa fa-user-circle text-2xl"></i>
+            <section class="flex flex-col leading-tight">
+              <span id="username" class="text-base font-bold">Loading...</span>
+              <span id="userid" class="text-xs opacity-70">ID: —</span>
+            </section>
+            <i class="fa fa-chevron-down text-sm ml-1"></i>
+          </section>
+          <section class="profile-dropdown absolute right-0 mt-2 w-64 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+            <section class="p-4 border-b profile-divider">
+              <p class="font-semibold text-lg" id="profileName">Loading...</p>
+              <p class="text-sm" style="color:var(--text-secondary)" id="profileAccount">Account: —</p>
+            </section>
+            <a href="/pages/home.html" class="block px-4 py-3"><i class="fa fa-home mr-2"></i><span data-i18n="account_back_dashboard">Back to Dashboard</span></a>
+            <a href="#" onclick="abcBank.logout(); return false;" class="logout-link block px-4 py-3" style="color:#dc2626;"><i class="fa fa-sign-out-alt mr-2"></i><span data-i18n="nav_logout">Logout</span></a>
+          </section>
+        </section>
+
+      </section>
+    </section>
+  </nav>
+</header>
+
+<section class="max-w-7xl mx-auto px-6 pt-8 pb-2">
+  <h1 class="text-4xl font-bold mt-1" data-i18n="account_page_title">Open Bank Account</h1>
+  <p class="page-desc text-lg mt-1" data-i18n="account_page_desc">Complete the form below to open your ABC Bank account.</p>
+</section>
+
+<main class="max-w-7xl mx-auto p-6">
+<form id="accountForm" class="form-panel shadow-xl rounded-xl p-10 space-y-12">
+
+  <!-- ── Personal Information ── -->
+  <section>
+    <header class="mb-6"><h2 class="section-title text-2xl font-bold" data-i18n="personal_info_title">Personal Information</h2></header>
+    <section class="grid md:grid-cols-2 gap-6">
+      <section><label class="form-label font-semibold text-lg" data-i18n="full_name">Full Name</label><input id="name" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="date_of_birth">Date of Birth</label><input id="dob" type="date" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="email">Email</label><input id="email" type="email" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="mobile_number">Mobile Number</label><input id="mobile" type="tel" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="aadhaar_number">Aadhaar Number</label><input id="aadhaar" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="pan_number">PAN Number</label><input id="pan" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg" required></section>
+    </section>
+  </section>
+
+  <!-- ── Parent Details ── -->
+  <section>
+    <header class="mb-6"><h2 class="section-title text-2xl font-bold" data-i18n="parent_details_title">Parent Details</h2></header>
+    <section class="grid md:grid-cols-2 gap-6">
+      <section><label class="form-label font-semibold text-lg" data-i18n="father_name">Father Name</label><input id="father" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="mother_name">Mother Name</label><input id="mother" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+    </section>
+  </section>
+
+  <!-- ── Address Information ── -->
+  <section>
+    <header class="mb-6"><h2 class="section-title text-2xl font-bold" data-i18n="address_info_title">Address Information</h2></header>
+    <section class="grid md:grid-cols-2 gap-6">
+      <section class="md:col-span-2"><label class="form-label font-semibold text-lg" data-i18n="address">Address</label><textarea id="address" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></textarea></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="city">City</label><input id="city" type="text" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="state">State</label>
+        <select id="state" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+          <option value="" data-i18n="state_select">Select</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+          <option value="Assam">Assam</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Chhattisgarh">Chhattisgarh</option>
+          <option value="Goa">Goa</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Haryana">Haryana</option>
+          <option value="Himachal Pradesh">Himachal Pradesh</option>
+          <option value="Jharkhand">Jharkhand</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Manipur">Manipur</option>
+          <option value="Meghalaya">Meghalaya</option>
+          <option value="Mizoram">Mizoram</option>
+          <option value="Nagaland">Nagaland</option>
+          <option value="Odisha">Odisha</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Sikkim">Sikkim</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="Tripura">Tripura</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Uttarakhand">Uttarakhand</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+          <option value="Chandigarh">Chandigarh</option>
+          <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+          <option value="Ladakh">Ladakh</option>
+          <option value="Lakshadweep">Lakshadweep</option>
+          <option value="Puducherry">Puducherry</option>
+        </select>
+      </section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="pincode">PIN Code</label><input id="pincode" type="number" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+    </section>
+  </section>
+
+  <!-- ── Account Type ── -->
+  <section>
+    <header><h2 class="section-title text-3xl font-bold mb-6" data-i18n="account_type_title">Select Type of Bank Account</h2></header>
+    <p class="page-desc text-lg mb-6" data-i18n="account_type_desc">Choose the account that best fits your banking needs.</p>
+    <section class="grid md:grid-cols-2 gap-8">
+      <label class="account-card border-2 rounded-xl p-8 shadow-lg cursor-pointer transition block">
+        <input type="radio" name="account" value="savings" class="mb-4" checked>
+        <section class="flex items-center gap-4 mb-4"><span class="text-5xl">🏦</span><h3 class="account-card-title text-2xl font-bold" data-i18n="savings_account">Savings Account</h3></section>
+        <p class="account-card-desc text-lg" data-i18n="savings_account_desc">Ideal for individuals who want to safely save money and earn interest.</p>
+      </label>
+      <label class="account-card border-2 rounded-xl p-8 shadow-lg cursor-pointer transition block">
+        <input type="radio" name="account" value="current" class="mb-4">
+        <section class="flex items-center gap-4 mb-4"><span class="text-5xl">💼</span><h3 class="account-card-title text-2xl font-bold" data-i18n="current_account">Current Account</h3></section>
+        <p class="account-card-desc text-lg" data-i18n="current_account_desc">Designed for businesses that perform frequent financial transactions.</p>
+      </label>
+    </section>
+  </section>
+
+  <!-- ── Income Details ── -->
+  <section>
+    <header><h2 class="section-title text-2xl font-bold mb-6" data-i18n="income_details_title">Income Details</h2></header>
+    <section class="grid md:grid-cols-2 gap-6">
+      <section><label class="form-label font-semibold text-lg" data-i18n="gross_annual_income">Gross Annual Income</label><input id="grossIncome" type="number" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="monthly_net_income">Monthly Net Income</label><input id="netIncome" type="number" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+      <section><label class="form-label font-semibold text-lg" data-i18n="other_income">Other Income</label><input id="otherIncome" type="number" class="form-field w-full border rounded-md p-3 mt-2 text-lg"></section>
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="income_verification_doc">Income Verification Document</label>
+        <input id="incomeDoc" type="file" accept="image/*,application/pdf" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+        <section id="progress-incomeDoc" class="upload-progress"><section class="spinner"></section> Compressing &amp; saving…</section>
+        <section id="badge-incomeDoc"></section>
+        <section id="preview-incomeDoc" class="preview-container mt-2" style="display:none;">
+          <img id="img-incomeDoc" class="preview-img" src="" alt="Income Doc Preview">
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- ── KYC Upload ── -->
+  <section>
+    <header class="mb-6">
+      <h2 class="section-title text-2xl font-bold" data-i18n="kyc_upload_title">KYC Document Upload</h2>
+      <p class="page-desc" data-i18n="kyc_upload_desc">Upload Aadhaar card, PAN card, signature and property document (if applicable) for verification.</p>
+    </header>
+    <section class="grid md:grid-cols-2 gap-6">
+
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="upload_aadhaar">Upload Aadhaar Card</label>
+        <input id="aadhaarFile" type="file" accept="image/*,application/pdf" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+        <section id="progress-aadhaarFile" class="upload-progress"><section class="spinner"></section> Compressing &amp; saving…</section>
+        <section id="badge-aadhaarFile"></section>
+        <section id="preview-aadhaar" class="preview-container mt-2" style="display:none;">
+          <img id="img-aadhaar" class="preview-img" src="" alt="Aadhaar Preview">
+        </section>
+      </section>
+
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="upload_pan">Upload PAN Card</label>
+        <input id="panFile" type="file" accept="image/*,application/pdf" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+        <section id="progress-panFile" class="upload-progress"><section class="spinner"></section> Compressing &amp; saving…</section>
+        <section id="badge-panFile"></section>
+        <section id="preview-pan" class="preview-container mt-2" style="display:none;">
+          <img id="img-pan" class="preview-img" src="" alt="PAN Preview">
+        </section>
+      </section>
+
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="upload_signature">Upload Signature</label>
+        <input id="signatureFile" type="file" accept="image/*" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+        <section id="progress-signatureFile" class="upload-progress"><section class="spinner"></section> Compressing &amp; saving…</section>
+        <section id="badge-signatureFile"></section>
+        <section id="preview-signature" class="preview-container mt-2" style="display:none;">
+          <img id="img-signature" class="preview-img" src="" alt="Signature Preview">
+        </section>
+      </section>
+
+      <section>
+        <label class="form-label font-semibold text-lg" data-i18n="doc_property">Property Document (optional)</label>
+        <input id="propertyFile" type="file" accept="image/*,application/pdf" class="form-field w-full border rounded-md p-3 mt-2 text-lg">
+        <section id="progress-propertyFile" class="upload-progress"><section class="spinner"></section> Compressing &amp; saving…</section>
+        <section id="badge-propertyFile"></section>
+        <section id="preview-property" class="preview-container mt-2" style="display:none;">
+          <img id="img-property" class="preview-img" src="" alt="Property Preview">
+        </section>
+      </section>
+
+    </section>
+  </section>
+
+  <!-- ── Submit ── -->
+  <section>
+    <button type="button" onclick="validateForm()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg text-lg font-semibold transition">
+      <i class="fa fa-check-circle mr-2"></i><span data-i18n="submit_account_application">Submit Account Application</span>
+    </button>
+  </section>
+
+</form>
+</main>
+
+<footer class="text-center py-6" style="color:var(--footer-text);font-size:0.875rem;">© 2026 ABC Bank. All rights reserved.</footer>
+
+<script src="/utils/bank-account.js"></script>
+</body>
+</html>

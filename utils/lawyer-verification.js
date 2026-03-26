@@ -1,248 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lawyer Verification</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="shared.js"></script>
-<script src="logic.js"></script>
-<style>
-  #lang-switcher { display: none !important; }
 
-  #doc-modal {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75); z-index: 9999;
-    align-items: center; justify-content: center;
-  }
-  #doc-modal.active { display: flex; }
-  #doc-modal-inner {
-    background: #fff; border-radius: 16px;
-    max-width: 90vw; max-height: 90vh; width: 720px;
-    display: flex; flex-direction: column;
-    overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-  }
-  #doc-modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 24px; background: #1e3a8a; color: #fff;
-  }
-  #doc-modal-body {
-    flex: 1; overflow: auto; padding: 24px;
-    display: flex; align-items: center; justify-content: center;
-    background: #f8fafc; min-height: 300px;
-  }
-  #doc-modal-body img {
-    max-width: 100%; max-height: 65vh;
-    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
-  .doc-card { transition: box-shadow 0.2s; }
-  .doc-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-  .badge-uploaded { background:#dcfce7; color:#16a34a; }
-  .badge-missing  { background:#fee2e2; color:#dc2626; }
+// ── Dark mode toggle (identical pattern to home.html) ────────────────
+const toggle = document.getElementById('darkToggle');
+const html   = document.documentElement;
 
-  .profile-group:hover .profile-dropdown,
-  .profile-group:focus-within .profile-dropdown {
-    opacity: 1; visibility: visible;
-  }
-  .profile-dropdown {
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.15s, visibility 0.15s;
-  }
-</style>
-</head>
-<body class="bg-gray-100">
+function applyTheme(dark) {
+  html.classList.toggle('dark', dark);
+  toggle.checked = dark;
+}
 
-<!-- Document Viewer Modal -->
-<div id="doc-modal">
-  <div id="doc-modal-inner">
-    <div id="doc-modal-header">
-      <div class="flex items-center gap-3">
-        <i class="fa fa-file-image text-xl"></i>
-        <span id="doc-modal-title" class="text-lg font-bold">Document</span>
-      </div>
-      <button onclick="closeDocModal()" class="text-white text-2xl">&times;</button>
-    </div>
-    <div id="doc-modal-body">
-      <p id="doc-modal-placeholder" class="text-gray-400 text-lg">No document uploaded.</p>
-      <img id="doc-modal-img" src="" alt="Document" class="hidden">
-    </div>
-    <div class="px-6 py-4 bg-gray-50 border-t flex justify-between items-center">
-      <span id="doc-modal-filename" class="text-sm text-gray-500 font-mono"></span>
-      <a id="doc-modal-download" href="#" download class="text-blue-700 hidden">
-        <i class="fa fa-download"></i> Download
-      </a>
-    </div>
-  </div>
-</div>
+const saved = localStorage.getItem('abcbank_theme');
+applyTheme(saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-<!-- NAVBAR -->
-<header>
-  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
-    <div class="w-full px-10 py-5 flex justify-between items-center gap-6">
-      <a href="home.html" class="flex items-center gap-3 flex-shrink-0">
-        <img src="abc-bank-logo.jpeg" class="w-12 h-12 rounded-full" alt="ABC Bank">
-        <h1 class="text-3xl font-bold">ABC Bank</h1>
-      </a>
-      <a href="home.html"
-         class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
-        <i class="fa fa-arrow-left"></i>
-        <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-      </a>
-      <div class="flex items-center gap-4 flex-shrink-0">
-        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:5px 12px;">
-          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;">
-            <i class="fa fa-globe"></i> Lang:
-          </label>
-          <select id="nav-lang-select"
-                  style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
-            <option value="en" style="background:#1e3a5f">English</option>
-            <option value="te" style="background:#1e3a5f">తెలుగు</option>
-            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
-            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
-            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
-            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
-          </select>
-        </div>
-        <div class="relative profile-group">
-          <div class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
-            <i class="fa fa-user-circle text-2xl"></i>
-            <div class="flex flex-col leading-tight">
-              <span id="username" class="text-base font-bold">Loading...</span>
-              <span id="userid" class="text-xs opacity-70">ID: —</span>
-            </div>
-            <i class="fa fa-chevron-down text-sm ml-1"></i>
-          </div>
-          <div class="profile-dropdown absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg z-50">
-            <div class="p-4 border-b">
-              <p class="font-semibold text-lg" id="profileName">Loading...</p>
-              <p class="text-sm text-gray-600" id="profileAccount">Account: —</p>
-            </div>
-            <a href="home.html" class="block px-4 py-3 hover:bg-gray-100">
-              <i class="fa fa-home mr-2"></i>
-              <span data-i18n="account_back_dashboard">Back to Dashboard</span>
-            </a>
-            <a href="#" onclick="abcBank.logout(); return false;" class="block px-4 py-3 hover:bg-red-100 text-red-600">
-              <i class="fa fa-sign-out-alt mr-2"></i>
-              <span data-i18n="nav_logout">Logout</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-</header>
+toggle.addEventListener('change', function () {
+  applyTheme(this.checked);
+  localStorage.setItem('abcbank_theme', this.checked ? 'dark' : 'light');
+});
 
-<!-- PAGE HEADER -->
-<div class="max-w-7xl mx-auto px-6 pt-8 pb-2">
-  <h1 class="text-4xl font-bold mt-1">Legal Document Verification</h1>
-  <p class="text-gray-600 text-lg mt-1">
-    Bank legal department verifies all uploaded documents before loan approval.
-  </p>
-</div>
-
-<!-- MAIN CONTENT -->
-<main class="max-w-7xl mx-auto p-6">
-
-  <!-- Assigned Legal Officer -->
-  <section class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6 flex items-center gap-6">
-    <figure class="flex items-center gap-6">
-      <img src="vimg.jpg" class="w-24 h-24 rounded-full object-cover border-4 border-blue-400" alt="Legal Officer">
-      <figcaption>
-        <h2 class="text-xl font-bold text-blue-900">Assigned Legal Officer</h2>
-        <p class="text-2xl font-semibold mt-2">
-          <i class="fa fa-scale-balanced mr-2"></i>Advocate Venkata Ramana
-        </p>
-      </figcaption>
-    </figure>
-  </section>
-
-  <!-- REVIEWING USER INDICATOR -->
-  <div id="reviewing-banner" class="bg-indigo-50 border border-indigo-200 rounded-xl px-6 py-3 mb-6 flex items-center gap-3 text-indigo-800 font-semibold text-base">
-    <i class="fa fa-user-circle text-xl text-indigo-500"></i>
-    <span>Reviewing documents for: <strong id="reviewing-name">—</strong>
-      <span class="text-sm font-normal text-indigo-500 ml-2" id="reviewing-email"></span>
-    </span>
-  </div>
-
-  <!-- Applicant Summary -->
-  <section class="bg-white shadow rounded-xl p-6 mb-6">
-    <header>
-      <h2 class="text-2xl font-bold mb-4">Applicant Summary</h2>
-    </header>
-    <div class="grid md:grid-cols-3 gap-4 text-lg">
-      <article><p><b>Name:</b>          <span id="lv-name"       class="font-semibold">—</span></p></article>
-      <article><p><b>Date of Birth:</b> <span id="lv-dob"        class="font-semibold">—</span></p></article>
-      <article><p><b>Email:</b>         <span id="lv-email"      class="font-semibold">—</span></p></article>
-      <article><p><b>Mobile:</b>        <span id="lv-mobile"     class="font-semibold">—</span></p></article>
-      <article><p><b>Aadhaar:</b>       <span id="lv-aadhaar"    class="font-semibold">—</span></p></article>
-      <article><p><b>PAN:</b>           <span id="lv-pan"        class="font-semibold">—</span></p></article>
-      <article><p><b>Father Name:</b>   <span id="lv-father"     class="font-semibold">—</span></p></article>
-      <article><p><b>Mother Name:</b>   <span id="lv-mother"     class="font-semibold">—</span></p></article>
-      <article><p><b>Employment:</b>    <span id="lv-employment" class="font-semibold">—</span></p></article>
-      <article><p><b>Monthly Income:</b><span id="lv-monthly"    class="font-semibold">—</span></p></article>
-      <article><p><b>Annual Income:</b> <span id="lv-annual"     class="font-semibold">—</span></p></article>
-      <article><p><b>CIBIL Score:</b>   <span id="lv-cibil"      class="font-semibold">—</span></p></article>
-      <article><p><b>Loan Type:</b>     <span id="lv-loantype"   class="font-semibold">—</span></p></article>
-      <article><p><b>Loan Amount:</b>   <span id="lv-loanamount" class="font-semibold">—</span></p></article>
-      <article><p><b>Loan Tenure:</b>   <span id="lv-tenure"     class="font-semibold">—</span></p></article>
-    </div>
-  </section>
-
-  <!-- Uploaded Documents -->
-  <section class="bg-white shadow rounded-xl p-8 mb-6">
-    <header class="mb-6 flex justify-between items-center">
-      <h2 class="text-2xl font-bold">Uploaded Documents</h2>
-      <span id="docs-summary" class="text-gray-500 font-semibold"></span>
-    </header>
-    <div id="doc-grid" class="grid md:grid-cols-2 gap-6"></div>
-  </section>
-
-  <!-- Legal Review Notes -->
-  <section class="bg-white shadow rounded-xl p-8 mb-6">
-    <h2 class="text-2xl font-bold mb-4">Legal Review Notes</h2>
-    <textarea id="legal-notes" class="w-full border rounded-lg p-4 text-lg" rows="4"
-              placeholder="Enter review notes here…"></textarea>
-  </section>
-
-  <!-- Legal Decision -->
-  <section class="bg-white shadow rounded-xl p-8">
-    <header class="mb-4">
-      <h2 class="text-2xl font-bold">Legal Decision</h2>
-      <p class="text-gray-500 text-base mt-1">Approve or reject the application documents after review.</p>
-    </header>
-    <div id="decision-banner" class="hidden mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold"></div>
-    <div id="decision-buttons" class="flex gap-6">
-      <button onclick="legalDecision('approve')" id="btn-approve"
-              class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition">
-        <i class="fa fa-check mr-2"></i>Approve Documents
-      </button>
-      <button onclick="legalDecision('reject')" id="btn-reject"
-              class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition">
-        <i class="fa fa-times mr-2"></i>Reject Application
-      </button>
-    </div>
-  </section>
-
-</main>
-
-<!-- FOOTER -->
-<footer class="bg-blue-900 text-white text-center py-6 mt-10">
-  <p data-i18n="footer_copyright">© 2026 ABC Bank. All Rights Reserved.</p>
-</footer>
-
-<script>
 // ════════════════════════════════════════════════════
 //  STEP 1 — Identify the currently logged-in user
-//  ALL localStorage reads MUST be scoped to this user
 // ════════════════════════════════════════════════════
 var CURRENT_USER_ID  = "";
 var CURRENT_USER_OBJ = {};
 
 (function identifyUser() {
   if (!abcBank?.isLoggedIn?.()) {
-    window.location.replace("login.html");
+    window.location.replace("/pages/login.html");
     return;
   }
   try {
@@ -255,17 +37,12 @@ var CURRENT_USER_OBJ = {};
 })();
 
 // ── Scoped localStorage helpers ──────────────────────────────────────
-// Priority order:
-//   1. user-scoped key   →  email + "__" + key
-//   2. unprefixed key    →  ONLY if the JSON blob's .email matches current user
 function lsGet(key) {
   if (!key) return "";
-  // 1. Scoped key
   if (CURRENT_USER_ID) {
     var scoped = localStorage.getItem(CURRENT_USER_ID + "__" + key);
     if (scoped !== null && scoped !== "") return scoped;
   }
-  // 2. Raw key with ownership check
   var raw = localStorage.getItem(key);
   if (raw === null) return "";
   if (raw.startsWith("{") || raw.startsWith("[")) {
@@ -273,7 +50,7 @@ function lsGet(key) {
       var parsed = JSON.parse(raw);
       if (parsed && parsed.email && CURRENT_USER_ID &&
           parsed.email.toLowerCase() !== CURRENT_USER_ID.toLowerCase()) {
-        return ""; // belongs to a DIFFERENT user — reject
+        return "";
       }
     } catch(e) {}
   }
@@ -284,7 +61,6 @@ function lsGetJSON(key) {
   try { return JSON.parse(lsGet(key) || "null"); } catch(e) { return null; }
 }
 
-// Decision key scoped per user
 function decisionKey() {
   return CURRENT_USER_ID
     ? CURRENT_USER_ID + "__loan_legal_decision"
@@ -334,7 +110,6 @@ function loadAllSources() {
   var loanApp = lsGetJSON("loan_application_data");
   var loanApproval = lsGetJSON("loanApplication");
 
-  // Full user record from the users array
   var userRecord = null;
   try {
     var users = JSON.parse(localStorage.getItem("abcBank_users") || "[]");
@@ -344,19 +119,17 @@ function loadAllSources() {
     }) || null;
   } catch(e) {}
 
-  // ── Name ──
   var name = "";
   var srcs = [session, userRecord, kyc];
   for (var i = 0; i < srcs.length; i++) {
     var s = srcs[i];
     if (!s) continue;
-    if (s.fullName)                    { name = s.fullName; break; }
-    if (s.firstName || s.lastName)     { name = ((s.firstName||"")+" "+(s.lastName||"")).trim(); break; }
-    if (s.name)                        { name = s.name; break; }
+    if (s.fullName)                { name = s.fullName; break; }
+    if (s.firstName || s.lastName) { name = ((s.firstName||"")+" "+(s.lastName||"")).trim(); break; }
+    if (s.name)                    { name = s.name; break; }
   }
   out.name = name;
 
-  // ── Personal ──
   out.dob     = cibil?.dob || kyc?.dob || session?.dob || userRecord?.dob || "";
   out.email   = CURRENT_USER_ID || session?.email || "";
   out.mobile  = session?.mobile || session?.phone || session?.mobileNumber
@@ -368,21 +141,17 @@ function loadAllSources() {
              || session?.pan || session?.panNumber
              || userRecord?.pan || "";
 
-  // ── Parents ──
   out.fatherName = kyc?.fatherName || session?.fatherName || userRecord?.fatherName || "";
   out.motherName = kyc?.motherName || session?.motherName || userRecord?.motherName || "";
 
-  // ── Income ──
   out.employment    = cibil?.employment || loanApp?.employment || loanApproval?.employment || "";
   out.monthlyIncome = cibil?.monthlyIncome || kyc?.monthlyNetIncome
                    || userRecord?.monthlyNetIncome || session?.monthlyNetIncome || "";
   out.annualIncome  = cibil?.annualIncome || kyc?.grossAnnualIncome
                    || userRecord?.grossAnnualIncome || loanApproval?.annualIncome || "";
 
-  // ── CIBIL ──
   out.cibilScore = cibil?.score || lsGet("loan_score") || "";
 
-  // ── Tenure ──
   var tenure = null;
   if (out.dob) {
     var birth = new Date(out.dob);
@@ -395,7 +164,6 @@ function loadAllSources() {
   if (tenure === null) tenure = parseInt(lsGet("loanTenure")) || null;
   out.tenure = tenure;
 
-  // ── Loan ──
   out.loanType   = cibil?.loanTypeLabel || cibil?.loanType
                 || loanApproval?.loanType || lsGet("loan_type_selected") || "";
   out.loanAmount = cibil?.loanAmount || loanApproval?.loanAmount
@@ -404,7 +172,6 @@ function loadAllSources() {
   return out;
 }
 
-// ── Formatters ────────────────────────────────────────────────────────
 function fmtCurr(n) {
   var num = parseInt(n);
   return isNaN(num) || n === "" || n === null || n === 0 ? "—" : "₹" + num.toLocaleString("en-IN");
@@ -419,14 +186,10 @@ function set(id, value) {
   if (el) el.textContent = (value !== undefined && value !== null && value !== "") ? value : "—";
 }
 
-// ── Populate Applicant Summary ────────────────────────────────────────
 function populateSummary() {
   var d = loadAllSources();
-
-  // Reviewing banner
   document.getElementById("reviewing-name").textContent  = d.name || "—";
   document.getElementById("reviewing-email").textContent = d.email ? "(" + d.email + ")" : "";
-
   set("lv-name",       d.name);
   set("lv-dob",        fmtDate(d.dob));
   set("lv-email",      d.email);
@@ -440,20 +203,19 @@ function populateSummary() {
   set("lv-annual",     fmtCurr(d.annualIncome));
   set("lv-cibil",      d.cibilScore);
   set("lv-tenure",     d.tenure !== null ? d.tenure + " Years" : "—");
-
   var lt = d.loanType || "";
   set("lv-loantype",   lt ? lt.charAt(0).toUpperCase() + lt.slice(1) : "—");
   set("lv-loanamount", fmtCurr(d.loanAmount));
 }
 
 // ════════════════════════════════════════════════════
-//  STEP 3 — Document Grid — scoped per user
+//  STEP 3 — Document Grid
 // ════════════════════════════════════════════════════
 var DOC_LIST = [
-  { label:"Aadhaar Card",  storageKey:"kyc_doc_aadhaar", nameKey:"kyc_doc_aadhaar_name" },
-  { label:"PAN Card",      storageKey:"kyc_doc_pan",     nameKey:"kyc_doc_pan_name"     },
-  { label:"Property Documents",  storageKey:"kyc_doc_property",  nameKey:"kyc_doc_property_name"  },
-  { label:"CIBIL Report",  storageKey:"kyc_doc_cibil",   nameKey:"kyc_doc_cibil_name"   }
+  { label:"Aadhaar Card",       storageKey:"kyc_doc_aadhaar",  nameKey:"kyc_doc_aadhaar_name"  },
+  { label:"PAN Card",           storageKey:"kyc_doc_pan",      nameKey:"kyc_doc_pan_name"      },
+  { label:"Property Documents", storageKey:"kyc_doc_property", nameKey:"kyc_doc_property_name" },
+  { label:"CIBIL Report",       storageKey:"kyc_doc_cibil",    nameKey:"kyc_doc_cibil_name"    }
 ];
 
 function escQ(str) {
@@ -468,7 +230,6 @@ function renderDocGrid() {
   var uploadedCount = 0;
 
   DOC_LIST.forEach(function(doc) {
-    // Use scoped lsGet — will never show another user's document
     var dataUrl  = lsGet(doc.storageKey);
     var fileName = lsGet(doc.nameKey) || "";
     var uploaded = !!dataUrl;
@@ -510,7 +271,6 @@ function renderDocGrid() {
     ' font-bold">' + uploadedCount + ' / ' + DOC_LIST.length + ' uploaded</span>';
 }
 
-// ── Document modal ────────────────────────────────────────────────────
 function viewDoc(dataUrl, label, fileName) {
   var img         = document.getElementById("doc-modal-img");
   var placeholder = document.getElementById("doc-modal-placeholder");
@@ -545,7 +305,7 @@ function closeDocModal() {
 }
 
 // ════════════════════════════════════════════════════
-//  STEP 4 — Decision — scoped per user
+//  STEP 4 — Decision
 // ════════════════════════════════════════════════════
 function updateDecisionBanner(type) {
   var banner = document.getElementById("decision-banner");
@@ -560,7 +320,7 @@ function updateDecisionBanner(type) {
     banner.className = "mb-5 p-4 rounded-lg flex items-center gap-3 text-lg font-semibold bg-green-50 border border-green-300 text-green-800";
     banner.innerHTML = '<i class="fa fa-check-circle text-green-600 text-2xl"></i>'
       + '<span>Current decision: <strong>Approved</strong>. '
-      + '<a href="loan-approval.html" class="underline font-semibold hover:text-green-700 ml-1">Proceed to Loan Approval →</a>'
+      + '<a href="/pages/loan-approval.html" class="underline font-semibold hover:text-green-700 ml-1">Proceed to Loan Approval →</a>'
       + ' &nbsp;|&nbsp; You can still change this decision below.</span>';
     document.getElementById("btn-approve").classList.add("ring-4","ring-green-400");
     document.getElementById("btn-reject").classList.remove("ring-4","ring-red-400");
@@ -573,7 +333,6 @@ function updateDecisionBanner(type) {
   }
 }
 
-// Read decision for THIS user only
 updateDecisionBanner(localStorage.getItem(decisionKey()));
 
 function legalDecision(type) {
@@ -581,7 +340,7 @@ function legalDecision(type) {
     localStorage.setItem(decisionKey(), "approved");
     updateDecisionBanner("approved");
     swal({ title:"Documents Approved", text:"Documents approved successfully. Proceeding to Loan Approval.", icon:"success", button:"Continue to Loan Approval" })
-      .then(function() { window.location.href = "loan-approval.html"; });
+      .then(function() { window.location.href = "/pages/loan-approval.html"; });
   } else {
     localStorage.setItem(decisionKey(), "rejected");
     updateDecisionBanner("rejected");
@@ -592,6 +351,3 @@ function legalDecision(type) {
 // ── Init ──────────────────────────────────────────────────────────────
 populateSummary();
 renderDocGrid();
-</script>
-</body>
-</html>

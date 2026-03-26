@@ -1,0 +1,158 @@
+
+html, body { height:100%; width:100%; margin:0; padding:0; }
+#lang-switcher { display: none !important; }
+
+/* ─── CSS variables: light ──────────────────────────────────────── */
+:root {
+  --bg-page:       #f3f4f6;
+  --bg-panel:      #ffffff;
+  --bg-panel-2:    #eff6ff;   /* blue-50 */
+  --text-primary:  #111827;
+  --text-secondary:#6b7280;
+  --text-muted:    #9ca3af;
+  --border:        #e5e7eb;
+  --faq-bg:        #ffffff;
+  --faq-summary:   #1e3a8a;
+  --workflow-bg:   #ffffff;
+  --workflow-title:#1e3a8a;
+  --toggle-bg:     rgba(255,255,255,0.18);
+  --toggle-border: rgba(255,255,255,0.30);
+  --toggle-track:  rgba(255,255,255,0.25);
+  --toggle-active: #facc15;
+  --toggle-knob:   #ffffff;
+  --details-line:  #d1d5db;
+}
+
+/* ─── CSS variables: dark ───────────────────────────────────────── */
+html.dark {
+  --bg-page:       #0f172a;
+  --bg-panel:      #1e293b;
+  --bg-panel-2:    #1e293b;
+  --text-primary:  #f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-muted:    #64748b;
+  --border:        #334155;
+  --faq-bg:        #1e293b;
+  --faq-summary:   #93c5fd;
+  --workflow-bg:   #1e293b;
+  --workflow-title:#93c5fd;
+  --toggle-track:  rgba(255,255,255,0.15);
+  --toggle-active: #facc15;
+  --toggle-knob:   #1e293b;
+  --details-line:  #334155;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ─── Workflow card ─────────────────────────────────────────────── */
+.workflow-card {
+  background-color: var(--workflow-bg);
+  transition: background-color 0.3s;
+}
+.workflow-title { color: var(--workflow-title); }
+.workflow-line  { background-color: var(--details-line); }
+
+/* ─── FAQ ───────────────────────────────────────────────────────── */
+.faq-item {
+  background-color: var(--faq-bg);
+  transition: background-color 0.3s;
+}
+.faq-summary { color: var(--faq-summary); }
+.faq-section {
+  background: linear-gradient(to right, var(--bg-panel-2), var(--bg-panel));
+  transition: background 0.3s;
+}
+
+/* ─── Profile dropdown ──────────────────────────────────────────── */
+.profile-dropdown {
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+  transition: background-color 0.3s;
+}
+.profile-dropdown a { color: var(--text-primary); }
+.profile-dropdown a:hover { background-color: var(--border); }
+.profile-dropdown .logout-link:hover { background-color: #fee2e2; color: #dc2626; }
+.profile-divider { border-color: var(--border); }
+
+/* ─── Nav dark toggle switch ────────────────────────────────────── */
+.nav-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 9999px;
+  padding: 5px 12px;
+}
+.nav-toggle-icon {
+  font-size: 0.8rem;
+  color: #facc15;
+}
+.nav-toggle-switch {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle-switch input { display: none; }
+.nav-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--toggle-track);
+  transition: background-color 0.3s;
+}
+.nav-toggle-switch input:checked ~ .nav-toggle-track {
+  background-color: var(--toggle-active);
+}
+.nav-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background-color: var(--toggle-knob);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+.nav-toggle-switch input:checked ~ .nav-toggle-knob {
+  transform: translateX(18px);
+}
+
+/* ─── Marquee ───────────────────────────────────────────────────── */
+.marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  padding: 40px 0;
+}
+.marquee-track {
+  display: flex;
+  gap: 32px;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+.marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track img {
+  width: 700px;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.marquee-track img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 28px 72px rgba(0,0,0,0.3);
+}

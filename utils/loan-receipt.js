@@ -1,0 +1,484 @@
+
+// ══════════════════════════════════════════════════════════════
+//  PER‑USER STORAGE HELPERS (SAME AS LOAN APPROVAL PAGE)
+// ══════════════════════════════════════════════════════════════
+var CURRENT_USER_EMAIL   = "";
+var CURRENT_USER_ACCOUNT = "";
+var CURRENT_USER_OBJ     = {};
+
+(function identifyUser() {
+  var sdkUser = null;
+  try {
+    if (typeof abcBank !== "undefined" && abcBank.getCurrentUser) {
+      sdkUser = abcBank.getCurrentUser();
+    }
+  } catch(e) {}
+
+  var rawSession = null;
+  try { rawSession = JSON.parse(localStorage.getItem("abcBank_currentUser") || "null"); } catch(e) {}
+
+  var legacyUser = null;
+  try { legacyUser = JSON.parse(localStorage.getItem("bankUser") || "null"); } catch(e) {}
+
+  var user = sdkUser || rawSession || legacyUser || {};
+  CURRENT_USER_OBJ = user;
+
+  CURRENT_USER_EMAIL = (user.email || "").trim().toLowerCase();
+
+  if (user.account && typeof user.account === "object" && user.account.accountNumber) {
+    CURRENT_USER_ACCOUNT = String(user.account.accountNumber);
+  } else if (user.account && typeof user.account === "string") {
+    CURRENT_USER_ACCOUNT = user.account;
+  } else if (user.accountNumber) {
+    CURRENT_USER_ACCOUNT = String(user.accountNumber);
+  }
+})();
+
+function lsGet(key) {
+  if (!key) return "";
+  if (CURRENT_USER_EMAIL) {
+    var v1 = localStorage.getItem(CURRENT_USER_EMAIL + "__" + key);
+    if (v1 !== null && v1 !== "") return v1;
+  }
+  if (CURRENT_USER_ACCOUNT) {
+    var v2 = localStorage.getItem(CURRENT_USER_ACCOUNT + "__" + key);
+    if (v2 !== null && v2 !== "") return v2;
+  }
+  var raw = localStorage.getItem(key);
+  if (raw === null) return "";
+  if (raw.startsWith("{") || raw.startsWith("[")) {
+    try {
+      var parsed = JSON.parse(raw);
+      if (parsed && parsed.email && CURRENT_USER_EMAIL &&
+          parsed.email.trim().toLowerCase() !== CURRENT_USER_EMAIL) {
+        return "";
+      }
+    } catch(e) {}
+  }
+  return raw || "";
+}
+
+function lsGetJSON(key) {
+  try { return JSON.parse(lsGet(key) || "null"); } catch(e) { return null; }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HELPER FUNCTIONS (RATES, FORMATTING, ETC.)
+// ══════════════════════════════════════════════════════════════
+var LOAN_RATES = {
+  home: 8.50, personal: 10.90, vehicle: 9.25,
+  gold: 7.50, education: 8.25, business: 11.50
+};
+var CIBIL_BRACKETS = [
+  { min: 750, max: 900, adj: -0.50 },
+  { min: 700, max: 749, adj:  0.00 },
+  { min: 650, max: 699, adj: +0.50 },
+  { min: 600, max: 649, adj: +1.00 },
+  { min: 300, max: 599, adj: +1.50 }
+];
+function getCibilAdj(score) {
+  var s = parseInt(score);
+  if (!s || isNaN(s)) return 0;
+  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
+    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i].adj;
+  }
+  return 0;
+}
+function normalizeLoanType(raw) {
+  if (!raw) return '';
+  var t = String(raw).toLowerCase().trim();
+  if (t.startsWith('loan_')) t = t.replace('loan_', '');
+  return t;
+}
+var LOAN_TYPE_LABELS = {
+  home:'🏠 Home Loan', personal:'👤 Personal Loan', vehicle:'🚗 Vehicle Loan',
+  gold:'🥇 Gold Loan', education:'🎓 Education Loan', business:'💼 Business Loan'
+};
+function loanTypeLabel(raw) {
+  var t = normalizeLoanType(raw);
+  return LOAN_TYPE_LABELS[t] || (raw ? String(raw) : '—');
+}
+function getRateForType(type, cibilScore) {
+  var t = normalizeLoanType(type);
+  var base = LOAN_RATES[t] || 8.50;
+  return t === 'home' ? Math.round((base + getCibilAdj(cibilScore)) * 100) / 100 : base;
+}
+function fmtCurr(n) {
+  var num = parseInt(n);
+  return isNaN(num) ? (n || '—') : '₹' + num.toLocaleString('en-IN');
+}
+function calcEMI(principal, annualRate, years) {
+  principal = parseFloat(principal); years = parseFloat(years);
+  if (!principal || !years || years <= 0) return '—';
+  var r = annualRate / 12 / 100, n = Math.round(years * 12);
+  if (r === 0) return fmtCurr(Math.round(principal / n));
+  return fmtCurr(Math.round(principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1)));
+}
+function pick() {
+  for (var i = 0; i < arguments.length; i++) {
+    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') return arguments[i];
+  }
+  return '';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PENDING SCREEN – UPDATE STEP STATUS (USES rT)
+// ══════════════════════════════════════════════════════════════
+function updatePendingSteps(officerDecision, legalDecision) {
+  var oIcon  = document.getElementById('step-officer-icon');
+  var oI     = document.getElementById('step-officer-i');
+  var oLabel = document.getElementById('step-officer-label');
+  var oDesc  = document.getElementById('step-officer-desc');
+
+  if (officerDecision === 'approved') {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    oI.className     = 'fa fa-check';
+    oLabel.textContent = rT('step2_approved_label');
+    oLabel.className   = 'font-bold text-sm text-green-600';
+    oDesc.textContent  = rT('step2_approved_desc');
+  } else if (officerDecision === 'rejected') {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    oI.className     = 'fa fa-times';
+    oLabel.textContent = rT('step2_rejected_label');
+    oLabel.className   = 'font-bold text-sm text-red-600';
+    oDesc.textContent  = rT('step2_rejected_desc');
+  } else {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-active';
+    oI.className     = 'fa fa-spinner fa-spin';
+    oLabel.textContent = rT('step2_active_label');
+    oLabel.className   = 'font-bold text-sm text-blue-600';
+    oDesc.textContent  = rT('step2_active_desc');
+  }
+
+  var lIcon  = document.getElementById('step-legal-icon');
+  var lI     = document.getElementById('step-legal-i');
+  var lLabel = document.getElementById('step-legal-label');
+  var lDesc  = document.getElementById('step-legal-desc');
+
+  if (legalDecision === 'approved') {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    lI.className     = 'fa fa-check';
+    lLabel.textContent = rT('step3_approved_label');
+    lLabel.className   = 'font-bold text-sm text-green-600';
+    lDesc.textContent  = rT('step3_approved_desc');
+  } else if (legalDecision === 'rejected') {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    lI.className     = 'fa fa-times';
+    lLabel.textContent = rT('step3_rejected_label');
+    lLabel.className   = 'font-bold text-sm text-red-600';
+    lDesc.textContent  = rT('step3_rejected_desc');
+  } else {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending';
+    lI.className     = 'fa fa-scale-balanced';
+    lLabel.textContent = rT('step3_pending_label');
+    lLabel.className   = 'font-bold text-sm text-gray-400';
+    lDesc.textContent  = rT('step3_pending_desc');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  POPULATE RECEIPT WITH CURRENT DATA (USES lsGetJSON)
+// ══════════════════════════════════════════════════════════════
+function populateReceipt() {
+  var loanApp = lsGetJSON('loan_application_data') || {};
+  var cibil   = lsGetJSON('cibil_data') || {};
+  var loanData = lsGetJSON('loanApplication') || {};
+  var kyc     = lsGetJSON('kyc_data') || {};
+
+  var userName = document.getElementById('username').innerText;
+  document.getElementById('rcptName').textContent = userName || '—';
+  document.getElementById('rcptAccount').textContent = CURRENT_USER_ACCOUNT || '—';
+
+  var pan = pick(kyc.pan, kyc.panNumber, loanApp.pan, loanApp.panNumber, cibil.pan, cibil.panNumber);
+  document.getElementById('rcptPan').textContent = pan || '—';
+
+  var cibilScore = pick(cibil.score, lsGet('loan_score'));
+  document.getElementById('rcptCibil').textContent = cibilScore || '—';
+
+  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType);
+  document.getElementById('rcptLoanType').textContent = loanTypeLabel(rawLoanType);
+
+  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
+  document.getElementById('rcptLoanAmount').textContent = principal ? fmtCurr(principal) : '—';
+
+  var rate = getRateForType(rawLoanType, cibilScore);
+  document.getElementById('rcptInterestRate').textContent = rate + '% p.a';
+
+  var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
+  if (!duration || duration <= 0) {
+    var dob = pick(CURRENT_USER_OBJ.dob, kyc.dob, cibil.dob);
+    if (dob) {
+      var birth = new Date(dob);
+      duration = Math.max(1, 60 - Math.ceil((new Date() - birth) / (1000*60*60*24*365.25)));
+    } else {
+      var st = parseInt(lsGet('loanTenure'));
+      if (st && st > 0) duration = st;
+    }
+  }
+  document.getElementById('rcptDuration').textContent = duration ? duration + ' Years' : '—';
+  document.getElementById('rcptEmi').textContent = (principal && duration) ? calcEMI(principal, rate, duration) : '—';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CORE REFRESH FUNCTION – reads current scoped decisions & updates UI
+// ══════════════════════════════════════════════════════════════
+function refreshPageState() {
+  var officerRaw = (lsGet("loan_officer_decision") || "").trim().toLowerCase();
+  var legalRaw   = (lsGet("loan_legal_decision")   || "").trim().toLowerCase();
+
+  var officerOk = (officerRaw === "approved");
+  var legalOk   = (legalRaw   === "approved");
+
+  var pendingDiv = document.getElementById('pending-screen');
+  var receiptDiv = document.getElementById('receipt-screen');
+
+  if (officerOk && legalOk) {
+    // Both approved → show receipt
+    pendingDiv.classList.add('hidden');
+    receiptDiv.classList.remove('hidden');
+    populateReceipt();
+  } else {
+    // Not both approved → show pending screen and update step statuses
+    pendingDiv.classList.remove('hidden');
+    receiptDiv.classList.add('hidden');
+    updatePendingSteps(officerRaw, legalRaw);
+  }
+
+  // Re-apply translations (always, because language might have changed)
+  applyReceiptLang(officerOk, legalOk);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  APPLY TRANSLATIONS (updated version that uses decision flags)
+// ══════════════════════════════════════════════════════════════
+function setTxt(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function applyReceiptLang(officerOk, legalOk) {
+  // Navbar & footer
+  setTxt('nav-bank-title',  rT('bank_title'));
+  setTxt('nav-back-btn',    rT('back_dashboard'));
+  setTxt('nav-logout-btn',  rT('nav_logout'));
+  setTxt('nav-back-dd-btn', rT('back_dashboard'));
+  setTxt('footer-text',     rT('footer'));
+
+  if (officerOk && legalOk) {
+    // Receipt screen
+    setTxt('rcpt-page-title',    rT('receipt_page_title'));
+    setTxt('rcpt-page-desc',     rT('receipt_page_desc'));
+    setTxt('rcpt-btn-print',     rT('btn_print'));
+    setTxt('rcpt-btn-proceed',   rT('btn_proceed'));
+    setTxt('rcpt-applicant-h',   rT('applicant_info'));
+    setTxt('rcpt-lbl-name',      rT('applicant_name'));
+    setTxt('rcpt-lbl-account',   rT('account_number'));
+    setTxt('rcpt-lbl-pan',       rT('pan_label'));
+    setTxt('rcpt-lbl-cibil',     rT('cibil_score'));
+    setTxt('rcpt-loan-h',        rT('loan_details'));
+    setTxt('rcpt-lbl-type',      rT('loan_type'));
+    setTxt('rcpt-lbl-amount',    rT('loan_amount'));
+    setTxt('rcpt-lbl-rate',      rT('interest_rate'));
+    setTxt('rcpt-lbl-dur',       rT('duration'));
+    setTxt('rcpt-lbl-emi',       rT('monthly_emi'));
+    setTxt('rcpt-badge-officer', rT('badge_officer'));
+    setTxt('rcpt-badge-legal',   rT('badge_legal'));
+    setTxt('rcpt-legal-note',    rT('legal_done_note'));
+    setTxt('rcpt-legal-desc',    rT('legal_done_desc'));
+    setTxt('rcpt-sig-customer',  rT('sig_customer'));
+    setTxt('rcpt-sig-seal',      rT('sig_seal'));
+    setTxt('rcpt-sig-auth',      rT('sig_auth'));
+    setTxt('rcpt-ps-title',      rT('processing_status'));
+    setTxt('rcpt-ps-1',          rT('ps_submitted'));
+    setTxt('rcpt-ps-2',          rT('ps_officer'));
+    setTxt('rcpt-ps-3',          rT('ps_legal'));
+    setTxt('rcpt-ps-4',          rT('ps_credit'));
+    setTxt('rcpt-ps-5',          rT('ps_final'));
+  } else {
+    // Pending screen
+    setTxt('pending-title',      rT('pending_title'));
+    setTxt('pending-desc',       rT('pending_desc'));
+    setTxt('pending-status-h',   rT('approval_status'));
+    setTxt('step1-title',        rT('step1_title'));
+    setTxt('step1-desc',         rT('step1_desc'));
+    setTxt('step1-label',        rT('step1_label'));
+    setTxt('step2-title',        rT('step2_title'));
+    setTxt('step3-title',        rT('step3_title'));
+    setTxt('step4-title',        rT('step4_title'));
+    setTxt('step4-desc',         rT('step4_desc'));
+    setTxt('step4-label',        rT('step4_label'));
+    setTxt('whats-next-text',    rT('whats_next'));
+    setTxt('officer-link-text',  rT('officer_link'));
+    setTxt('and-word',           rT('and_word'));
+    setTxt('legal-link-text',    rT('legal_link'));
+    setTxt('whats-next-end',     rT('whats_next_end'));
+    // The dynamic step texts are handled by updatePendingSteps, which is called later.
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVBAR USER INFO
+// ══════════════════════════════════════════════════════════════
+var fullName = [CURRENT_USER_OBJ.firstName, CURRENT_USER_OBJ.lastName].filter(Boolean).join(' ')
+            || CURRENT_USER_OBJ.name || 'User';
+var accNum = CURRENT_USER_ACCOUNT;
+document.getElementById('username').innerText       = fullName;
+document.getElementById('profileName').innerText    = fullName;
+document.getElementById('profileAccount').innerText = 'Account: ' + (accNum || 'NIL');
+document.getElementById('userid').innerText         = 'ID: ' + ((accNum && accNum.length > 6) ? accNum.slice(-6) : (accNum || '–'));
+
+function logoutUser() {
+  try { if (typeof abcBank !== "undefined" && abcBank.logout) { abcBank.logout(); return; } } catch(e) {}
+  localStorage.removeItem('bankUser');
+  localStorage.removeItem('abcBank_currentUser');
+  window.location.href = '/pages/index.html';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  LANGUAGE SWITCHER & REACTIVITY
+// ══════════════════════════════════════════════════════════════
+var langSelect = document.getElementById('nav-lang-select');
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (langSelect) langSelect.value = savedLang;
+
+function onLangChange() {
+  var newLang = langSelect.value;
+  localStorage.setItem('abcbank_lang', newLang);
+  refreshPageState();               // re‑apply all translations and re‑evaluate status
+  if (typeof applyLang === 'function') applyLang(newLang);
+}
+if (langSelect) langSelect.addEventListener('change', onLangChange);
+
+// Listen for changes in localStorage (from other tabs)
+window.addEventListener('storage', function(e) {
+  if (e.key && (e.key.includes('loan_officer_decision') || e.key.includes('loan_legal_decision'))) {
+    refreshPageState();
+  }
+});
+// Also on page show (when coming back from bfcache)
+window.addEventListener('pageshow', function() {
+  refreshPageState();
+});
+
+// Initial load
+refreshPageState();
+
+
+var R_I18N = {
+  en: {
+    bank_title: "ABC Bank", back_dashboard: "Back to Dashboard", nav_logout: "Logout",
+    pending_title: "Verification In Progress", pending_desc: "Your loan receipt will be available once all approvals are completed.", approval_status: "Approval Status",
+    step1_title: "Application Submitted", step1_desc: "Your loan application has been received.", step1_label: "Done",
+    step2_title: "Loan Officer Review", step2_pending_desc: "Waiting for officer decision.", step2_active_desc: "Waiting for officer decision.", step2_approved_desc: "Loan officer has approved your application.", step2_rejected_desc: "Loan officer rejected your application.",
+    step2_pending_label: "Pending", step2_active_label: "In Review", step2_approved_label: "Approved", step2_rejected_label: "Rejected",
+    step3_title: "Legal Document Verification", step3_pending_desc: "Waiting for lawyer verification.", step3_approved_desc: "Documents have been legally verified.", step3_rejected_desc: "Legal verification failed.",
+    step3_pending_label: "Pending", step3_approved_label: "Verified", step3_rejected_label: "Rejected",
+    step4_title: "Loan Receipt", step4_desc: "Available after all verifications pass.", step4_label: "Locked",
+    whats_next: "What's next? Please complete the", officer_link: "Loan Officer Review", and_word: "and", legal_link: "Legal Verification", whats_next_end: "steps. Once both are approved, your receipt will unlock automatically.",
+    receipt_page_title: "Loan Processing Receipt", receipt_page_desc: "Official receipt for your loan application", btn_print: "Print", btn_proceed: "Proceed to Approval",
+    applicant_info: "Applicant Information", applicant_name: "Applicant Name", account_number: "Account Number", pan_label: "PAN", cibil_score: "CIBIL Score",
+    loan_details: "Loan Details", loan_type: "Loan Type", loan_amount: "Loan Amount", interest_rate: "Interest Rate", duration: "Duration", monthly_emi: "Monthly EMI",
+    badge_officer: "Officer Approved", badge_legal: "Legally Verified", legal_done_note: "Legal Verification Completed.", legal_done_desc: "All documents have been verified. Proceed to final approval.",
+    sig_customer: "Customer Signature", sig_seal: "Bank Seal", sig_auth: "Authorized Signatory",
+    processing_status: "Processing Status", ps_submitted: "Application Submitted", ps_officer: "Officer Approved", ps_legal: "Legal Verification", ps_credit: "Credit Appraisal", ps_final: "Final Approval",
+    footer: "© 2026 ABC Bank. All Rights Reserved."
+  },
+  te: {
+    bank_title: "ABC బ్యాంక్", back_dashboard: "డ్యాష్‌బోర్డ్‌కి తిరిగి వెళ్ళండి", nav_logout: "లాగ్అవుట్",
+    pending_title: "ధృవీకరణ జరుగుతోంది", pending_desc: "అన్ని అనుమతులు పూర్తయిన తర్వాత మీ లోన్ రశీదు అందుబాటులో ఉంటుంది.", approval_status: "అనుమతి స్థితి",
+    step1_title: "దరఖాస్తు సమర్పించబడింది", step1_desc: "మీ లోన్ దరఖాస్తు స్వీకరించబడింది.", step1_label: "పూర్తయింది",
+    step2_title: "లోన్ అధికారి సమీక్ష", step2_pending_desc: "అధికారి నిర్ణయం కోసం వేచి ఉంది.", step2_active_desc: "అధికారి నిర్ణయం కోసం వేచి ఉంది.", step2_approved_desc: "లోన్ అధికారి మీ దరఖాస్తును ఆమోదించారు.", step2_rejected_desc: "లోన్ అధికారి మీ దరఖాస్తును తిరస్కరించారు.",
+    step2_pending_label: "పెండింగ్", step2_active_label: "సమీక్షలో ఉంది", step2_approved_label: "ఆమోదించబడింది", step2_rejected_label: "తిరస్కరించబడింది",
+    step3_title: "చట్టపరమైన పత్ర ధృవీకరణ", step3_pending_desc: "న్యాయవాది ధృవీకరణ కోసం వేచి ఉంది.", step3_approved_desc: "పత్రాలు చట్టపరంగా ధృవీకరించబడ్డాయి.", step3_rejected_desc: "చట్టపరమైన ధృవీకరణ విఫలమైంది.",
+    step3_pending_label: "పెండింగ్", step3_approved_label: "ధృవీకరించబడింది", step3_rejected_label: "తిరస్కరించబడింది",
+    step4_title: "లోన్ రశీదు", step4_desc: "అన్ని ధృవీకరణలు పూర్తయిన తర్వాత అందుబాటులో ఉంటుంది.", step4_label: "లాక్ చేయబడింది",
+    whats_next: "తదుపరి ఏమిటి? దయచేసి పూర్తి చేయండి:", officer_link: "లోన్ అధికారి సమీక్ష", and_word: "మరియు", legal_link: "చట్టపరమైన ధృవీకరణ", whats_next_end: "రెండూ ఆమోదించబడిన తర్వాత మీ రశీదు స్వయంచాలకంగా అన్‌లాక్ అవుతుంది.",
+    receipt_page_title: "లోన్ ప్రాసెసింగ్ రశీదు", receipt_page_desc: "మీ లోన్ దరఖాస్తుకు అధికారిక రశీదు", btn_print: "ప్రింట్", btn_proceed: "అనుమతికి కొనసాగండి",
+    applicant_info: "దరఖాస్తుదారు సమాచారం", applicant_name: "దరఖాస్తుదారు పేరు", account_number: "ఖాతా సంఖ్య", pan_label: "PAN", cibil_score: "సిబిల్ స్కోర్",
+    loan_details: "లోన్ వివరాలు", loan_type: "లోన్ రకం", loan_amount: "లోన్ మొత్తం", interest_rate: "వడ్డీ రేటు", duration: "వ్యవధి", monthly_emi: "నెలవారీ EMI",
+    badge_officer: "అధికారి ఆమోదించారు", badge_legal: "చట్టపరంగా ధృవీకరించబడింది", legal_done_note: "చట్టపరమైన ధృవీకరణ పూర్తైంది.", legal_done_desc: "అన్ని పత్రాలు ధృవీకరించబడ్డాయి. తుది అనుమతికి కొనసాగండి.",
+    sig_customer: "కస్టమర్ సంతకం", sig_seal: "బ్యాంకు ముద్ర", sig_auth: "అధికారిక సంతకం",
+    processing_status: "ప్రాసెసింగ్ స్థితి", ps_submitted: "దరఖాస్తు సమర్పించబడింది", ps_officer: "అధికారి ఆమోదించారు", ps_legal: "చట్టపరమైన ధృవీకరణ", ps_credit: "క్రెడిట్ అప్రైసల్", ps_final: "తుది అనుమతి",
+    footer: "© 2026 ABC బ్యాంక్. అన్ని హక్కులు రక్షించబడ్డాయి."
+  },
+  ta: {
+    bank_title: "ABC வங்கி", back_dashboard: "டாஷ்போர்டுக்கு திரும்பு", nav_logout: "வெளியேறு",
+    pending_title: "சரிபார்ப்பு நடைபெறுகிறது", pending_desc: "அனைத்து அனுமதிகளும் முடிந்த பிறகு உங்கள் கடன் ரசீது கிடைக்கும்.", approval_status: "அனுமதி நிலை",
+    step1_title: "விண்ணப்பம் சமர்ப்பிக்கப்பட்டது", step1_desc: "உங்கள் கடன் விண்ணப்பம் பெறப்பட்டது.", step1_label: "முடிந்தது",
+    step2_title: "கடன் அதிகாரி மறுஆய்வு", step2_pending_desc: "அதிகாரி முடிவுக்காக காத்திருக்கிறோம்.", step2_active_desc: "அதிகாரி முடிவுக்காக காத்திருக்கிறோம்.", step2_approved_desc: "கடன் அதிகாரி உங்கள் விண்ணப்பத்தை அனுமதித்தார்.", step2_rejected_desc: "கடன் அதிகாரி உங்கள் விண்ணப்பத்தை நிராகரித்தார்.",
+    step2_pending_label: "நிலுவையில் உள்ளது", step2_active_label: "மறுஆய்வில் உள்ளது", step2_approved_label: "அனுமதிக்கப்பட்டது", step2_rejected_label: "நிராகரிக்கப்பட்டது",
+    step3_title: "சட்ட ஆவண சரிபார்ப்பு", step3_pending_desc: "வழக்கறிஞர் சரிபார்ப்புக்காக காத்திருக்கிறோம்.", step3_approved_desc: "ஆவணங்கள் சட்டப்பூர்வமாக சரிபார்க்கப்பட்டன.", step3_rejected_desc: "சட்ட சரிபார்ப்பு தோல்வியடைந்தது.",
+    step3_pending_label: "நிலுவையில் உள்ளது", step3_approved_label: "சரிபார்க்கப்பட்டது", step3_rejected_label: "நிராகரிக்கப்பட்டது",
+    step4_title: "கடன் ரசீது", step4_desc: "அனைத்து சரிபார்ப்புகளும் முடிந்த பிறகு கிடைக்கும்.", step4_label: "பூட்டப்பட்டுள்ளது",
+    whats_next: "அடுத்து என்ன? தயவுசெய்து முடிக்கவும்:", officer_link: "கடன் அதிகாரி மறுஆய்வு", and_word: "மற்றும்", legal_link: "சட்ட சரிபார்ப்பு", whats_next_end: "இரண்டும் அனுமதிக்கப்பட்ட பிறகு உங்கள் ரசீது தானாக திறக்கும்.",
+    receipt_page_title: "கடன் செயலாக்க ரசீது", receipt_page_desc: "உங்கள் கடன் விண்ணப்பத்திற்கான அதிகாரப்பூர்வ ரசீது", btn_print: "அச்சிடு", btn_proceed: "அனுமதிக்கு தொடரவும்",
+    applicant_info: "விண்ணப்பதாரர் தகவல்", applicant_name: "விண்ணப்பதாரர் பெயர்", account_number: "கணக்கு எண்", pan_label: "PAN", cibil_score: "சிபில் மதிப்பெண்",
+    loan_details: "கடன் விவரங்கள்", loan_type: "கடன் வகை", loan_amount: "கடன் தொகை", interest_rate: "வட்டி விகிதம்", duration: "காலம்", monthly_emi: "மாதாந்திர EMI",
+    badge_officer: "அதிகாரி அனுமதித்தார்", badge_legal: "சட்டப்பூர்வமாக சரிபார்க்கப்பட்டது", legal_done_note: "சட்ட சரிபார்ப்பு முடிந்தது.", legal_done_desc: "அனைத்து ஆவணங்களும் சரிபார்க்கப்பட்டன. இறுதி அனுமதிக்கு தொடரவும்.",
+    sig_customer: "வாடிக்கையாளர் கையொப்பம்", sig_seal: "வங்கி முத்திரை", sig_auth: "அங்கீகரிக்கப்பட்ட கையொப்பதாரர்",
+    processing_status: "செயலாக்க நிலை", ps_submitted: "விண்ணப்பம் சமர்ப்பிக்கப்பட்டது", ps_officer: "அதிகாரி அனுமதித்தார்", ps_legal: "சட்ட சரிபார்ப்பு", ps_credit: "கடன் மதிப்பீடு", ps_final: "இறுதி அனுமதி",
+    footer: "© 2026 ABC வங்கி. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
+  },
+  ml: {
+    bank_title: "ABC ബാങ്ക്", back_dashboard: "ഡാഷ്ബോർഡിലേക്ക് മടങ്ങുക", nav_logout: "ലോഗ്ഔട്ട്",
+    pending_title: "സ്ഥിരീകരണം നടന്നുകൊണ്ടിരിക്കുന്നു", pending_desc: "എല്ലാ അനുമതികളും പൂർത്തിയായ ശേഷം നിങ്ങളുടെ ലോൺ രസീത് ലഭ്യമാകും.", approval_status: "അനുമതി നില",
+    step1_title: "അപേക്ഷ സമർപ്പിച്ചു", step1_desc: "നിങ്ങളുടെ ലോൺ അപേക്ഷ സ്വീകരിച്ചു.", step1_label: "പൂർത്തിയായി",
+    step2_title: "ലോൺ ഓഫീസർ അവലോകനം", step2_pending_desc: "ഓഫീസർ തീരുമാനത്തിനായി കാത്തിരിക്കുന്നു.", step2_active_desc: "ഓഫീസർ തീരുമാനത്തിനായി കാത്തിരിക്കുന്നു.", step2_approved_desc: "ലോൺ ഓഫീസർ നിങ്ങളുടെ അപേക്ഷ അംഗീകരിച്ചു.", step2_rejected_desc: "ലോൺ ഓഫീസർ നിങ്ങളുടെ അപേക്ഷ നിരസിച്ചു.",
+    step2_pending_label: "തീർപ്പാക്കാത്തത്", step2_active_label: "അവലോകനത്തിൽ", step2_approved_label: "അംഗീകരിച്ചു", step2_rejected_label: "നിരസിച്ചു",
+    step3_title: "നിയമ രേഖ സ്ഥിരീകരണം", step3_pending_desc: "അഭിഭാഷക സ്ഥിരീകരണത്തിനായി കാത്തിരിക്കുന്നു.", step3_approved_desc: "രേഖകൾ നിയമപരമായി സ്ഥിരീകരിച്ചു.", step3_rejected_desc: "നിയമ സ്ഥിരീകരണം പരാജയപ്പെട്ടു.",
+    step3_pending_label: "തീർപ്പാക്കാത്തത്", step3_approved_label: "സ്ഥിരീകരിച്ചു", step3_rejected_label: "നിരസിച്ചു",
+    step4_title: "ലോൺ രസീത്", step4_desc: "എല്ലാ സ്ഥിരീകരണങ്ങളും കഴിഞ്ഞ ശേഷം ലഭ്യമാകും.", step4_label: "ലോക്ക് ചെയ്തിരിക്കുന്നു",
+    whats_next: "അടുത്തത് എന്ത്? ദയവായി പൂർത്തിയാക്കുക:", officer_link: "ലോൺ ഓഫീസർ അവലോകനം", and_word: "കൂടാതെ", legal_link: "നിയമ സ്ഥിരീകരണം", whats_next_end: "രണ്ടും അംഗീകരിച്ചാൽ നിങ്ങളുടെ രസീത് സ്വയം അൺലോക്ക് ആകും.",
+    receipt_page_title: "ലോൺ പ്രോസസ്സിംഗ് രസീത്", receipt_page_desc: "നിങ്ങളുടെ ലോൺ അപേക്ഷയ്ക്കുള്ള ഔദ്യോഗിക രസീത്", btn_print: "പ്രിന്റ്", btn_proceed: "അനുമതിയിലേക്ക് തുടരുക",
+    applicant_info: "അപേക്ഷകരുടെ വിവരങ്ങൾ", applicant_name: "അപേക്ഷകരുടെ പേര്", account_number: "അക്കൗണ്ട് നമ്പർ", pan_label: "PAN", cibil_score: "സിബിൽ സ്കോർ",
+    loan_details: "ലോൺ വിവരങ്ങൾ", loan_type: "ലോൺ തരം", loan_amount: "ലോൺ തുക", interest_rate: "പലിശ നിരക്ക്", duration: "കാലാവധി", monthly_emi: "പ്രതിമാസ EMI",
+    badge_officer: "ഓഫീസർ അംഗീകരിച്ചു", badge_legal: "നിയമപരമായി സ്ഥിരീകരിച്ചു", legal_done_note: "നിയമ സ്ഥിരീകരണം പൂർത്തിയായി.", legal_done_desc: "എല്ലാ രേഖകളും സ്ഥിരീകരിച്ചു. അന്തിമ അനുമതിയിലേക്ക് തുടരുക.",
+    sig_customer: "ഉപഭോക്താവിന്റെ ഒപ്പ്", sig_seal: "ബാങ്ക് മുദ്ര", sig_auth: "അധികൃത ഒപ്പിടുന്നയാൾ",
+    processing_status: "പ്രോസസ്സിംഗ് നില", ps_submitted: "അപേക്ഷ സമർപ്പിച്ചു", ps_officer: "ഓഫീസർ അംഗീകരിച്ചു", ps_legal: "നിയമ സ്ഥിരീകരണം", ps_credit: "ക്രെഡിറ്റ് മൂല്യനിർണ്ണയം", ps_final: "അന്തിമ അനുമതി",
+    footer: "© 2026 ABC ബാങ്ക്. എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം."
+  },
+  kn: {
+    bank_title: "ABC ಬ್ಯಾಂಕ್", back_dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ", nav_logout: "ಲಾಗ್‌ಔಟ್",
+    pending_title: "ಪರಿಶೀಲನೆ ನಡೆಯುತ್ತಿದೆ", pending_desc: "ಎಲ್ಲಾ ಅನುಮೋದನೆಗಳು ಪೂರ್ಣಗೊಂಡ ನಂತರ ನಿಮ್ಮ ಸಾಲದ ರಸೀದಿ ಲಭ್ಯವಾಗುತ್ತದೆ.", approval_status: "ಅನುಮೋದನೆ ಸ್ಥಿತಿ",
+    step1_title: "ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ", step1_desc: "ನಿಮ್ಮ ಸಾಲದ ಅರ್ಜಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ.", step1_label: "ಮುಗಿದಿದೆ",
+    step2_title: "ಸಾಲ ಅಧಿಕಾರಿ ಪರಿಶೀಲನೆ", step2_pending_desc: "ಅಧಿಕಾರಿ ನಿರ್ಧಾರಕ್ಕಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ.", step2_active_desc: "ಅಧಿಕಾರಿ ನಿರ್ಧಾರಕ್ಕಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ.", step2_approved_desc: "ಸಾಲ ಅಧಿಕಾರಿ ನಿಮ್ಮ ಅರ್ಜಿಯನ್ನು ಅನುಮೋದಿಸಿದ್ದಾರೆ.", step2_rejected_desc: "ಸಾಲ ಅಧಿಕಾರಿ ನಿಮ್ಮ ಅರ್ಜಿಯನ್ನು ತಿರಸ್ಕರಿಸಿದ್ದಾರೆ.",
+    step2_pending_label: "ಬಾಕಿ ಇದೆ", step2_active_label: "ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ", step2_approved_label: "ಅನುಮೋದಿಸಲಾಗಿದೆ", step2_rejected_label: "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+    step3_title: "ಕಾನೂನು ದಾಖಲೆ ಪರಿಶೀಲನೆ", step3_pending_desc: "ವಕೀಲರ ಪರಿಶೀಲನೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ.", step3_approved_desc: "ದಾಖಲೆಗಳನ್ನು ಕಾನೂನುಬದ್ಧವಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ.", step3_rejected_desc: "ಕಾನೂನು ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ.",
+    step3_pending_label: "ಬಾಕಿ ಇದೆ", step3_approved_label: "ಪರಿಶೀಲಿಸಲಾಗಿದೆ", step3_rejected_label: "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+    step4_title: "ಸಾಲದ ರಸೀದಿ", step4_desc: "ಎಲ್ಲಾ ಪರಿಶೀಲನೆಗಳ ನಂತರ ಲಭ್ಯವಾಗುತ್ತದೆ.", step4_label: "ಲಾಕ್ ಮಾಡಲಾಗಿದೆ",
+    whats_next: "ಮುಂದೇನು? ದಯವಿಟ್ಟು ಪೂರ್ಣಗೊಳಿಸಿ:", officer_link: "ಸಾಲ ಅಧಿಕಾರಿ ಪರಿಶೀಲನೆ", and_word: "ಮತ್ತು", legal_link: "ಕಾನೂನು ಪರಿಶೀಲನೆ", whats_next_end: "ಎರಡೂ ಅನುಮೋದಿಸಿದ ನಂತರ ನಿಮ್ಮ ರಸೀದಿ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅನ್‌ಲಾಕ್ ಆಗುತ್ತದೆ.",
+    receipt_page_title: "ಸಾಲ ಪ್ರಕ್ರಿಯೆ ರಸೀದಿ", receipt_page_desc: "ನಿಮ್ಮ ಸಾಲದ ಅರ್ಜಿಗಾಗಿ ಅಧಿಕೃತ ರಸೀದಿ", btn_print: "ಮುದ್ರಿಸು", btn_proceed: "ಅನುಮೋದನೆಗೆ ಮುಂದುವರೆಯಿರಿ",
+    applicant_info: "ಅರ್ಜಿದಾರರ ಮಾಹಿತಿ", applicant_name: "ಅರ್ಜಿದಾರರ ಹೆಸರು", account_number: "ಖಾತೆ ಸಂಖ್ಯೆ", pan_label: "PAN", cibil_score: "ಸಿಬಿಲ್ ಸ್ಕೋರ್",
+    loan_details: "ಸಾಲದ ವಿವರಗಳು", loan_type: "ಸಾಲದ ವಿಧ", loan_amount: "ಸಾಲದ ಮೊತ್ತ", interest_rate: "ಬಡ್ಡಿ ದರ", duration: "ಅವಧಿ", monthly_emi: "ಮಾಸಿಕ EMI",
+    badge_officer: "ಅಧಿಕಾರಿ ಅನುಮೋದಿಸಿದ್ದಾರೆ", badge_legal: "ಕಾನೂನುಬದ್ಧವಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ", legal_done_note: "ಕಾನೂನು ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಂಡಿದೆ.", legal_done_desc: "ಎಲ್ಲಾ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ. ಅಂತಿಮ ಅನುಮೋದನೆಗೆ ಮುಂದುವರೆಯಿರಿ.",
+    sig_customer: "ಗ್ರಾಹಕರ ಸಹಿ", sig_seal: "ಬ್ಯಾಂಕ್ ಮುದ್ರೆ", sig_auth: "ಅಧಿಕೃತ ಸಹಿದಾರ",
+    processing_status: "ಪ್ರಕ್ರಿಯೆ ಸ್ಥಿತಿ", ps_submitted: "ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ", ps_officer: "ಅಧಿಕಾರಿ ಅನುಮೋದಿಸಿದ್ದಾರೆ", ps_legal: "ಕಾನೂನು ಪರಿಶೀಲನೆ", ps_credit: "ಕ್ರೆಡಿಟ್ ಮೌಲ್ಯಮಾಪನ", ps_final: "ಅಂತಿಮ ಅನುಮೋದನೆ",
+    footer: "© 2026 ABC ಬ್ಯಾಂಕ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ."
+  },
+  hi: {
+    bank_title: "ABC बैंक", back_dashboard: "डैशबोर्ड पर वापस जाएं", nav_logout: "लॉगआउट",
+    pending_title: "सत्यापन जारी है", pending_desc: "सभी अनुमोदन पूरे होने के बाद आपकी ऋण रसीद उपलब्ध होगी।", approval_status: "अनुमोदन स्थिति",
+    step1_title: "आवेदन जमा किया गया", step1_desc: "आपका ऋण आवेदन प्राप्त हो गया है।", step1_label: "हो गया",
+    step2_title: "ऋण अधिकारी समीक्षा", step2_pending_desc: "अधिकारी के निर्णय की प्रतीक्षा है।", step2_active_desc: "अधिकारी के निर्णय की प्रतीक्षा है।", step2_approved_desc: "ऋण अधिकारी ने आपका आवेदन स्वीकृत किया।", step2_rejected_desc: "ऋण अधिकारी ने आपका आवेदन अस्वीकृत किया।",
+    step2_pending_label: "लंबित", step2_active_label: "समीक्षा में", step2_approved_label: "स्वीकृत", step2_rejected_label: "अस्वीकृत",
+    step3_title: "कानूनी दस्तावेज़ सत्यापन", step3_pending_desc: "वकील सत्यापन की प्रतीक्षा है।", step3_approved_desc: "दस्तावेज़ कानूनी रूप से सत्यापित हो गए।", step3_rejected_desc: "कानूनी सत्यापन विफल हुआ।",
+    step3_pending_label: "लंबित", step3_approved_label: "सत्यापित", step3_rejected_label: "अस्वीकृत",
+    step4_title: "ऋण रसीद", step4_desc: "सभी सत्यापन के बाद उपलब्ध होगी।", step4_label: "लॉक्ड",
+    whats_next: "आगे क्या? कृपया पूरा करें:", officer_link: "ऋण अधिकारी समीक्षा", and_word: "और", legal_link: "कानूनी सत्यापन", whats_next_end: "दोनों स्वीकृत होने के बाद आपकी रसीद स्वचालित रूप से अनलॉक होगी।",
+    receipt_page_title: "ऋण प्रसंस्करण रसीद", receipt_page_desc: "आपके ऋण आवेदन की आधिकारिक रसीद", btn_print: "प्रिंट", btn_proceed: "अनुमोदन की ओर बढ़ें",
+    applicant_info: "आवेदक की जानकारी", applicant_name: "आवेदक का नाम", account_number: "खाता संख्या", pan_label: "PAN", cibil_score: "सिबिल स्कोर",
+    loan_details: "ऋण विवरण", loan_type: "ऋण प्रकार", loan_amount: "ऋण राशि", interest_rate: "ब्याज दर", duration: "अवधि", monthly_emi: "मासिक EMI",
+    badge_officer: "अधिकारी ने स्वीकृत किया", badge_legal: "कानूनी रूप से सत्यापित", legal_done_note: "कानूनी सत्यापन पूर्ण हुआ।", legal_done_desc: "सभी दस्तावेज़ सत्यापित हो गए। अंतिम अनुमोदन की ओर बढ़ें।",
+    sig_customer: "ग्राहक हस्ताक्षर", sig_seal: "बैंक मुहर", sig_auth: "अधिकृत हस्ताक्षरकर्ता",
+    processing_status: "प्रसंस्करण स्थिति", ps_submitted: "आवेदन जमा किया गया", ps_officer: "अधिकारी ने स्वीकृत किया", ps_legal: "कानूनी सत्यापन", ps_credit: "ऋण मूल्यांकन", ps_final: "अंतिम अनुमोदन",
+    footer: "© 2026 ABC बैंक. सभी अधिकार सुरक्षित।"
+  }
+};
+
+/* ── translation helper ── */
+function rT(key) {
+  var lang = localStorage.getItem('abcbank_lang') || 'en';
+  return (R_I18N[lang] && R_I18N[lang][key] !== undefined)
+    ? R_I18N[lang][key]
+    : (R_I18N['en'][key] || key);
+}

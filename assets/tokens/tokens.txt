@@ -26,7 +26,7 @@ lang_kn : "Kannada"
 
 lang_hi : "Hindi"
 
-File: login.html
+File: /pages/login.html
 
 login_heading : "Welcome Back"
 
@@ -94,7 +94,7 @@ reg_alert_mismatch_text : "Passwords do not match. Please try again."
 reg_alert_success_title : "Registration Successful"
 
 reg_alert_success_text : "Your account has been created successfully."
-File: home.html
+File: /pages/home.html
 
 nav_home : "Home"
 

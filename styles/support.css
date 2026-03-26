@@ -1,0 +1,148 @@
+
+  #lang-switcher { display: none !important; }
+
+  /* ─── CSS variables: light ──────────────────────────────────────── */
+  :root {
+    --bg-page:       #f3f4f6;
+    --bg-panel:      #ffffff;
+    --text-primary:  #111827;
+    --text-secondary:#6b7280;
+    --border:        #e5e7eb;
+    --faq-bg:        #ffffff;
+    --faq-summary:   #1e3a8a;
+    --faq-section-from: #eff6ff;
+    --faq-section-to:   #dbeafe;
+    --toggle-bg:     rgba(255,255,255,0.18);
+    --toggle-border: rgba(255,255,255,0.30);
+    --toggle-track:  rgba(255,255,255,0.25);
+    --toggle-active: #facc15;
+    --toggle-knob:   #ffffff;
+    --select-option-bg: #ffffff;
+    --select-option-text: #111827;
+  }
+
+  /* ─── CSS variables: dark ───────────────────────────────────────── */
+  html.dark {
+    --bg-page:       #0f172a;
+    --bg-panel:      #1e293b;
+    --text-primary:  #f1f5f9;
+    --text-secondary:#94a3b8;
+    --border:        #334155;
+    --faq-bg:        #1e293b;
+    --faq-summary:   #93c5fd;
+    --faq-section-from: #1e293b;
+    --faq-section-to:   #1e293b;
+    --toggle-track:  rgba(255,255,255,0.15);
+    --toggle-active: #facc15;
+    --toggle-knob:   #1e293b;
+    --select-option-bg: #1e293b;
+    --select-option-text: #f1f5f9;
+  }
+
+  /* ─── Base ──────────────────────────────────────────────────────── */
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* ─── Dark overrides for common elements ─────────────────────────── */
+  html.dark .bg-white        { background-color: var(--bg-panel) !important; }
+  html.dark .bg-gray-100     { background-color: var(--bg-page) !important; }
+  html.dark .text-gray-600   { color: var(--text-secondary) !important; }
+  html.dark .text-gray-500   { color: var(--text-secondary) !important; }
+  html.dark .border          { border-color: var(--border) !important; }
+  html.dark .shadow          { box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
+  html.dark input,
+  html.dark textarea,
+  html.dark select           { background-color: #0f172a !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
+  html.dark .hover\:bg-gray-100:hover { background-color: var(--border) !important; }
+  html.dark .bg-blue-700     { background-color: #1e40af !important; }
+  html.dark .hover\:bg-blue-800:hover { background-color: #1e3a8a !important; }
+
+  /* FAQ section */
+  .faq-section {
+    background: linear-gradient(to right, var(--faq-section-from), var(--faq-section-to));
+    transition: background 0.3s;
+  }
+  .faq-item {
+    background-color: var(--faq-bg);
+    transition: background-color 0.3s;
+  }
+  .faq-summary { color: var(--faq-summary); }
+  html.dark .text-blue-900   { color: #93c5fd !important; }
+
+  /* Profile dropdown */
+  .profile-dropdown {
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
+    transition: background-color 0.3s;
+  }
+  .profile-dropdown a { color: var(--text-primary); }
+  .profile-dropdown a:hover { background-color: var(--border); }
+
+  /* ─── Nav dark toggle switch (identical to home.html) ────────────── */
+  .nav-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    border-radius: 9999px;
+    padding: 5px 12px;
+  }
+  .nav-toggle-icon { font-size: 0.8rem; color: #facc15; }
+  .nav-toggle-switch {
+    position: relative;
+    width: 38px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .nav-toggle-switch input { display: none; }
+  .nav-toggle-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: var(--toggle-track);
+    transition: background-color 0.3s;
+  }
+  .nav-toggle-switch input:checked ~ .nav-toggle-track { background-color: var(--toggle-active); }
+  .nav-toggle-knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 9999px;
+    background-color: var(--toggle-knob);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  .nav-toggle-switch input:checked ~ .nav-toggle-knob { transform: translateX(18px); }
+
+  /* ===== FIX: LANGUAGE DROPDOWN OPTIONS STYLING ===== */
+  select#lang-select {
+    background: transparent !important;
+    color: #fff !important;
+  }
+  html.dark select#lang-select {
+    background: transparent !important;
+    color: #fff !important;
+  }
+  select#lang-select option {
+    background-color: #1e3a5f;
+    color: white;
+  }
+  html.dark select#lang-select option {
+    background-color: #0f172a;
+    color: #f1f5f9;
+  }
+  /* Ensure wrapper background remains consistent */
+  .nav-lang-wrapper {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }

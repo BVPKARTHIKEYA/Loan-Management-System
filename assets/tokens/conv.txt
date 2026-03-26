@@ -1,4 +1,4 @@
-/* shared.js – common utilities for ABC Bank LMS */
+/* /js/lang.js – common utilities for ABC Bank LMS */
 
 /* ══════════════════════════════════════════════
    🌐 LANGUAGE / i18n SYSTEM
@@ -115,7 +115,7 @@ const I18N = {
     reg_alert_success_title:   "Registration Successful",
     reg_alert_success_text:    "Your account has been created successfully.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:           "Dashboard",
     home_welcome:         "Welcome back",
     home_total_loans:     "Total Loans",
@@ -609,7 +609,7 @@ const I18N = {
     reg_alert_success_title:   "నమోదు విజయవంతమైంది",
     reg_alert_success_text:    "మీ ఖాతా విజయవంతంగా సృష్టించబడింది.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "డాష్‌బోర్డ్",
     home_welcome:          "తిరిగి స్వాగతం",
     home_total_loans:      "మొత్తం రుణాలు",
@@ -1099,7 +1099,7 @@ const I18N = {
     reg_alert_success_title:   "பதிவு வெற்றிகரமானது",
     reg_alert_success_text:    "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "டாஷ்போர்டு",
     home_welcome:          "மீண்டும் வரவேற்கிறோம்",
     home_total_loans:      "மொத்த கடன்கள்",
@@ -1589,7 +1589,7 @@ const I18N = {
     reg_alert_success_title:   "രജിസ്ട്രേഷൻ വിജയകരം",
     reg_alert_success_text:    "നിങ്ങളുടെ അക്കൗണ്ട് വിജയകരമായി സൃഷ്ടിക്കപ്പെട്ടു.",
 
-    /* ── home.html ── */
+    /* ── /pages/home.html ── */
     home_title:            "ഡാഷ്‌ബോർഡ്",
     home_welcome:          "തിരിച്ചു സ്വാഗതം",
     home_total_loans:      "ആകെ വായ്പകൾ",

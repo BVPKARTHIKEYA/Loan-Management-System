@@ -1,0 +1,142 @@
+
+    body { font-family: 'Source Sans 3', sans-serif; }
+
+    /* ─── CSS variables: light ─────────────────────────────────────── */
+    :root {
+      --bg-page:        #f3f4f6;
+      --bg-panel:       #ffffff;
+      --text-primary:   #111827;
+      --text-secondary: #6b7280;
+      --text-label:     #374151;
+      --border:         #d1d5db;
+      --input-bg:       #ffffff;
+      --input-focus:    #3b82f6;
+      --btn-bg:         #1d4ed8;
+      --btn-hover:      #1e40af;
+      --link:           #2563eb;
+      --link-hover:     #1e40af;
+      --overlay:        rgba(0,0,0,0.30);
+      --toggle-bg:      #e5e7eb;
+      --toggle-knob:    #ffffff;
+      --toggle-active:  #3b82f6;
+    }
+
+    /* ─── CSS variables: dark ──────────────────────────────────────── */
+    html.dark {
+      --bg-page:        #0f172a;
+      --bg-panel:       #1e293b;
+      --text-primary:   #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-label:     #cbd5e1;
+      --border:         #334155;
+      --input-bg:       #0f172a;
+      --input-focus:    #60a5fa;
+      --btn-bg:         #2563eb;
+      --btn-hover:      #1d4ed8;
+      --link:           #60a5fa;
+      --link-hover:     #93c5fd;
+      --overlay:        rgba(0,0,0,0.55);
+      --toggle-bg:      #334155;
+      --toggle-knob:    #f1f5f9;
+      --toggle-active:  #60a5fa;
+    }
+
+    /* ─── Base ─────────────────────────────────────────────────────── */
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .panel {
+      background-color: var(--bg-panel);
+      transition: background-color 0.3s;
+    }
+    .video-overlay {
+      background: var(--overlay);
+      transition: background 0.3s;
+    }
+
+    /* ─── Form elements ────────────────────────────────────────────── */
+    .text-sub  { color: var(--text-secondary); }
+    .text-head { color: var(--text-primary); }
+    .link-blue { color: var(--link); }
+    .link-blue:hover { color: var(--link-hover); }
+
+    .form-input {
+      background-color: var(--input-bg);
+      border-color: var(--border);
+      color: var(--text-primary);
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .form-input::placeholder { color: var(--text-secondary); }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--input-focus);
+      border-color: var(--input-focus);
+    }
+
+    /* date input: force text color in dark mode */
+    .form-input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: var(--date-icon-filter, none);
+    }
+    html.dark .form-input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    .form-check-label { color: var(--text-label); }
+    .form-check-label a { color: var(--link); }
+    .form-check-label a:hover { color: var(--link-hover); }
+
+    .btn-primary {
+      background-color: var(--btn-bg);
+      transition: background-color 0.2s;
+    }
+    .btn-primary:hover { background-color: var(--btn-hover); }
+
+    /* ─── Controls row (top of panel) ─────────────────────────────── */
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.32rem;
+    }
+    .toggle-icon {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background-color: var(--toggle-bg);
+      transition: background-color 0.3s;
+    }
+    .toggle-switch input:checked ~ .toggle-track { background-color: var(--toggle-active); }
+    .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 9999px;
+      background-color: var(--toggle-knob);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+    }
+    .toggle-switch input:checked ~ .toggle-knob { transform: translateX(18px); }

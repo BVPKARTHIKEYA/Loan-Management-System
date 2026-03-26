@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="/assets/images/abc-bank-logo.jpeg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Approval - ABC Bank</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/utils/lang.js"></script>
+<link rel="stylesheet" href="/styles/loan-approval.css">
+
+</head>
+<body class="bg-gray-100 text-lg">
+
+<!-- NAVBAR -->
+<header>
+  <nav class="bg-blue-900 text-white shadow-xl sticky top-0 z-50">
+    <section class="w-full px-10 py-5 flex justify-between items-center gap-6">
+      <a href="/pages/home.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="/assets/images/abc-bank-logo.jpeg" class="w-12 h-12 rounded-full">
+        <h1 class="text-3xl font-bold" data-i18n="footer_bank_title">ABC Bank</h1>
+      </a>
+      <a href="/pages/home.html" class="flex items-center gap-2 font-semibold text-lg bg-white/10 border border-white/25 px-5 py-2 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+        <i class="fa fa-arrow-left"></i>
+        <span data-i18n="approval_back_dashboard">Back to Dashboard</span>
+      </a>
+      <section class="flex items-center gap-4 flex-shrink-0">
+
+        <!-- LANGUAGE SWITCHER -->
+        <section class="nav-lang-wrapper">
+          <label style="color:#facc15;font-size:13px;font-weight:600;white-space:nowrap;"><i class="fa fa-globe"></i> Lang:</label>
+          <select id="nav-lang-select" style="background:transparent;color:#fff;border:none;outline:none;font-size:14px;font-weight:600;cursor:pointer;">
+            <option value="en" style="background:#1e3a5f">English</option>
+            <option value="te" style="background:#1e3a5f">తెలుగు</option>
+            <option value="ta" style="background:#1e3a5f">தமிழ்</option>
+            <option value="ml" style="background:#1e3a5f">മലയാളം</option>
+            <option value="kn" style="background:#1e3a5f">ಕನ್ನಡ</option>
+            <option value="hi" style="background:#1e3a5f">हिन्दी</option>
+          </select>
+        </section>
+
+        <!-- DARK MODE TOGGLE -->
+        <section class="nav-toggle-wrap" title="Toggle dark mode">
+          <i class="fa-solid fa-sun nav-toggle-icon"></i>
+          <label class="nav-toggle-switch" aria-label="Toggle dark mode">
+            <input type="checkbox" id="darkToggle">
+            <span class="nav-toggle-track"></span>
+            <span class="nav-toggle-knob"></span>
+          </label>
+          <i class="fa-solid fa-moon nav-toggle-icon"></i>
+        </section>
+
+        <!-- PROFILE DROPDOWN -->
+        <section class="relative group">
+          <section class="flex items-center gap-3 bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold cursor-pointer select-none">
+            <i class="fa fa-user-circle text-2xl"></i>
+            <section class="flex flex-col leading-tight">
+              <span id="username" class="text-base font-bold">User</span>
+              <span class="text-xs opacity-70" id="userid">ID: NIL</span>
+            </section>
+            <i class="fa fa-chevron-down text-sm ml-1"></i>
+          </section>
+          <section class="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+            <section class="p-4 border-b">
+              <p class="font-semibold text-lg" id="profileName">User</p>
+              <p class="text-sm text-gray-600" id="profileAccount">Account: NIL</p>
+            </section>
+            <a href="/pages/home.html" class="block px-4 py-3 hover:bg-gray-100">
+              <i class="fa fa-home mr-2"></i><span data-i18n="account_back_dashboard">Back to Dashboard</span>
+            </a>
+            <a href="#" onclick="logoutUser()" class="block px-4 py-3 hover:bg-red-100 text-red-600">
+              <i class="fa fa-sign-out-alt mr-2"></i><span data-i18n="nav_logout">Logout</span>
+            </a>
+          </section>
+        </section>
+
+      </section>
+    </section>
+  </nav>
+</header>
+
+<!-- ACCESS GATE PANELS -->
+<section id="accessGate" class="hidden max-w-2xl mx-auto mt-20 px-6 pb-20">
+
+  <section id="gateIncomplete" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+    <section class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fa fa-list-check text-5xl text-orange-500"></i>
+    </section>
+    <h2 class="text-3xl font-bold text-orange-600 mb-3">Steps Not Completed</h2>
+    <p class="text-gray-600 text-lg mb-6">Please complete all required steps before accessing the Loan Approval page.</p>
+    <section id="gateStepsSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></section>
+    <a href="/pages/home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
+      <i class="fa fa-house"></i> Back to Dashboard
+    </a>
+  </section>
+
+  <section id="gateRejected" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+    <section class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fa fa-circle-xmark text-5xl text-red-500"></i>
+    </section>
+    <h2 class="text-3xl font-bold text-red-600 mb-3">Loan Application Rejected</h2>
+    <section id="rejectionSpecificMessage" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-left text-base text-red-800"></section>
+    <p class="text-gray-600 text-lg mb-6">Please contact your branch manager or apply again after 90 days.</p>
+    <section id="gateDecisionSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></section>
+    <a href="/pages/home.html" class="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
+      <i class="fa fa-house"></i> Back to Dashboard
+    </a>
+  </section>
+
+  <section id="gateLegalPending" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+    <section class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fa fa-scale-balanced text-5xl text-yellow-500"></i>
+    </section>
+    <h2 class="text-3xl font-bold text-yellow-600 mb-3">Awaiting Legal Verification</h2>
+    <p class="text-gray-600 text-lg mb-6">
+      You've completed all your steps! Your documents are now with the legal department.
+      The approval letter will be available once the legal officer approves your application.
+    </p>
+    <section id="gateLegalSummary" class="bg-gray-50 rounded-xl p-5 text-left mb-8 text-base"></section>
+    <section class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/pages/lawyer-verification.html" class="inline-flex items-center gap-2 bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-800 transition-colors">
+        <i class="fa fa-scale-balanced"></i> Go to Legal Verification
+      </a>
+      <a href="/pages/home.html" class="inline-flex items-center gap-2 bg-gray-200 text-gray-700 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-300 transition-colors">
+        <i class="fa fa-house"></i> Back to Dashboard
+      </a>
+    </section>
+  </section>
+
+</section>
+
+<!-- MAIN APPROVAL CONTENT -->
+<section id="approvalContent" class="hidden">
+  <section class="max-w-5xl mx-auto px-6 pt-8 pb-2">
+    <h1 class="text-4xl font-bold mt-1">Loan Approval</h1>
+    <p class="text-gray-500 text-lg mt-1">Official loan sanction letter and approval details.</p>
+  </section>
+  <main class="max-w-5xl mx-auto p-6">
+    <section class="bg-green-600 text-white rounded-xl p-10 text-center mb-6 shadow">
+      <i class="fa fa-circle-check text-6xl mb-4"></i>
+      <h2 class="text-4xl font-bold">Congratulations!</h2>
+      <p class="text-xl font-semibold mt-3">Your Loan Has Been Approved</p>
+      <p class="text-lg opacity-90 mt-2">Loan disbursement will be completed within 2–3 business days.</p>
+      <section class="flex justify-center gap-4 mt-5 flex-wrap text-lg">
+        <span class="bg-white/20 px-4 py-2 rounded">Loan ID: #LN2024001</span>
+        <span class="bg-white/20 px-4 py-2 rounded">Approved: <span id="approvedDateSpan">–</span></span>
+      </section>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-8 mb-6">
+      <header><h2 class="text-2xl font-bold mb-5">Loan Details</h2></header>
+      <section class="grid md:grid-cols-2 gap-6 text-lg">
+        <article><p class="text-gray-500">Customer Name</p><p class="font-semibold text-xl" id="detailCustomerName">–</p></article>
+        <article><p class="text-gray-500">Loan Type</p><p class="font-semibold text-xl" id="detailLoanType">–</p></article>
+        <article><p class="text-gray-500">Loan Amount</p><p class="font-bold text-green-600 text-2xl" id="detailLoanAmount">–</p></article>
+        <article><p class="text-gray-500">Interest Rate</p><p class="text-lg" id="detailInterestRate">–</p></article>
+        <article><p class="text-gray-500">Loan Duration</p><p class="text-lg" id="detailDuration">–</p></article>
+        <article><p class="text-gray-500">Monthly EMI</p><p class="text-blue-600 font-semibold text-xl" id="detailEmi">–</p></article>
+        <article><p class="text-gray-500">Total Payable</p><p class="text-lg" id="detailTotalPayable">–</p></article>
+        <article><p class="text-gray-500">Processing Fee</p><p class="text-lg">₹12,500</p></article>
+        <article><p class="text-gray-500">Employment Type</p><p class="text-lg" id="detailEmployment">–</p></article>
+        <article><p class="text-gray-500">Annual Income</p><p class="text-lg" id="detailAnnualIncome">–</p></article>
+        <article><p class="text-gray-500">Collateral</p><p class="text-lg" id="detailCollateral">–</p></article>
+        <article><p class="text-gray-500">Purpose</p><p class="text-lg" id="detailPurpose">–</p></article>
+      </section>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-8 mb-6">
+      <header><h2 class="text-2xl font-bold mb-2">Select Your Branch</h2></header>
+      <p class="text-gray-500 mb-5">Choose the branch where your loan will be processed.</p>
+      <section class="grid md:grid-cols-2 gap-4 mb-6" id="branchGrid">
+        <section class="branch-card border-2 border-gray-200 rounded-xl p-5" data-branch="mumbai-central" onclick="selectBranch(this)">
+          <p class="branch-name font-bold text-lg">Mumbai Central</p>
+          <p class="text-gray-500 text-base">123, Dr. Ambedkar Rd, Mumbai – 400 008</p>
+          <section class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
+            <span><i class="fa fa-user-tie mr-1 text-blue-700"></i>Rajan Mehta</span>
+            <span><i class="fa fa-clock mr-1 text-green-600"></i>Mon–Sat, 9am–5pm</span>
+            <span class="font-mono text-sm">IFSC: ABCB0001234</span>
+          </section>
+        </section>
+        <section class="branch-card border-2 border-gray-200 rounded-xl p-5" data-branch="andheri-west" onclick="selectBranch(this)">
+          <p class="branch-name font-bold text-lg">Andheri West</p>
+          <p class="text-gray-500 text-base">Plot 44, Versova Link Rd, Mumbai – 400 058</p>
+          <section class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
+            <span><i class="fa fa-user-tie mr-1 text-blue-700"></i>Priya Sharma</span>
+            <span><i class="fa fa-clock mr-1 text-green-600"></i>Mon–Sat, 9am–5pm</span>
+            <span class="font-mono text-sm">IFSC: ABCB0001892</span>
+          </section>
+        </section>
+        <section class="branch-card border-2 border-gray-200 rounded-xl p-5" data-branch="connaught-place" onclick="selectBranch(this)">
+          <p class="branch-name font-bold text-lg">Connaught Place</p>
+          <p class="text-gray-500 text-base">F-12, Inner Circle, Connaught Place, Delhi – 110 001</p>
+          <section class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
+            <span><i class="fa fa-user-tie mr-1 text-blue-700"></i>Amit Kapoor</span>
+            <span><i class="fa fa-clock mr-1 text-green-600"></i>Mon–Sat, 10am–4pm</span>
+            <span class="font-mono text-sm">IFSC: ABCB0002211</span>
+          </section>
+        </section>
+        <section class="branch-card border-2 border-gray-200 rounded-xl p-5" data-branch="koramangala" onclick="selectBranch(this)">
+          <p class="branch-name font-bold text-lg">Koramangala</p>
+          <p class="text-gray-500 text-base">80 Feet Rd, 4th Block, Koramangala, Bangalore – 560 034</p>
+          <section class="text-base text-gray-600 mt-3 flex flex-wrap gap-4">
+            <span><i class="fa fa-user-tie mr-1 text-blue-700"></i>Deepa Nair</span>
+            <span><i class="fa fa-clock mr-1 text-green-600"></i>Mon–Sat, 9am–5pm</span>
+            <span class="font-mono text-sm">IFSC: ABCB0003345</span>
+          </section>
+        </section>
+      </section>
+      <section id="selectPrompt" class="text-center text-gray-400 text-base py-2">
+        <i class="fa fa-hand-pointer mr-2"></i>Please select a branch above to proceed.
+      </section>
+      <section id="managerSection" class="hidden">
+        <section class="bg-blue-900 text-white rounded-xl p-6 mb-5">
+          <p class="text-sm opacity-70 mb-3 uppercase tracking-wide font-semibold">Assigned Branch Manager</p>
+          <section class="flex flex-wrap gap-6 items-center">
+            <section class="flex items-center gap-4">
+              <section class="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-xl font-bold" id="managerInitials">–</section>
+              <section><p class="font-bold text-xl" id="managerName">–</p><p class="opacity-70 text-base" id="managerBranch">–</p></section>
+            </section>
+            <section class="flex flex-wrap gap-6 text-base opacity-90">
+              <span><i class="fa fa-phone mr-2"></i><span id="managerPhone">–</span></span>
+              <span><i class="fa fa-envelope mr-2"></i><span id="managerEmail">–</span></span>
+              <span><i class="fa fa-briefcase mr-2"></i>Loan Specialist</span>
+            </section>
+          </section>
+        </section>
+        <section class="flex justify-end">
+          <button onclick="confirmBranch()" class="bg-green-600 text-white px-8 py-3 rounded-xl text-lg font-semibold flex items-center gap-2 hover:bg-green-700 transition-colors">
+            <i class="fa fa-check-circle"></i><span id="confirmBtnText">Confirm Branch</span>
+          </button>
+        </section>
+      </section>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-8 mb-6">
+      <header><h2 class="text-2xl font-bold mb-5">Disbursement Details</h2></header>
+      <section class="grid md:grid-cols-2 gap-6 text-lg">
+        <article><p class="text-gray-500">Account Number</p><p class="font-mono text-xl" id="disbursementAccount">–</p></article>
+        <article><p class="text-gray-500">IFSC Code</p><p class="text-lg" id="disbursementIfsc">–</p></article>
+        <article><p class="text-gray-500">Branch</p><p class="text-lg" id="disbursementBranch">–</p></article>
+        <article><p class="text-gray-500">Disbursement Amount</p><p class="font-semibold text-green-600 text-xl" id="disbursementAmountVal">–</p></article>
+      </section>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-8 mb-6">
+      <header><h2 class="text-2xl font-bold mb-5">EMI Schedule (Sample)</h2></header>
+      <section class="overflow-x-auto">
+        <table class="w-full text-lg">
+          <thead class="bg-blue-900 text-white">
+            <tr>
+              <th class="p-3 text-left">Month</th>
+              <th class="p-3 text-left">EMI</th>
+              <th class="p-3 text-left">Principal</th>
+              <th class="p-3 text-left">Interest</th>
+              <th class="p-3 text-left">Balance</th>
+            </tr>
+          </thead>
+          <tbody id="emiTableBody"></tbody>
+        </table>
+      </section>
+    </section>
+
+    <section class="flex justify-between mt-12 text-center text-lg">
+      <aside><section class="h-12 border-b w-40"></section><p class="mt-2">Customer Signature</p></aside>
+      <aside><i class="fa fa-stamp text-5xl text-blue-800"></i><p class="mt-2">Bank Seal</p></aside>
+      <aside><section class="h-12 border-b w-40"></section><p class="mt-2">Authorized Signatory</p></aside>
+    </section>
+  </main>
+</section>
+
+<script src="/utils/loan-approval.js"></script>
+
+<footer class="bg-blue-900 text-white text-center py-6 mt-10 text-lg">
+  <p>© 2026 ABC Bank. All Rights Reserved.</p>
+</footer>
+
+<section id="successToast" class="hidden fixed bottom-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-xl text-lg flex items-center gap-3 z-50">
+  <i class="fa fa-circle-check text-2xl"></i><span id="toastMsg">Branch confirmed!</span>
+</section>
+
+
+
+</body>
+</html>
