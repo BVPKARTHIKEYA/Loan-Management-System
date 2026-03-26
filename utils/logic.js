@@ -177,7 +177,7 @@ function isLoggedIn() {
 function logout() {
   localStorage.removeItem(CURRENT_USER_KEY);
   localStorage.removeItem("bankUser");
-  window.location.href = "/pages/index.html";
+  window.location.href = "/index.html";
 }
 
 // ------------------------------------------------------------------
