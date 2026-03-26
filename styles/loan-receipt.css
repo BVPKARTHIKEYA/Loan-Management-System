@@ -336,3 +336,247 @@
   .step-done i {
     color: white;
   }
+/* =============================================
+   loan-receipt.css  –  Animation & Pending/Rejected Styles
+   Drop-in replacement / supplement for loan-receipt.css
+   ============================================= */
+
+/* ── Fade-in-up stagger ─────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up   { animation: fadeInUp 0.55s cubic-bezier(.22,.68,0,1.2) both; }
+.fade-in-up-2 { animation: fadeInUp 0.55s cubic-bezier(.22,.68,0,1.2) 0.12s both; }
+.fade-in-up-3 { animation: fadeInUp 0.55s cubic-bezier(.22,.68,0,1.2) 0.22s both; }
+.fade-in-up-4 { animation: fadeInUp 0.55s cubic-bezier(.22,.68,0,1.2) 0.34s both; }
+.fade-in-up-5 { animation: fadeInUp 0.55s cubic-bezier(.22,.68,0,1.2) 0.46s both; }
+
+/* ── Pulse ring (concentric expanding rings) ─ */
+@keyframes pulseRing {
+  0%   { transform: scale(0.85); opacity: 0.7; }
+  70%  { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+.pulse-ring {
+  animation: pulseRing 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ── Slow spin (outer ring) ──────────────────── */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spinSlow 3.5s linear infinite;
+}
+
+/* ── Float (icon bob) ────────────────────────── */
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-8px); }
+}
+
+.float-icon {
+  animation: floatIcon 2.8s ease-in-out infinite;
+}
+
+/* ── Shimmer text ────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #1e3a8a 0%,
+    #3b82f6 30%,
+    #93c5fd 50%,
+    #3b82f6 70%,
+    #1e3a8a 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Step badges ─────────────────────────────── */
+.step-done {
+  background-color: #dcfce7;
+  color: #16a34a;
+  font-size: 1.1rem;
+}
+
+.step-pending {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.step-approved {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.step-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* ── Rejected state – red shimmer ───────────── */
+@keyframes shimmerRed {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-text-red {
+  background: linear-gradient(
+    90deg,
+    #7f1d1d 0%,
+    #dc2626 30%,
+    #fca5a5 50%,
+    #dc2626 70%,
+    #7f1d1d 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerRed 3s linear infinite;
+}
+
+/* Pulse ring colour variant for rejected */
+@keyframes pulseRingRed {
+  0%   { transform: scale(0.85); opacity: 0.7; }
+  70%  { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+.pulse-ring-red {
+  animation: pulseRingRed 2.4s ease-out infinite;
+  background-color: #fecaca !important;
+  pointer-events: none;
+}
+
+/* ── Dark mode overrides ─────────────────────── */
+.dark .shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #93c5fd 0%,
+    #bfdbfe 35%,
+    #e0f2fe 50%,
+    #bfdbfe 70%,
+    #93c5fd 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .step-done    { background-color: #14532d; color: #86efac; }
+.dark .step-pending { background-color: #374151; color: #6b7280; }
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0);    }
+}
+.fade-in-up   { animation: fadeInUp .55s cubic-bezier(.22,.68,0,1.2)       both; }
+.fade-in-up-2 { animation: fadeInUp .55s cubic-bezier(.22,.68,0,1.2) .12s  both; }
+.fade-in-up-3 { animation: fadeInUp .55s cubic-bezier(.22,.68,0,1.2) .22s  both; }
+.fade-in-up-4 { animation: fadeInUp .55s cubic-bezier(.22,.68,0,1.2) .34s  both; }
+.fade-in-up-5 { animation: fadeInUp .55s cubic-bezier(.22,.68,0,1.2) .46s  both; }
+
+/* ── Pulse rings ─────────────────────────────── */
+@keyframes pulseRing {
+  0%  { transform:scale(.85); opacity:.7; }
+  70% { transform:scale(1.6); opacity:0;  }
+  100%{ transform:scale(1.6); opacity:0;  }
+}
+.pulse-ring {
+  animation: pulseRing 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.pulse-ring.delay { animation-delay: .7s; }
+
+/* red variant */
+@keyframes pulseRingRed {
+  0%  { transform:scale(.85); opacity:.65; }
+  70% { transform:scale(1.6); opacity:0;   }
+  100%{ transform:scale(1.6); opacity:0;   }
+}
+.pulse-ring-red {
+  background: #fecaca !important;
+  animation: pulseRingRed 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.pulse-ring-red.delay { animation-delay: .7s; }
+
+/* ── Slow spin ───────────────────────────────── */
+@keyframes spinSlow { to { transform:rotate(360deg); } }
+.spin-slow { animation: spinSlow 3.5s linear infinite; }
+
+/* ── Float bob ───────────────────────────────── */
+@keyframes floatIcon {
+  0%,100% { transform:translateY(0);    }
+  50%     { transform:translateY(-9px); }
+}
+.float-icon { animation: floatIcon 2.8s ease-in-out infinite; }
+
+/* ── Shimmer text – blue (pending) ──────────── */
+@keyframes shimmer {
+  0%   { background-position:-200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(90deg,
+    #1e3a8a 0%, #3b82f6 30%, #93c5fd 50%, #3b82f6 70%, #1e3a8a 100%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Shimmer text – red (rejected) ──────────── */
+@keyframes shimmerRed {
+  0%   { background-position:-200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text-red {
+  background: linear-gradient(90deg,
+    #7f1d1d 0%, #dc2626 30%, #fca5a5 50%, #dc2626 70%, #7f1d1d 100%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: shimmerRed 3s linear infinite;
+}
+
+/* ── Step icon states ────────────────────────── */
+.step-done    { background:#dcfce7; color:#16a34a; }
+.step-pending { background:#f3f4f6; color:#9ca3af; }
+.step-rejected{ background:#fee2e2; color:#dc2626; }
+
+/* ── Toggle bar ──────────────────────────────── */
+.tab-btn { transition: all .2s; }
+.tab-btn.active { background:#1d4ed8; color:#fff; box-shadow:0 2px 8px #1d4ed840; }
+
+
+.step-rejected {
+  background-color: #fee2e2;   /* red-100 */
+  color: #dc2626;              /* red-600 */
+}

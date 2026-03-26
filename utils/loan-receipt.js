@@ -1,369 +1,6 @@
-
 // ══════════════════════════════════════════════════════════════
-//  PER‑USER STORAGE HELPERS (SAME AS LOAN APPROVAL PAGE)
+//  I18N DATA & HELPER — must be first so rT() is available everywhere
 // ══════════════════════════════════════════════════════════════
-var CURRENT_USER_EMAIL   = "";
-var CURRENT_USER_ACCOUNT = "";
-var CURRENT_USER_OBJ     = {};
-
-(function identifyUser() {
-  var sdkUser = null;
-  try {
-    if (typeof abcBank !== "undefined" && abcBank.getCurrentUser) {
-      sdkUser = abcBank.getCurrentUser();
-    }
-  } catch(e) {}
-
-  var rawSession = null;
-  try { rawSession = JSON.parse(localStorage.getItem("abcBank_currentUser") || "null"); } catch(e) {}
-
-  var legacyUser = null;
-  try { legacyUser = JSON.parse(localStorage.getItem("bankUser") || "null"); } catch(e) {}
-
-  var user = sdkUser || rawSession || legacyUser || {};
-  CURRENT_USER_OBJ = user;
-
-  CURRENT_USER_EMAIL = (user.email || "").trim().toLowerCase();
-
-  if (user.account && typeof user.account === "object" && user.account.accountNumber) {
-    CURRENT_USER_ACCOUNT = String(user.account.accountNumber);
-  } else if (user.account && typeof user.account === "string") {
-    CURRENT_USER_ACCOUNT = user.account;
-  } else if (user.accountNumber) {
-    CURRENT_USER_ACCOUNT = String(user.accountNumber);
-  }
-})();
-
-function lsGet(key) {
-  if (!key) return "";
-  if (CURRENT_USER_EMAIL) {
-    var v1 = localStorage.getItem(CURRENT_USER_EMAIL + "__" + key);
-    if (v1 !== null && v1 !== "") return v1;
-  }
-  if (CURRENT_USER_ACCOUNT) {
-    var v2 = localStorage.getItem(CURRENT_USER_ACCOUNT + "__" + key);
-    if (v2 !== null && v2 !== "") return v2;
-  }
-  var raw = localStorage.getItem(key);
-  if (raw === null) return "";
-  if (raw.startsWith("{") || raw.startsWith("[")) {
-    try {
-      var parsed = JSON.parse(raw);
-      if (parsed && parsed.email && CURRENT_USER_EMAIL &&
-          parsed.email.trim().toLowerCase() !== CURRENT_USER_EMAIL) {
-        return "";
-      }
-    } catch(e) {}
-  }
-  return raw || "";
-}
-
-function lsGetJSON(key) {
-  try { return JSON.parse(lsGet(key) || "null"); } catch(e) { return null; }
-}
-
-// ══════════════════════════════════════════════════════════════
-//  HELPER FUNCTIONS (RATES, FORMATTING, ETC.)
-// ══════════════════════════════════════════════════════════════
-var LOAN_RATES = {
-  home: 8.50, personal: 10.90, vehicle: 9.25,
-  gold: 7.50, education: 8.25, business: 11.50
-};
-var CIBIL_BRACKETS = [
-  { min: 750, max: 900, adj: -0.50 },
-  { min: 700, max: 749, adj:  0.00 },
-  { min: 650, max: 699, adj: +0.50 },
-  { min: 600, max: 649, adj: +1.00 },
-  { min: 300, max: 599, adj: +1.50 }
-];
-function getCibilAdj(score) {
-  var s = parseInt(score);
-  if (!s || isNaN(s)) return 0;
-  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
-    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i].adj;
-  }
-  return 0;
-}
-function normalizeLoanType(raw) {
-  if (!raw) return '';
-  var t = String(raw).toLowerCase().trim();
-  if (t.startsWith('loan_')) t = t.replace('loan_', '');
-  return t;
-}
-var LOAN_TYPE_LABELS = {
-  home:'🏠 Home Loan', personal:'👤 Personal Loan', vehicle:'🚗 Vehicle Loan',
-  gold:'🥇 Gold Loan', education:'🎓 Education Loan', business:'💼 Business Loan'
-};
-function loanTypeLabel(raw) {
-  var t = normalizeLoanType(raw);
-  return LOAN_TYPE_LABELS[t] || (raw ? String(raw) : '—');
-}
-function getRateForType(type, cibilScore) {
-  var t = normalizeLoanType(type);
-  var base = LOAN_RATES[t] || 8.50;
-  return t === 'home' ? Math.round((base + getCibilAdj(cibilScore)) * 100) / 100 : base;
-}
-function fmtCurr(n) {
-  var num = parseInt(n);
-  return isNaN(num) ? (n || '—') : '₹' + num.toLocaleString('en-IN');
-}
-function calcEMI(principal, annualRate, years) {
-  principal = parseFloat(principal); years = parseFloat(years);
-  if (!principal || !years || years <= 0) return '—';
-  var r = annualRate / 12 / 100, n = Math.round(years * 12);
-  if (r === 0) return fmtCurr(Math.round(principal / n));
-  return fmtCurr(Math.round(principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1)));
-}
-function pick() {
-  for (var i = 0; i < arguments.length; i++) {
-    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') return arguments[i];
-  }
-  return '';
-}
-
-// ══════════════════════════════════════════════════════════════
-//  PENDING SCREEN – UPDATE STEP STATUS (USES rT)
-// ══════════════════════════════════════════════════════════════
-function updatePendingSteps(officerDecision, legalDecision) {
-  var oIcon  = document.getElementById('step-officer-icon');
-  var oI     = document.getElementById('step-officer-i');
-  var oLabel = document.getElementById('step-officer-label');
-  var oDesc  = document.getElementById('step-officer-desc');
-
-  if (officerDecision === 'approved') {
-    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
-    oI.className     = 'fa fa-check';
-    oLabel.textContent = rT('step2_approved_label');
-    oLabel.className   = 'font-bold text-sm text-green-600';
-    oDesc.textContent  = rT('step2_approved_desc');
-  } else if (officerDecision === 'rejected') {
-    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
-    oI.className     = 'fa fa-times';
-    oLabel.textContent = rT('step2_rejected_label');
-    oLabel.className   = 'font-bold text-sm text-red-600';
-    oDesc.textContent  = rT('step2_rejected_desc');
-  } else {
-    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-active';
-    oI.className     = 'fa fa-spinner fa-spin';
-    oLabel.textContent = rT('step2_active_label');
-    oLabel.className   = 'font-bold text-sm text-blue-600';
-    oDesc.textContent  = rT('step2_active_desc');
-  }
-
-  var lIcon  = document.getElementById('step-legal-icon');
-  var lI     = document.getElementById('step-legal-i');
-  var lLabel = document.getElementById('step-legal-label');
-  var lDesc  = document.getElementById('step-legal-desc');
-
-  if (legalDecision === 'approved') {
-    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
-    lI.className     = 'fa fa-check';
-    lLabel.textContent = rT('step3_approved_label');
-    lLabel.className   = 'font-bold text-sm text-green-600';
-    lDesc.textContent  = rT('step3_approved_desc');
-  } else if (legalDecision === 'rejected') {
-    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
-    lI.className     = 'fa fa-times';
-    lLabel.textContent = rT('step3_rejected_label');
-    lLabel.className   = 'font-bold text-sm text-red-600';
-    lDesc.textContent  = rT('step3_rejected_desc');
-  } else {
-    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending';
-    lI.className     = 'fa fa-scale-balanced';
-    lLabel.textContent = rT('step3_pending_label');
-    lLabel.className   = 'font-bold text-sm text-gray-400';
-    lDesc.textContent  = rT('step3_pending_desc');
-  }
-}
-
-// ══════════════════════════════════════════════════════════════
-//  POPULATE RECEIPT WITH CURRENT DATA (USES lsGetJSON)
-// ══════════════════════════════════════════════════════════════
-function populateReceipt() {
-  var loanApp = lsGetJSON('loan_application_data') || {};
-  var cibil   = lsGetJSON('cibil_data') || {};
-  var loanData = lsGetJSON('loanApplication') || {};
-  var kyc     = lsGetJSON('kyc_data') || {};
-
-  var userName = document.getElementById('username').innerText;
-  document.getElementById('rcptName').textContent = userName || '—';
-  document.getElementById('rcptAccount').textContent = CURRENT_USER_ACCOUNT || '—';
-
-  var pan = pick(kyc.pan, kyc.panNumber, loanApp.pan, loanApp.panNumber, cibil.pan, cibil.panNumber);
-  document.getElementById('rcptPan').textContent = pan || '—';
-
-  var cibilScore = pick(cibil.score, lsGet('loan_score'));
-  document.getElementById('rcptCibil').textContent = cibilScore || '—';
-
-  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType);
-  document.getElementById('rcptLoanType').textContent = loanTypeLabel(rawLoanType);
-
-  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
-  document.getElementById('rcptLoanAmount').textContent = principal ? fmtCurr(principal) : '—';
-
-  var rate = getRateForType(rawLoanType, cibilScore);
-  document.getElementById('rcptInterestRate').textContent = rate + '% p.a';
-
-  var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
-  if (!duration || duration <= 0) {
-    var dob = pick(CURRENT_USER_OBJ.dob, kyc.dob, cibil.dob);
-    if (dob) {
-      var birth = new Date(dob);
-      duration = Math.max(1, 60 - Math.ceil((new Date() - birth) / (1000*60*60*24*365.25)));
-    } else {
-      var st = parseInt(lsGet('loanTenure'));
-      if (st && st > 0) duration = st;
-    }
-  }
-  document.getElementById('rcptDuration').textContent = duration ? duration + ' Years' : '—';
-  document.getElementById('rcptEmi').textContent = (principal && duration) ? calcEMI(principal, rate, duration) : '—';
-}
-
-// ══════════════════════════════════════════════════════════════
-//  CORE REFRESH FUNCTION – reads current scoped decisions & updates UI
-// ══════════════════════════════════════════════════════════════
-function refreshPageState() {
-  var officerRaw = (lsGet("loan_officer_decision") || "").trim().toLowerCase();
-  var legalRaw   = (lsGet("loan_legal_decision")   || "").trim().toLowerCase();
-
-  var officerOk = (officerRaw === "approved");
-  var legalOk   = (legalRaw   === "approved");
-
-  var pendingDiv = document.getElementById('pending-screen');
-  var receiptDiv = document.getElementById('receipt-screen');
-
-  if (officerOk && legalOk) {
-    // Both approved → show receipt
-    pendingDiv.classList.add('hidden');
-    receiptDiv.classList.remove('hidden');
-    populateReceipt();
-  } else {
-    // Not both approved → show pending screen and update step statuses
-    pendingDiv.classList.remove('hidden');
-    receiptDiv.classList.add('hidden');
-    updatePendingSteps(officerRaw, legalRaw);
-  }
-
-  // Re-apply translations (always, because language might have changed)
-  applyReceiptLang(officerOk, legalOk);
-}
-
-// ══════════════════════════════════════════════════════════════
-//  APPLY TRANSLATIONS (updated version that uses decision flags)
-// ══════════════════════════════════════════════════════════════
-function setTxt(id, val) {
-  var el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
-
-function applyReceiptLang(officerOk, legalOk) {
-  // Navbar & footer
-  setTxt('nav-bank-title',  rT('bank_title'));
-  setTxt('nav-back-btn',    rT('back_dashboard'));
-  setTxt('nav-logout-btn',  rT('nav_logout'));
-  setTxt('nav-back-dd-btn', rT('back_dashboard'));
-  setTxt('footer-text',     rT('footer'));
-
-  if (officerOk && legalOk) {
-    // Receipt screen
-    setTxt('rcpt-page-title',    rT('receipt_page_title'));
-    setTxt('rcpt-page-desc',     rT('receipt_page_desc'));
-    setTxt('rcpt-btn-print',     rT('btn_print'));
-    setTxt('rcpt-btn-proceed',   rT('btn_proceed'));
-    setTxt('rcpt-applicant-h',   rT('applicant_info'));
-    setTxt('rcpt-lbl-name',      rT('applicant_name'));
-    setTxt('rcpt-lbl-account',   rT('account_number'));
-    setTxt('rcpt-lbl-pan',       rT('pan_label'));
-    setTxt('rcpt-lbl-cibil',     rT('cibil_score'));
-    setTxt('rcpt-loan-h',        rT('loan_details'));
-    setTxt('rcpt-lbl-type',      rT('loan_type'));
-    setTxt('rcpt-lbl-amount',    rT('loan_amount'));
-    setTxt('rcpt-lbl-rate',      rT('interest_rate'));
-    setTxt('rcpt-lbl-dur',       rT('duration'));
-    setTxt('rcpt-lbl-emi',       rT('monthly_emi'));
-    setTxt('rcpt-badge-officer', rT('badge_officer'));
-    setTxt('rcpt-badge-legal',   rT('badge_legal'));
-    setTxt('rcpt-legal-note',    rT('legal_done_note'));
-    setTxt('rcpt-legal-desc',    rT('legal_done_desc'));
-    setTxt('rcpt-sig-customer',  rT('sig_customer'));
-    setTxt('rcpt-sig-seal',      rT('sig_seal'));
-    setTxt('rcpt-sig-auth',      rT('sig_auth'));
-    setTxt('rcpt-ps-title',      rT('processing_status'));
-    setTxt('rcpt-ps-1',          rT('ps_submitted'));
-    setTxt('rcpt-ps-2',          rT('ps_officer'));
-    setTxt('rcpt-ps-3',          rT('ps_legal'));
-    setTxt('rcpt-ps-4',          rT('ps_credit'));
-    setTxt('rcpt-ps-5',          rT('ps_final'));
-  } else {
-    // Pending screen
-    setTxt('pending-title',      rT('pending_title'));
-    setTxt('pending-desc',       rT('pending_desc'));
-    setTxt('pending-status-h',   rT('approval_status'));
-    setTxt('step1-title',        rT('step1_title'));
-    setTxt('step1-desc',         rT('step1_desc'));
-    setTxt('step1-label',        rT('step1_label'));
-    setTxt('step2-title',        rT('step2_title'));
-    setTxt('step3-title',        rT('step3_title'));
-    setTxt('step4-title',        rT('step4_title'));
-    setTxt('step4-desc',         rT('step4_desc'));
-    setTxt('step4-label',        rT('step4_label'));
-    setTxt('whats-next-text',    rT('whats_next'));
-    setTxt('officer-link-text',  rT('officer_link'));
-    setTxt('and-word',           rT('and_word'));
-    setTxt('legal-link-text',    rT('legal_link'));
-    setTxt('whats-next-end',     rT('whats_next_end'));
-    // The dynamic step texts are handled by updatePendingSteps, which is called later.
-  }
-}
-
-// ══════════════════════════════════════════════════════════════
-//  NAVBAR USER INFO
-// ══════════════════════════════════════════════════════════════
-var fullName = [CURRENT_USER_OBJ.firstName, CURRENT_USER_OBJ.lastName].filter(Boolean).join(' ')
-            || CURRENT_USER_OBJ.name || 'User';
-var accNum = CURRENT_USER_ACCOUNT;
-document.getElementById('username').innerText       = fullName;
-document.getElementById('profileName').innerText    = fullName;
-document.getElementById('profileAccount').innerText = 'Account: ' + (accNum || 'NIL');
-document.getElementById('userid').innerText         = 'ID: ' + ((accNum && accNum.length > 6) ? accNum.slice(-6) : (accNum || '–'));
-
-function logoutUser() {
-  try { if (typeof abcBank !== "undefined" && abcBank.logout) { abcBank.logout(); return; } } catch(e) {}
-  localStorage.removeItem('bankUser');
-  localStorage.removeItem('abcBank_currentUser');
-  window.location.href = '/pages/index.html';
-}
-
-// ══════════════════════════════════════════════════════════════
-//  LANGUAGE SWITCHER & REACTIVITY
-// ══════════════════════════════════════════════════════════════
-var langSelect = document.getElementById('nav-lang-select');
-var savedLang = localStorage.getItem('abcbank_lang') || 'en';
-if (langSelect) langSelect.value = savedLang;
-
-function onLangChange() {
-  var newLang = langSelect.value;
-  localStorage.setItem('abcbank_lang', newLang);
-  refreshPageState();               // re‑apply all translations and re‑evaluate status
-  if (typeof applyLang === 'function') applyLang(newLang);
-}
-if (langSelect) langSelect.addEventListener('change', onLangChange);
-
-// Listen for changes in localStorage (from other tabs)
-window.addEventListener('storage', function(e) {
-  if (e.key && (e.key.includes('loan_officer_decision') || e.key.includes('loan_legal_decision'))) {
-    refreshPageState();
-  }
-});
-// Also on page show (when coming back from bfcache)
-window.addEventListener('pageshow', function() {
-  refreshPageState();
-});
-
-// Initial load
-refreshPageState();
-
-
 var R_I18N = {
   en: {
     bank_title: "ABC Bank", back_dashboard: "Back to Dashboard", nav_logout: "Logout",
@@ -475,10 +112,378 @@ var R_I18N = {
   }
 };
 
-/* ── translation helper ── */
+/* ── translation helper — defined immediately after R_I18N ── */
 function rT(key) {
   var lang = localStorage.getItem('abcbank_lang') || 'en';
   return (R_I18N[lang] && R_I18N[lang][key] !== undefined)
     ? R_I18N[lang][key]
     : (R_I18N['en'][key] || key);
 }
+
+// ══════════════════════════════════════════════════════════════
+//  PER‑USER STORAGE HELPERS (SAME AS LOAN APPROVAL PAGE)
+// ══════════════════════════════════════════════════════════════
+var CURRENT_USER_EMAIL   = "";
+var CURRENT_USER_ACCOUNT = "";
+var CURRENT_USER_OBJ     = {};
+
+(function identifyUser() {
+  var sdkUser = null;
+  try {
+    if (typeof abcBank !== "undefined" && abcBank.getCurrentUser) {
+      sdkUser = abcBank.getCurrentUser();
+    }
+  } catch(e) {}
+
+  var rawSession = null;
+  try { rawSession = JSON.parse(localStorage.getItem("abcBank_currentUser") || "null"); } catch(e) {}
+
+  var legacyUser = null;
+  try { legacyUser = JSON.parse(localStorage.getItem("bankUser") || "null"); } catch(e) {}
+
+  var user = sdkUser || rawSession || legacyUser || {};
+  CURRENT_USER_OBJ = user;
+
+  CURRENT_USER_EMAIL = (user.email || "").trim().toLowerCase();
+
+  if (user.account && typeof user.account === "object" && user.account.accountNumber) {
+    CURRENT_USER_ACCOUNT = String(user.account.accountNumber);
+  } else if (user.account && typeof user.account === "string") {
+    CURRENT_USER_ACCOUNT = user.account;
+  } else if (user.accountNumber) {
+    CURRENT_USER_ACCOUNT = String(user.accountNumber);
+  }
+
+  if (!CURRENT_USER_EMAIL) {
+    try {
+      var fallback = JSON.parse(localStorage.getItem("abcBank_currentUser") || "null");
+      if (fallback && fallback.email) {
+        CURRENT_USER_EMAIL = fallback.email.trim().toLowerCase();
+      }
+    } catch(e) {}
+  }
+})();
+
+function lsGet(key) {
+  if (!key) return "";
+
+  if (CURRENT_USER_EMAIL) {
+    var v1 = localStorage.getItem(CURRENT_USER_EMAIL + "__" + key);
+    if (v1 !== null && v1 !== "") return v1;
+  }
+
+  if (CURRENT_USER_ACCOUNT) {
+    var v2 = localStorage.getItem(CURRENT_USER_ACCOUNT + "__" + key);
+    if (v2 !== null && v2 !== "") return v2;
+  }
+
+  var raw = localStorage.getItem(key);
+  if (raw === null) return "";
+  if (raw.startsWith("{") || raw.startsWith("[")) {
+    try {
+      var parsed = JSON.parse(raw);
+      if (parsed && parsed.email && CURRENT_USER_EMAIL &&
+          parsed.email.trim().toLowerCase() !== CURRENT_USER_EMAIL) {
+        return "";
+      }
+    } catch(e) {}
+  }
+  return raw || "";
+}
+
+function lsGetJSON(key) {
+  try { return JSON.parse(lsGet(key) || "null"); } catch(e) { return null; }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HELPER FUNCTIONS (RATES, FORMATTING, ETC.)
+// ══════════════════════════════════════════════════════════════
+var LOAN_RATES = {
+  home: 8.50, personal: 10.90, vehicle: 9.25,
+  gold: 7.50, education: 8.25, business: 11.50
+};
+var CIBIL_BRACKETS = [
+  { min: 750, max: 900, adj: -0.50 },
+  { min: 700, max: 749, adj:  0.00 },
+  { min: 650, max: 699, adj: +0.50 },
+  { min: 600, max: 649, adj: +1.00 },
+  { min: 300, max: 599, adj: +1.50 }
+];
+function getCibilAdj(score) {
+  var s = parseInt(score);
+  if (!s || isNaN(s)) return 0;
+  for (var i = 0; i < CIBIL_BRACKETS.length; i++) {
+    if (s >= CIBIL_BRACKETS[i].min && s <= CIBIL_BRACKETS[i].max) return CIBIL_BRACKETS[i].adj;
+  }
+  return 0;
+}
+function normalizeLoanType(raw) {
+  if (!raw) return '';
+  var t = String(raw).toLowerCase().trim();
+  if (t.startsWith('loan_')) t = t.replace('loan_', '');
+  return t;
+}
+var LOAN_TYPE_LABELS = {
+  home:'🏠 Home Loan', personal:'👤 Personal Loan', vehicle:'🚗 Vehicle Loan',
+  gold:'🥇 Gold Loan', education:'🎓 Education Loan', business:'💼 Business Loan'
+};
+function loanTypeLabel(raw) {
+  var t = normalizeLoanType(raw);
+  return LOAN_TYPE_LABELS[t] || (raw ? String(raw) : '—');
+}
+function getRateForType(type, cibilScore) {
+  var t = normalizeLoanType(type);
+  var base = LOAN_RATES[t] || 8.50;
+  return t === 'home' ? Math.round((base + getCibilAdj(cibilScore)) * 100) / 100 : base;
+}
+function fmtCurr(n) {
+  var num = parseInt(n);
+  return isNaN(num) ? (n || '—') : '₹' + num.toLocaleString('en-IN');
+}
+function calcEMI(principal, annualRate, years) {
+  principal = parseFloat(principal); years = parseFloat(years);
+  if (!principal || !years || years <= 0) return '—';
+  var r = annualRate / 12 / 100, n = Math.round(years * 12);
+  if (r === 0) return fmtCurr(Math.round(principal / n));
+  return fmtCurr(Math.round(principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1)));
+}
+function pick() {
+  for (var i = 0; i < arguments.length; i++) {
+    if (arguments[i] !== undefined && arguments[i] !== null && arguments[i] !== '') return arguments[i];
+  }
+  return '';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PENDING SCREEN – UPDATE STEP STATUS
+// ══════════════════════════════════════════════════════════════
+function updatePendingSteps(officerDecision, legalDecision) {
+  var oIcon  = document.getElementById('step-officer-icon');
+  var oI     = document.getElementById('step-officer-i');
+  var oLabel = document.getElementById('step-officer-label');
+  var oDesc  = document.getElementById('step-officer-desc');
+
+  if (officerDecision === 'approved') {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    oI.className     = 'fa fa-check';
+    oLabel.textContent = rT('step2_approved_label');
+    oLabel.className   = 'font-bold text-sm text-green-600';
+    oDesc.textContent  = rT('step2_approved_desc');
+  } else if (officerDecision === 'rejected') {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    oI.className     = 'fa fa-times';
+    oLabel.textContent = rT('step2_rejected_label');
+    oLabel.className   = 'font-bold text-sm text-red-600';
+    oDesc.textContent  = rT('step2_rejected_desc');
+  } else {
+    oIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-active';
+    oI.className     = 'fa fa-spinner fa-spin';
+    oLabel.textContent = rT('step2_active_label');
+    oLabel.className   = 'font-bold text-sm text-blue-600';
+    oDesc.textContent  = rT('step2_active_desc');
+  }
+
+  var lIcon  = document.getElementById('step-legal-icon');
+  var lI     = document.getElementById('step-legal-i');
+  var lLabel = document.getElementById('step-legal-label');
+  var lDesc  = document.getElementById('step-legal-desc');
+
+  if (legalDecision === 'approved') {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-done';
+    lI.className     = 'fa fa-check';
+    lLabel.textContent = rT('step3_approved_label');
+    lLabel.className   = 'font-bold text-sm text-green-600';
+    lDesc.textContent  = rT('step3_approved_desc');
+  } else if (legalDecision === 'rejected') {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-rejected';
+    lI.className     = 'fa fa-times';
+    lLabel.textContent = rT('step3_rejected_label');
+    lLabel.className   = 'font-bold text-sm text-red-600';
+    lDesc.textContent  = rT('step3_rejected_desc');
+  } else {
+    lIcon.className  = 'w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 step-pending';
+    lI.className     = 'fa fa-scale-balanced';
+    lLabel.textContent = rT('step3_pending_label');
+    lLabel.className   = 'font-bold text-sm text-gray-400';
+    lDesc.textContent  = rT('step3_pending_desc');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  POPULATE RECEIPT WITH CURRENT DATA
+// ══════════════════════════════════════════════════════════════
+function populateReceipt() {
+  var loanApp  = lsGetJSON('loan_application_data') || {};
+  var cibil    = lsGetJSON('cibil_data') || {};
+  var loanData = lsGetJSON('loanApplication') || {};
+  var kyc      = lsGetJSON('kyc_data') || {};
+
+  var userName = document.getElementById('username').innerText;
+  document.getElementById('rcptName').textContent    = userName || '—';
+  document.getElementById('rcptAccount').textContent = CURRENT_USER_ACCOUNT || '—';
+
+  var pan = pick(kyc.pan, kyc.panNumber, loanApp.pan, loanApp.panNumber, cibil.pan, cibil.panNumber);
+  document.getElementById('rcptPan').textContent = pan || '—';
+
+  var cibilScore = pick(cibil.score, lsGet('loan_score'));
+  document.getElementById('rcptCibil').textContent = cibilScore || '—';
+
+  var rawLoanType = pick(loanApp.loanType, cibil.loanType, loanData.loanType);
+  document.getElementById('rcptLoanType').textContent = loanTypeLabel(rawLoanType);
+
+  var principal = parseFloat(pick(loanApp.loanAmount, cibil.loanAmount, loanData.loanAmount, 0));
+  document.getElementById('rcptLoanAmount').textContent = principal ? fmtCurr(principal) : '—';
+
+  var rate = getRateForType(rawLoanType, cibilScore);
+  document.getElementById('rcptInterestRate').textContent = rate + '% p.a';
+
+  var duration = parseFloat(pick(loanApp.loanDuration, loanData.duration, cibil.loanDuration, 0));
+  if (!duration || duration <= 0) {
+    var dob = pick(CURRENT_USER_OBJ.dob, kyc.dob, cibil.dob);
+    if (dob) {
+      var birth = new Date(dob);
+      duration = Math.max(1, 60 - Math.ceil((new Date() - birth) / (1000*60*60*24*365.25)));
+    } else {
+      var st = parseInt(lsGet('loanTenure'));
+      if (st && st > 0) duration = st;
+    }
+  }
+  document.getElementById('rcptDuration').textContent = duration ? duration + ' Years' : '—';
+  document.getElementById('rcptEmi').textContent = (principal && duration) ? calcEMI(principal, rate, duration) : '—';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CORE REFRESH FUNCTION
+// ══════════════════════════════════════════════════════════════
+function refreshPageState() {
+  var officerRaw = (lsGet("loan_officer_decision") || "").trim().toLowerCase();
+  var legalRaw   = (lsGet("loan_legal_decision")   || "").trim().toLowerCase();
+
+  var officerOk = (officerRaw === "approved");
+  var legalOk   = (legalRaw   === "approved");
+
+  var pendingDiv = document.getElementById('pending-screen');
+  var receiptDiv = document.getElementById('receipt-screen');
+
+  if (officerOk && legalOk) {
+    pendingDiv.classList.add('hidden');
+    receiptDiv.classList.remove('hidden');
+    populateReceipt();
+  } else {
+    pendingDiv.classList.remove('hidden');
+    receiptDiv.classList.add('hidden');
+    updatePendingSteps(officerRaw, legalRaw);
+  }
+
+  applyReceiptLang(officerOk, legalOk);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  APPLY TRANSLATIONS
+// ══════════════════════════════════════════════════════════════
+function setTxt(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function applyReceiptLang(officerOk, legalOk) {
+  setTxt('nav-bank-title',  rT('bank_title'));
+  setTxt('nav-back-btn',    rT('back_dashboard'));
+  setTxt('nav-logout-btn',  rT('nav_logout'));
+  setTxt('nav-back-dd-btn', rT('back_dashboard'));
+  setTxt('footer-text',     rT('footer'));
+
+  if (officerOk && legalOk) {
+    setTxt('rcpt-page-title',    rT('receipt_page_title'));
+    setTxt('rcpt-page-desc',     rT('receipt_page_desc'));
+    setTxt('rcpt-btn-print',     rT('btn_print'));
+    setTxt('rcpt-btn-proceed',   rT('btn_proceed'));
+    setTxt('rcpt-applicant-h',   rT('applicant_info'));
+    setTxt('rcpt-lbl-name',      rT('applicant_name'));
+    setTxt('rcpt-lbl-account',   rT('account_number'));
+    setTxt('rcpt-lbl-pan',       rT('pan_label'));
+    setTxt('rcpt-lbl-cibil',     rT('cibil_score'));
+    setTxt('rcpt-loan-h',        rT('loan_details'));
+    setTxt('rcpt-lbl-type',      rT('loan_type'));
+    setTxt('rcpt-lbl-amount',    rT('loan_amount'));
+    setTxt('rcpt-lbl-rate',      rT('interest_rate'));
+    setTxt('rcpt-lbl-dur',       rT('duration'));
+    setTxt('rcpt-lbl-emi',       rT('monthly_emi'));
+    setTxt('rcpt-badge-officer', rT('badge_officer'));
+    setTxt('rcpt-badge-legal',   rT('badge_legal'));
+    setTxt('rcpt-legal-note',    rT('legal_done_note'));
+    setTxt('rcpt-legal-desc',    rT('legal_done_desc'));
+    setTxt('rcpt-sig-customer',  rT('sig_customer'));
+    setTxt('rcpt-sig-seal',      rT('sig_seal'));
+    setTxt('rcpt-sig-auth',      rT('sig_auth'));
+    setTxt('rcpt-ps-title',      rT('processing_status'));
+    setTxt('rcpt-ps-1',          rT('ps_submitted'));
+    setTxt('rcpt-ps-2',          rT('ps_officer'));
+    setTxt('rcpt-ps-3',          rT('ps_legal'));
+    setTxt('rcpt-ps-4',          rT('ps_credit'));
+    setTxt('rcpt-ps-5',          rT('ps_final'));
+  } else {
+    setTxt('pending-title',      rT('pending_title'));
+    setTxt('pending-desc',       rT('pending_desc'));
+    setTxt('pending-status-h',   rT('approval_status'));
+    setTxt('step1-title',        rT('step1_title'));
+    setTxt('step1-desc',         rT('step1_desc'));
+    setTxt('step1-label',        rT('step1_label'));
+    setTxt('step2-title',        rT('step2_title'));
+    setTxt('step3-title',        rT('step3_title'));
+    setTxt('step4-title',        rT('step4_title'));
+    setTxt('step4-desc',         rT('step4_desc'));
+    setTxt('step4-label',        rT('step4_label'));
+    setTxt('whats-next-text',    rT('whats_next'));
+    setTxt('officer-link-text',  rT('officer_link'));
+    setTxt('and-word',           rT('and_word'));
+    setTxt('legal-link-text',    rT('legal_link'));
+    setTxt('whats-next-end',     rT('whats_next_end'));
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVBAR USER INFO
+// ══════════════════════════════════════════════════════════════
+var fullName = [CURRENT_USER_OBJ.firstName, CURRENT_USER_OBJ.lastName].filter(Boolean).join(' ')
+            || CURRENT_USER_OBJ.name || 'User';
+var accNum = CURRENT_USER_ACCOUNT;
+document.getElementById('username').innerText       = fullName;
+document.getElementById('profileName').innerText    = fullName;
+document.getElementById('profileAccount').innerText = 'Account: ' + (accNum || 'NIL');
+document.getElementById('userid').innerText         = 'ID: ' + ((accNum && accNum.length > 6) ? accNum.slice(-6) : (accNum || '–'));
+
+function logoutUser() {
+  try { if (typeof abcBank !== "undefined" && abcBank.logout) { abcBank.logout(); return; } } catch(e) {}
+  localStorage.removeItem('bankUser');
+  localStorage.removeItem('abcBank_currentUser');
+  window.location.href = '/pages/index.html';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  LANGUAGE SWITCHER & REACTIVITY
+// ══════════════════════════════════════════════════════════════
+var langSelect = document.getElementById('nav-lang-select');
+var savedLang = localStorage.getItem('abcbank_lang') || 'en';
+if (langSelect) langSelect.value = savedLang;
+
+function onLangChange() {
+  var newLang = langSelect.value;
+  localStorage.setItem('abcbank_lang', newLang);
+  refreshPageState();
+  if (typeof applyLang === 'function') applyLang(newLang);
+}
+if (langSelect) langSelect.addEventListener('change', onLangChange);
+
+window.addEventListener('storage', function(e) {
+  if (e.key && (e.key.includes('loan_officer_decision') || e.key.includes('loan_legal_decision'))) {
+    refreshPageState();
+  }
+});
+
+window.addEventListener('pageshow', function() {
+  refreshPageState();
+});
+
+// Initial load
+refreshPageState();

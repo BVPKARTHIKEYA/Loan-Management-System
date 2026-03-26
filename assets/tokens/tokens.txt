@@ -606,7 +606,7 @@ footer_email : "support@abcbank.com"
 footer_copyright : "© 2026 ABC Bank. All Rights Reserved | Secure Digital Banking Platform"
 File: loan-approval.html
 
-approval_back_dashboard : "Back to Dashboard"
+c : "Back to Dashboard"
 
 approval_page_title : "Loan Approval"
 
