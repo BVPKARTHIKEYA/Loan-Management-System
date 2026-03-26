@@ -140,3 +140,6 @@
       transition: transform 0.25s cubic-bezier(.4,0,.2,1);
     }
     .toggle-switch input:checked ~ .toggle-knob { transform: translateX(18px); }
+.controls-row {
+      margin-top: 1.5rem; /* adds space from top edge */
+    }
