@@ -128,3 +128,22 @@ function showMessage(msg, type) {
   el.textContent = msg;
   el.style.color = type === "success" ? "#16a34a" : "#dc2626";
 }
+// ── Dark mode toggle ──────────────────────────────────────────────────
+const darkToggle = document.getElementById("darkToggle");
+
+// ── Load saved preference ─────────────────────────────────────────────
+if (localStorage.getItem("abcbank_theme") === "dark") {
+  document.documentElement.classList.add("dark");
+  darkToggle.checked = true;
+}
+
+// ── Listen for toggle ─────────────────────────────────────────────────
+darkToggle.addEventListener("change", () => {
+  if (darkToggle.checked) {
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("abcbank_theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("abcbank_theme", "light");
+  }
+});
