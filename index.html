@@ -1,10 +1,23 @@
+<!-- structure of this page.
+1.this page is going to be thhe head of my complete web application.
+2.greeting message+small description about the website.
+3.created a background video using  lenardo.ai and for the overlay purpose.
+4. injecting the language switcher for converting the content into different languages.
+5. after 4  seconds the login and register buttons will appear with a fade in animation. 
+6. footer section will contain the copyright information  -->
+
+
+<!-- document type is html page -->
 <!DOCTYPE html>
+<!-- page language is english -->
 <html lang="en">
 
+<!-- this tag is used to import or represent the meatdata about the html document. and import stylesheets. -->
 <head>
-
-<!-- Character encoding so browser supports all characters -->
+     
+     
 <meta charset="UTF-8">
+<!-- unicode transformation format is known as utf-8 aand it is used to completely represent the website in 1 to 4 characters. and it is used to display the most complex characters like emoji's and other language characters. -->
 
 <!-- Makes the page responsive on mobile, tablet, laptop -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,58 +27,37 @@
 
 <!-- Tailwind CSS CDN used for quick styling using utility classes -->
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- favicon a element shown on the top of the browser tab -->
 <link rel="icon" type="image/x-icon" href="/assets/images/abc-bank-logo.jpeg">
 <!-- Font Awesome CDN used to display icons (globe, social icons etc.) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="icon" type="image/x-icon" href="/assets/images/abc-bank-logo.jpeg">
+
+<!-- external css file -->
 <link href="/styles/index.css" rel="stylesheet">
 </head>
 
 
-<!-- --------------------------------------------------------
-     BODY SECTION
---------------------------------------------------------- -->
-
+<!-- body section -->
 <body class="h-screen overflow-hidden">
 
-<!-- --------------------------------------------------------
-     LANGUAGE SWITCHER (TOP RIGHT DROPDOWN)
-     Allows user to change the website language
---------------------------------------------------------- -->
-
-<section id="lang-switcher">
-
-  <!-- globe icon + text -->
-  <label>
-    <i class="fa fa-globe"></i> Language:
-  </label>
-
-  <!-- language dropdown -->
-  <select id="lang-select" onchange="applyLang(this.value)">
-
-    <!-- Each option represents a supported language -->
-
-    <option value="en">English</option>
-    <option value="te">తెలుగు</option>
-    <option value="ta">தமிழ்</option>
-    <option value="ml">മലയാളം</option>
-    <option value="kn">ಕನ್ನಡ</option>
-    <option value="hi">हिन्दी</option>
-
-  </select>
-
-</section>
 
 
-<!-- --------------------------------------------------------
-     VIDEO BACKGROUND SECTION
-     Full screen background video playing automatically
---------------------------------------------------------- -->
-
+<!-- header section is used to represent the main content of the poge. -->
 <header>
+
+     <!-- auto play video muted audio looped as a videop to the background.
+      classes explanation: -->
+      <!-- fixed: positions such that video don't scroll with the page
+      right-0: algins video with the right edge of the viewport
+      bottom-0: algins video with the right edge of the viewport
+     min-w-full: ensures video takes full width of the viewport    
+     min-h-full: ensures video takes full height of the viewport
+     object-cover: scales the video to cover the entire area without distortion, cropping if necessary.  -->
 
   <video autoplay muted loop
          class="fixed right-0 bottom-0 min-w-full min-h-full object-cover">
+
+
 
     <!-- video source -->
     <source src="/assets/videos/motion.mp4" type="video/mp4">
@@ -74,39 +66,40 @@
 
 </header>
 
-
-<!-- --------------------------------------------------------
-     DARK OVERLAY
-     Adds black transparent layer above video
-     Improves text visibility
---------------------------------------------------------- -->
+<!-- overlay section -->
 
 <section class="absolute inset-0 bg-black bg-opacity-60"></section>
 
+<!-- absolute: if the parents exist then it will be positioned relative to the parent element.
+inset-0: sets all four inset properties (top, right, bottom, left) to 0, making the element fill its containing block.
+bg-black: sets the background color to black.
+bpg-opacity-60: sets the opacity of the background color to 60%, allowing the video to be visible through the overlay while still providing a darkened effect for better text readability.      -->
 
-<!-- --------------------------------------------------------
-     MAIN CONTENT
---------------------------------------------------------- -->
+<!-- HEADING-->
 
 <main class="relative h-screen text-white">
 
-  <!-- ----------------------------------------------------
-       WEBSITE TITLE / WELCOME TEXT
-  ---------------------------------------------------- -->
-
+ 
   <section class="flex justify-center text-center pt-28">
-
-    <!-- text will be inserted using translation dictionary -->
+    
+     <!-- classes epxlanation:
+     flex: enables flexbox layout for the section, allowing for easy centering of content.
+     justify-center: horizontally centers the content within the flex container.
+     text-center: centers the text within the section.
+     pt-28: adds padding to the top of the section, creating space between the top of the viewport and the content. The value "28" corresponds to a specific amount of padding defined in Tailwind CSS, which is typically 7rem (112px) based on the default spacing scale. This helps to position the content lower on the page, making it more visually appealing and easier to read against the background video. -->
     <h1 class="text-6xl font-bold tracking-wide"
+          
         data-i18n="welcome"></h1>
+        <!-- class explanation -->
+     <!-- text-6xl: sets the font size to a very large size, making the heading prominent and eye-catching.
+     font-bold: makes the text bold, adding emphasis and making it stand out against the background
+      tracking-wide: increases the letter spacing, giving the text a more open and airy feel, which can enhance readability and visual appeal. This is especially effective for large headings, as it prevents the letters from appearing too cramped and allows each character to be more distinct.
+      -->
 
   </section>
 
 
-  <!-- ----------------------------------------------------
-       DESCRIPTION + BUTTONS
-  ---------------------------------------------------- -->
-
+     <!-- inner description of the bank -->
   <section class="absolute bottom-24 w-full text-center px-6">
 
     <!-- description text -->
@@ -115,22 +108,27 @@
       <!-- main description -->
       <p class="text-xl max-w-3xl mx-auto leading-relaxed"
          data-i18n="desc1"></p>
+         <!-- classes explanation -->
+          <!-- mx-auto : centers the paragraph horizontally within its container by setting the left and right margins to auto.
+          leading-relaxed: increases the line height, creating more space between lines of text. This enhances readability by preventing the lines from appearing too cramped, especially for longer paragraphs. It gives the text a more open and airy feel, making it easier for users to read and comprehend the information being presented about the bank. -->
 
       <!-- secondary description -->
       <p class="text-lg mt-4 max-w-3xl mx-auto"
          data-i18n="desc2"></p>
-
+        <!-- class explanation
+        mt-4 : margin-top
+         -->
     </article>
 
 
-    <!-- ------------------------------------------------
-         LOGIN + REGISTER BUTTONS
-         Buttons appear after animation delay
-    ------------------------------------------------ -->
-
+    <!-- buttons -->
     <nav class="flex justify-center gap-6 mt-10 fade-in">
 
-      <!-- LOGIN BUTTON -->
+      <!-- buttons structure explanation:
+      dark blue shade 
+      login and register buttons of diff colors
+      adding pading to make buttons clickable
+    <--  LOGIN BUTTON -->
       <a href="/pages/login.html"
          class="bg-blue-900 hover:bg-blue-800
                 px-8 py-3 rounded-lg
@@ -152,9 +150,6 @@
 </main>
 
 
-<!-- --------------------------------------------------------
-     FOOTER
---------------------------------------------------------- -->
 
 <footer class="absolute bottom-2 w-full text-center text-gray-300 text-sm">
 
@@ -165,14 +160,11 @@
 
 
 
-<!-- --------------------------------------------------------
-     JAVASCRIPT SECTION
---------------------------------------------------------- -->
+<!-- js -->
 
-<!-- /utils/lang.js contains translation dictionary + applyLang() function -->
+<!-- lang library -->
 <script src="/utils/lang.js"></script>
 
 
-<script src="/utils/index.js"></script>
 </body>
 </html>

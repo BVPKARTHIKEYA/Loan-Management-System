@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify OTP | ABC Bank</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="/assets/images/abc-bank-logo.jpeg">
+  <link href="/styles/forgot-password.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+  <section class="panel w-full max-w-md rounded-2xl shadow-2xl p-10">
+
+    <!-- Dark mode toggle -->
+    <section class="controls-row">
+      <section class="theme-toggle" title="Toggle dark mode">
+        <i class="fa-solid fa-sun toggle-icon"></i>
+        <label class="toggle-switch" aria-label="Toggle dark mode">
+          <input type="checkbox" id="darkToggle">
+          <span class="toggle-track"></span>
+          <span class="toggle-knob"></span>
+        </label>
+        <i class="fa-solid fa-moon toggle-icon"></i>
+      </section>
+    </section>
+
+    <!-- Header -->
+    <header class="text-center mb-8">
+      <img src="/assets/images/abc-bank-logo.jpeg" class="h-24 w-auto mx-auto mb-5 object-contain">
+      <h2 class="text-head text-3xl font-bold font-[Playfair_Display]">Verify OTP</h2>
+      <p class="text-sub text-sm mt-1" id="otpSubtitle">Enter the 6-digit OTP sent to your email.</p>
+    </header>
+
+    <!-- OTP Form -->
+    <form id="otpForm" class="space-y-5">
+
+      <!-- 6 OTP digit boxes -->
+      <section class="flex justify-center gap-3" id="otpBoxes">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+        <input type="text" maxlength="1" class="otp-box form-input w-12 h-12 text-center text-xl font-bold border rounded-lg transition" inputmode="numeric">
+      </section>
+
+      <!-- Countdown timer -->
+      <p class="text-center text-sm text-sub">
+        OTP expires in: <span id="countdown" class="font-semibold text-red-500">10:00</span>
+      </p>
+
+      <button type="submit" class="btn-primary w-full text-white p-3 rounded-lg font-semibold transition">
+        <i class="fa fa-check-circle mr-2"></i> Verify OTP
+      </button>
+
+    </form>
+
+    <!-- Resend + Back -->
+    <footer class="text-center text-sm mt-6 space-y-2">
+      <p>Didn't receive it?
+        <button id="resendBtn" class="link-blue hover:underline font-medium" disabled>
+          Resend OTP (<span id="resendTimer">30</span>s)
+        </button>
+      </p>
+      <a href="/pages/forgot-password.html" class="link-blue hover:underline block">← Back</a>
+    </footer>
+
+  </section>
+
+  <script src="/utils/lang.js"></script>
+  <script src="/utils/verify-otp.js"></script>
+</body>
+</html>

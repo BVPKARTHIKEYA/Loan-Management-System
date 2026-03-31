@@ -1,10 +1,6 @@
 
 
-/* --------------------------------------------------------
-   Animation for login/register buttons
-   Initially buttons are invisible then appear after 4 seconds
----------------------------------------------------------*/
-
+/* animation for login and register buttons to fade in after 4 seconds */
 .fade-in {
   opacity: 0;                /* element initially invisible */
   animation: fadeIn 2s forwards;  /* animation duration 2 seconds */
